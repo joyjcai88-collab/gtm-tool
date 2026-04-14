@@ -5,3 +5,13 @@ dist/
 *.log
 .DS_Store
 .vercel
+.claude/
+
+# Test and output files
+test-*.ts
+test-*.json
+test-*.txt
+output-*.json
+output-*.csv
+pipeline-*.json
+live-*.json
