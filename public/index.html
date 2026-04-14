@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GTM Tool — AI-Powered Lead Generation & Outreach</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --bg: #0a0a0f;
+      --surface: #14141f;
+      --border: #2a2a3a;
+      --text: #e4e4ef;
+      --text-dim: #8888a0;
+      --accent: #6c5ce7;
+      --accent-hover: #7e6ff0;
+      --success: #2ecc71;
+      --error: #e74c3c;
+      --radius: 8px;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    .container { max-width: 960px; margin: 0 auto; padding: 2rem 1.5rem; }
+    header { text-align: center; margin-bottom: 3rem; }
+    header h1 { font-size: 2.5rem; font-weight: 700; margin-bottom: 0.5rem; }
+    header h1 span { color: var(--accent); }
+    header p { color: var(--text-dim); font-size: 1.1rem; }
+    .tabs {
+      display: flex; gap: 0; border-bottom: 1px solid var(--border);
+      margin-bottom: 2rem;
+    }
+    .tab {
+      padding: 0.75rem 1.5rem; cursor: pointer; border: none;
+      background: none; color: var(--text-dim); font-size: 0.95rem;
+      border-bottom: 2px solid transparent; transition: all 0.2s;
+    }
+    .tab:hover { color: var(--text); }
+    .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+    .panel { display: none; }
+    .panel.active { display: block; }
+    .card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 1.5rem; margin-bottom: 1.5rem;
+    }
+    .card h3 { font-size: 1.1rem; margin-bottom: 1rem; }
+    label { display: block; font-size: 0.85rem; color: var(--text-dim); margin-bottom: 0.3rem; }
+    input, textarea, select {
+      width: 100%; padding: 0.6rem 0.8rem; background: var(--bg);
+      border: 1px solid var(--border); border-radius: var(--radius);
+      color: var(--text); font-size: 0.95rem; margin-bottom: 1rem;
+      font-family: inherit;
+    }
+    input:focus, textarea:focus, select:focus {
+      outline: none; border-color: var(--accent);
+    }
+    textarea { resize: vertical; min-height: 80px; }
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    button {
+      padding: 0.7rem 1.5rem; border-radius: var(--radius); border: none;
+      font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: all 0.2s;
+    }
+    .btn-primary { background: var(--accent); color: white; }
+    .btn-primary:hover { background: var(--accent-hover); }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-secondary {
+      background: transparent; color: var(--accent);
+      border: 1px solid var(--accent);
+    }
+    .btn-secondary:hover { background: rgba(108,92,231,0.1); }
+    .result {
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 1rem; margin-top: 1rem;
+      font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.85rem;
+      white-space: pre-wrap; max-height: 500px; overflow-y: auto;
+    }
+    .result.success { border-color: var(--success); }
+    .result.error { border-color: var(--error); }
+    .spinner {
+      display: inline-block; width: 16px; height: 16px;
+      border: 2px solid var(--border); border-top-color: var(--accent);
+      border-radius: 50%; animation: spin 0.6s linear infinite;
+      vertical-align: middle; margin-right: 0.5rem;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .lead-table { width: 100%; border-collapse: collapse; margin-top: 1rem; font-size: 0.85rem; }
+    .lead-table th { text-align: left; color: var(--text-dim); padding: 0.5rem; border-bottom: 1px solid var(--border); }
+    .lead-table td { padding: 0.5rem; border-bottom: 1px solid var(--border); }
+    .lead-table tr:hover { background: rgba(108,92,231,0.05); }
+    .email-preview {
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 1rem; margin-top: 1rem;
+    }
+    .email-preview .subject { font-weight: 600; margin-bottom: 0.5rem; }
+    .email-preview .body { color: var(--text-dim); white-space: pre-wrap; }
+    .badge {
+      display: inline-block; padding: 0.15rem 0.5rem; border-radius: 100px;
+      font-size: 0.75rem; background: rgba(108,92,231,0.15); color: var(--accent);
+    }
+    footer { text-align: center; color: var(--text-dim); font-size: 0.8rem; margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); }
+    .actions { display: flex; gap: 0.75rem; margin-top: 1rem; }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1><span>GTM</span> Tool</h1>
+      <p>AI-powered lead generation and personalized outreach</p>
+    </header>
+
+    <div class="tabs">
+      <button class="tab active" data-tab="icp">1. Define ICP</button>
+      <button class="tab" data-tab="search">2. Source Leads</button>
+      <button class="tab" data-tab="outreach">3. Outreach</button>
+    </div>
+
+    <!-- ICP Panel -->
+    <div class="panel active" id="panel-icp">
+      <div class="card">
+        <h3>Generate ICP with AI</h3>
+        <p style="color:var(--text-dim); margin-bottom:1rem; font-size:0.9rem;">Describe your product or service and Claude will generate an Ideal Customer Profile.</p>
+        <label>Product / Service Description</label>
+        <textarea id="icp-description" rows="5" placeholder="e.g., DevPulse is a developer productivity platform that integrates with GitHub and Jira to provide real-time engineering metrics and AI-powered code review suggestions..."></textarea>
+        <button class="btn-primary" id="icp-generate-btn" onclick="generateICP()">Generate ICP</button>
+        <div id="icp-result" class="hidden"></div>
+      </div>
+    </div>
+
+    <!-- Search Panel -->
+    <div class="panel" id="panel-search">
+      <div class="card">
+        <h3>Source Leads from Apollo.io</h3>
+        <p style="color:var(--text-dim); margin-bottom:1rem; font-size:0.9rem;">Search for leads matching your ICP criteria. Fill in fields manually or use the generated ICP above.</p>
+        <div class="row">
+          <div>
+            <label>Target Roles (comma-separated)</label>
+            <input id="search-roles" placeholder="CTO, VP Engineering, Head of Product">
+          </div>
+          <div>
+            <label>Industry Keywords</label>
+            <input id="search-keywords" placeholder="SaaS, devtools, platform engineering">
+          </div>
+        </div>
+        <div class="row">
+          <div>
+            <label>Geography</label>
+            <input id="search-locations" placeholder="United States, Canada">
+          </div>
+          <div>
+            <label>Company Size</label>
+            <select id="search-company-size">
+              <option value="1,10">1-10 employees</option>
+              <option value="11,50">11-50 employees</option>
+              <option value="51,200" selected>51-200 employees</option>
+              <option value="201,500">201-500 employees</option>
+              <option value="501,1000">501-1000 employees</option>
+              <option value="1001,5000">1001-5000 employees</option>
+            </select>
+          </div>
+        </div>
+        <div class="row">
+          <div>
+            <label>Seniority</label>
+            <select id="search-seniority" multiple size="3">
+              <option value="c_suite" selected>C-Suite</option>
+              <option value="vp" selected>VP</option>
+              <option value="director">Director</option>
+              <option value="manager">Manager</option>
+            </select>
+          </div>
+          <div>
+            <label>Results per page</label>
+            <input id="search-limit" type="number" value="25" min="1" max="100">
+          </div>
+        </div>
+        <button class="btn-primary" id="search-btn" onclick="searchLeads()">Search Leads</button>
+        <div id="search-result" class="hidden"></div>
+      </div>
+    </div>
+
+    <!-- Outreach Panel -->
+    <div class="panel" id="panel-outreach">
+      <div class="card">
+        <h3>Generate Personalized Email</h3>
+        <p style="color:var(--text-dim); margin-bottom:1rem; font-size:0.9rem;">Generate a personalized outreach email for a lead using Claude AI.</p>
+        <div class="row">
+          <div>
+            <label>Lead First Name</label>
+            <input id="out-first" placeholder="Jane">
+          </div>
+          <div>
+            <label>Lead Last Name</label>
+            <input id="out-last" placeholder="Smith">
+          </div>
+        </div>
+        <div class="row">
+          <div>
+            <label>Lead Title</label>
+            <input id="out-title" placeholder="CTO">
+          </div>
+          <div>
+            <label>Lead Company</label>
+            <input id="out-company" placeholder="Acme Corp">
+          </div>
+        </div>
+        <div class="row">
+          <div>
+            <label>Industry</label>
+            <input id="out-industry" placeholder="SaaS">
+          </div>
+          <div>
+            <label>Company Size</label>
+            <input id="out-size" type="number" placeholder="150">
+          </div>
+        </div>
+        <hr style="border-color:var(--border); margin:1rem 0;">
+        <label>Your Product Description</label>
+        <textarea id="out-product" rows="3" placeholder="What your product does..."></textarea>
+        <label>Value Proposition</label>
+        <textarea id="out-value" rows="2" placeholder="Key benefit to the prospect..."></textarea>
+        <div class="row">
+          <div>
+            <label>Your Name</label>
+            <input id="out-sender" placeholder="Sarah Johnson">
+          </div>
+          <div>
+            <label>Your Title</label>
+            <input id="out-sender-title" placeholder="Co-founder & CEO">
+          </div>
+        </div>
+        <div class="row">
+          <div>
+            <label>Your Company</label>
+            <input id="out-sender-company" placeholder="DevPulse">
+          </div>
+          <div>
+            <label>Tone</label>
+            <select id="out-tone">
+              <option value="professional">Professional</option>
+              <option value="casual">Casual</option>
+              <option value="friendly">Friendly</option>
+              <option value="direct">Direct</option>
+            </select>
+          </div>
+        </div>
+        <button class="btn-primary" id="out-btn" onclick="generateEmail()">Generate Email</button>
+        <div id="out-result" class="hidden"></div>
+      </div>
+    </div>
+
+    <footer>
+      GTM Tool v0.1.0 &mdash; Built with Claude API, Apollo.io &amp; Vercel
+    </footer>
+  </div>
+
+  <script>
+    // Tab switching
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+        tab.classList.add('active');
+        document.getElementById('panel-' + tab.dataset.tab).classList.add('active');
+      });
+    });
+
+    let lastICPResult = null;
+    let lastLeadsResult = null;
+
+    async function generateICP() {
+      const desc = document.getElementById('icp-description').value.trim();
+      if (desc.length < 10) return alert('Please provide a longer description.');
+
+      const btn = document.getElementById('icp-generate-btn');
+      const resultDiv = document.getElementById('icp-result');
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner"></span> Generating...';
+      resultDiv.className = 'result';
+      resultDiv.textContent = 'Calling Claude API...';
+      resultDiv.classList.remove('hidden');
+
+      try {
+        const res = await fetch('/api/icp-generate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ productDescription: desc }),
+        });
+        const data = await res.json();
+
+        if (!res.ok) throw new Error(data.error || 'Failed');
+
+        lastICPResult = data.icp;
+        resultDiv.className = 'result success';
+        resultDiv.textContent = JSON.stringify(data.icp, null, 2);
+
+        // Auto-fill search fields
+        if (data.icp.targetRoles) document.getElementById('search-roles').value = data.icp.targetRoles.join(', ');
+        if (data.icp.keywords) document.getElementById('search-keywords').value = [data.icp.industry, ...(data.icp.keywords || [])].join(', ');
+        if (data.icp.geography) document.getElementById('search-locations').value = data.icp.geography.join(', ');
+      } catch (err) {
+        resultDiv.className = 'result error';
+        resultDiv.textContent = 'Error: ' + err.message;
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Generate ICP';
+      }
+    }
+
+    async function searchLeads() {
+      const btn = document.getElementById('search-btn');
+      const resultDiv = document.getElementById('search-result');
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner"></span> Searching...';
+      resultDiv.classList.remove('hidden');
+      resultDiv.innerHTML = 'Querying Apollo.io...';
+
+      const roles = document.getElementById('search-roles').value.split(',').map(s => s.trim()).filter(Boolean);
+      const keywords = document.getElementById('search-keywords').value.trim();
+      const locations = document.getElementById('search-locations').value.split(',').map(s => s.trim()).filter(Boolean);
+      const companySize = document.getElementById('search-company-size').value;
+      const senioritySelect = document.getElementById('search-seniority');
+      const seniority = Array.from(senioritySelect.selectedOptions).map(o => o.value);
+      const limit = parseInt(document.getElementById('search-limit').value) || 25;
+
+      try {
+        const res = await fetch('/api/search', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            person_titles: roles.length ? roles : undefined,
+            person_locations: locations.length ? locations : undefined,
+            organization_num_employees_ranges: [companySize],
+            person_seniorities: seniority.length ? seniority : undefined,
+            q_organization_keyword: keywords || undefined,
+            per_page: limit,
+          }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Search failed');
+
+        lastLeadsResult = data.leads;
+        const total = data.pagination?.total_entries ?? data.leads.length;
+
+        let html = `<p style="margin-bottom:0.75rem;"><strong>${data.leads.length}</strong> leads found <span class="badge">${total.toLocaleString()} total</span></p>`;
+
+        if (data.leads.length > 0) {
+          html += '<table class="lead-table"><thead><tr><th>Name</th><th>Title</th><th>Company</th><th>Email</th><th>Location</th></tr></thead><tbody>';
+          for (const l of data.leads) {
+            html += `<tr>
+              <td>${esc(l.firstName)} ${esc(l.lastName)}</td>
+              <td>${esc(l.title)}</td>
+              <td>${esc(l.company)}</td>
+              <td>${esc(l.email || '—')}</td>
+              <td>${esc(l.location || '—')}</td>
+            </tr>`;
+          }
+          html += '</tbody></table>';
+          html += '<div class="actions"><button class="btn-secondary" onclick="downloadCSV()">Download CSV</button></div>';
+        }
+
+        resultDiv.innerHTML = html;
+        resultDiv.className = 'card';
+      } catch (err) {
+        resultDiv.innerHTML = '<p style="color:var(--error);">Error: ' + esc(err.message) + '</p>';
+        resultDiv.className = 'card';
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Search Leads';
+      }
+    }
+
+    function downloadCSV() {
+      if (!lastLeadsResult || !lastLeadsResult.length) return;
+      const headers = ['First Name','Last Name','Email','Title','Company','Industry','Employees','Location','LinkedIn','Seniority'];
+      const rows = lastLeadsResult.map(l => [
+        l.firstName, l.lastName, l.email||'', l.title, l.company,
+        l.industry||'', l.employeeCount||'', l.location||'', l.linkedinUrl||'', l.seniority||''
+      ]);
+      let csv = headers.join(',') + '\n';
+      for (const row of rows) {
+        csv += row.map(v => '"' + String(v).replace(/"/g, '""') + '"').join(',') + '\n';
+      }
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'leads-' + Date.now() + '.csv';
+      a.click();
+    }
+
+    async function generateEmail() {
+      const btn = document.getElementById('out-btn');
+      const resultDiv = document.getElementById('out-result');
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner"></span> Generating...';
+      resultDiv.classList.remove('hidden');
+      resultDiv.innerHTML = 'Calling Claude API...';
+
+      const lead = {
+        firstName: document.getElementById('out-first').value,
+        lastName: document.getElementById('out-last').value,
+        title: document.getElementById('out-title').value,
+        company: document.getElementById('out-company').value,
+        industry: document.getElementById('out-industry').value || null,
+        employeeCount: parseInt(document.getElementById('out-size').value) || null,
+      };
+
+      const context = {
+        productDescription: document.getElementById('out-product').value,
+        valueProposition: document.getElementById('out-value').value,
+        senderName: document.getElementById('out-sender').value,
+        senderTitle: document.getElementById('out-sender-title').value,
+        companyName: document.getElementById('out-sender-company').value,
+        tone: document.getElementById('out-tone').value,
+      };
+
+      try {
+        const res = await fetch('/api/generate-email', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ lead, context }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Failed');
+
+        resultDiv.innerHTML = `
+          <div class="email-preview">
+            <div style="color:var(--text-dim);font-size:0.8rem;margin-bottom:0.5rem;">To: ${esc(lead.firstName)} ${esc(lead.lastName)} &lt;${esc(lead.firstName.toLowerCase())}.${esc(lead.lastName.toLowerCase())}@${esc(lead.company.toLowerCase().replace(/\s+/g,''))}.com&gt;</div>
+            <div class="subject">Subject: ${esc(data.email.subject)}</div>
+            <hr style="border-color:var(--border);margin:0.5rem 0;">
+            <div class="body">${esc(data.email.body)}</div>
+            <hr style="border-color:var(--border);margin:0.5rem 0;">
+            <div style="color:var(--text-dim);font-size:0.8rem;"><strong>Personalization:</strong> ${esc(data.email.personalizationNotes)}</div>
+          </div>`;
+        resultDiv.className = '';
+      } catch (err) {
+        resultDiv.innerHTML = '<p style="color:var(--error);">Error: ' + esc(err.message) + '</p>';
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Generate Email';
+      }
+    }
+
+    function esc(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+  </script>
+</body>
+</html>
