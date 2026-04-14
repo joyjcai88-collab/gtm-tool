@@ -4,3 +4,4 @@ dist/
 .gtm/
 *.log
 .DS_Store
+.vercel
