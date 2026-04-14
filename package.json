@@ -8,7 +8,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "build:vercel": "echo 'Static site ready'",
+    "build:vercel": "node -e 'process.exit(0)'",
     "dev": "tsx src/index.ts",
     "test": "vitest run",
     "test:watch": "vitest",
