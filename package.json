@@ -1,0 +1,40 @@
+{
+  "name": "gtm-tool",
+  "version": "0.1.0",
+  "description": "AI-powered go-to-market CLI tool for ICP definition, lead sourcing, and outreach",
+  "type": "module",
+  "bin": {
+    "gtm": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx src/index.ts",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.39.0",
+    "chalk": "^5.4.1",
+    "cli-table3": "^0.6.5",
+    "commander": "^13.1.0",
+    "csv-writer": "^1.6.0",
+    "dotenv": "^16.4.7",
+    "inquirer": "^12.3.2",
+    "nodemailer": "^6.9.16",
+    "ora": "^8.2.0",
+    "p-limit": "^6.2.0",
+    "uuid": "^11.1.0",
+    "yaml": "^2.7.0",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@types/inquirer": "^9.0.7",
+    "@types/node": "^22.13.0",
+    "@types/nodemailer": "^6.4.17",
+    "@types/uuid": "^10.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.3",
+    "vitest": "^3.0.0"
+  }
+}

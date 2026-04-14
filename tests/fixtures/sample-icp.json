@@ -1,0 +1,14 @@
+{
+  "name": "saas-cto-na",
+  "industry": "SaaS / B2B Software",
+  "companySize": { "min": 50, "max": 500 },
+  "targetRoles": ["CTO", "VP Engineering", "Head of Engineering"],
+  "seniority": ["c_suite", "vp", "director"],
+  "geography": ["United States", "Canada"],
+  "painPoints": ["developer productivity", "CI/CD pipeline bottlenecks"],
+  "keywords": ["devtools", "developer experience", "platform engineering"],
+  "annualRevenue": { "min": 5000000, "max": 100000000 },
+  "technologies": ["Kubernetes", "AWS", "GitHub Actions"],
+  "rationale": "Mid-market SaaS companies with growing engineering teams.",
+  "createdAt": "2026-04-13T00:00:00.000Z"
+}
