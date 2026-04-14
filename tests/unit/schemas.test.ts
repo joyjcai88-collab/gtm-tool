@@ -133,11 +133,11 @@ describe('GtmConfigSchema', () => {
 
   it('merges partial config', () => {
     const result = GtmConfigSchema.safeParse({
-      apollo: { apiKey: 'test-key' },
+      hunter: { apiKey: 'test-key' },
     });
     expect(result.success).toBe(true);
     if (result.success) {
-      expect(result.data.apollo.apiKey).toBe('test-key');
+      expect(result.data.hunter.apiKey).toBe('test-key');
       expect(result.data.smtp.port).toBe(587);
     }
   });

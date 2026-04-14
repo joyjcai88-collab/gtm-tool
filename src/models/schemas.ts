@@ -96,7 +96,7 @@ export const OutreachContextSchema = z.object({
 export type OutreachContext = z.infer<typeof OutreachContextSchema>;
 
 export const GtmConfigSchema = z.object({
-  apollo: z.object({
+  hunter: z.object({
     apiKey: z.string().optional(),
   }).default({}),
   claude: z.object({

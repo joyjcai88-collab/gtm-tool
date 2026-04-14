@@ -27,7 +27,7 @@ export function getConfig(): GtmConfig {
   const config = GtmConfigSchema.parse(fileConfig);
 
   // Environment variables take precedence
-  if (process.env.APOLLO_API_KEY) config.apollo.apiKey = process.env.APOLLO_API_KEY;
+  if (process.env.HUNTER_API_KEY) config.hunter.apiKey = process.env.HUNTER_API_KEY;
   if (process.env.ANTHROPIC_API_KEY) config.claude.apiKey = process.env.ANTHROPIC_API_KEY;
   if (process.env.SMTP_HOST) config.smtp.host = process.env.SMTP_HOST;
   if (process.env.SMTP_PORT) config.smtp.port = parseInt(process.env.SMTP_PORT, 10);

@@ -15,7 +15,7 @@ export function registerConfigCommand(program: Command): void {
 
   cmd
     .command('set <key> <value>')
-    .description('Set a config value (e.g., gtm config set apollo.apiKey YOUR_KEY)')
+    .description('Set a config value (e.g., gtm config set hunter.apiKey YOUR_KEY)')
     .action(handleSet);
 
   cmd
@@ -37,8 +37,8 @@ async function handleInit(): Promise<void> {
   const answers = await inquirer.prompt([
     {
       type: 'input',
-      name: 'apolloApiKey',
-      message: 'Apollo.io API Key:',
+      name: 'hunterApiKey',
+      message: 'Hunter.io API Key:',
       transformer: (input: string) => input ? '****' + input.slice(-4) : '',
     },
     {
@@ -72,7 +72,7 @@ async function handleInit(): Promise<void> {
     },
   ]);
 
-  if (answers.apolloApiKey) setConfigValue('apollo.apiKey', answers.apolloApiKey);
+  if (answers.hunterApiKey) setConfigValue('hunter.apiKey', answers.hunterApiKey);
   if (answers.claudeApiKey) setConfigValue('claude.apiKey', answers.claudeApiKey);
   if (answers.smtpHost) setConfigValue('smtp.host', answers.smtpHost);
   if (answers.smtpPort) setConfigValue('smtp.port', String(answers.smtpPort));

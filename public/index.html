@@ -102,6 +102,7 @@
       font-size: 0.75rem; background: rgba(108,92,231,0.15); color: var(--accent);
     }
     footer { text-align: center; color: var(--text-dim); font-size: 0.8rem; margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); }
+    footer a { color: var(--accent); text-decoration: none; }
     .actions { display: flex; gap: 0.75rem; margin-top: 1rem; }
     .hidden { display: none; }
   </style>
@@ -134,49 +135,40 @@
     <!-- Search Panel -->
     <div class="panel" id="panel-search">
       <div class="card">
-        <h3>Source Leads from Apollo.io</h3>
-        <p style="color:var(--text-dim); margin-bottom:1rem; font-size:0.9rem;">Search for leads matching your ICP criteria. Fill in fields manually or use the generated ICP above.</p>
+        <h3>Source Leads from Hunter.io</h3>
+        <p style="color:var(--text-dim); margin-bottom:1rem; font-size:0.9rem;">Enter target company domains to find contacts. Hunter.io will return emails and roles for each domain.</p>
+        <label>Company Domains (one per line or comma-separated)</label>
+        <textarea id="search-domains" rows="4" placeholder="stripe.com&#10;datadog.com&#10;vercel.com"></textarea>
         <div class="row">
           <div>
-            <label>Target Roles (comma-separated)</label>
-            <input id="search-roles" placeholder="CTO, VP Engineering, Head of Product">
+            <label>Seniority Filter</label>
+            <select id="search-seniority">
+              <option value="">All seniorities</option>
+              <option value="executive">Executive (C-suite, VP)</option>
+              <option value="senior" selected>Senior (Directors, Managers)</option>
+              <option value="junior">Junior</option>
+            </select>
           </div>
           <div>
-            <label>Industry Keywords</label>
-            <input id="search-keywords" placeholder="SaaS, devtools, platform engineering">
-          </div>
-        </div>
-        <div class="row">
-          <div>
-            <label>Geography</label>
-            <input id="search-locations" placeholder="United States, Canada">
-          </div>
-          <div>
-            <label>Company Size</label>
-            <select id="search-company-size">
-              <option value="1,10">1-10 employees</option>
-              <option value="11,50">11-50 employees</option>
-              <option value="51,200" selected>51-200 employees</option>
-              <option value="201,500">201-500 employees</option>
-              <option value="501,1000">501-1000 employees</option>
-              <option value="1001,5000">1001-5000 employees</option>
+            <label>Department Filter</label>
+            <select id="search-department">
+              <option value="">All departments</option>
+              <option value="executive">Executive</option>
+              <option value="it" selected>IT / Engineering</option>
+              <option value="management">Management</option>
+              <option value="sales">Sales</option>
+              <option value="marketing">Marketing</option>
+              <option value="finance">Finance</option>
+              <option value="operations">Operations</option>
             </select>
           </div>
         </div>
         <div class="row">
           <div>
-            <label>Seniority</label>
-            <select id="search-seniority" multiple size="3">
-              <option value="c_suite" selected>C-Suite</option>
-              <option value="vp" selected>VP</option>
-              <option value="director">Director</option>
-              <option value="manager">Manager</option>
-            </select>
-          </div>
-          <div>
-            <label>Results per page</label>
+            <label>Max results</label>
             <input id="search-limit" type="number" value="25" min="1" max="100">
           </div>
+          <div></div>
         </div>
         <button class="btn-primary" id="search-btn" onclick="searchLeads()">Search Leads</button>
         <div id="search-result" class="hidden"></div>
@@ -254,7 +246,7 @@
     </div>
 
     <footer>
-      GTM Tool v0.1.0 &mdash; Built with Claude API, Apollo.io &amp; Vercel
+      GTM Tool v0.1.0 &mdash; Built with Claude API, <a href="https://hunter.io" target="_blank">Hunter.io</a> &amp; Vercel
     </footer>
   </div>
 
@@ -317,46 +309,45 @@
       btn.disabled = true;
       btn.innerHTML = '<span class="spinner"></span> Searching...';
       resultDiv.classList.remove('hidden');
-      resultDiv.innerHTML = 'Querying Apollo.io...';
+      resultDiv.innerHTML = 'Querying Hunter.io...';
 
-      const roles = document.getElementById('search-roles').value.split(',').map(s => s.trim()).filter(Boolean);
-      const keywords = document.getElementById('search-keywords').value.trim();
-      const locations = document.getElementById('search-locations').value.split(',').map(s => s.trim()).filter(Boolean);
-      const companySize = document.getElementById('search-company-size').value;
-      const senioritySelect = document.getElementById('search-seniority');
-      const seniority = Array.from(senioritySelect.selectedOptions).map(o => o.value);
+      const domainsRaw = document.getElementById('search-domains').value;
+      const domains = domainsRaw.split(/[,\n]/).map(s => s.trim().toLowerCase()).filter(Boolean);
+      const seniority = document.getElementById('search-seniority').value || undefined;
+      const department = document.getElementById('search-department').value || undefined;
       const limit = parseInt(document.getElementById('search-limit').value) || 25;
+
+      if (!domains.length) {
+        resultDiv.innerHTML = '<p style="color:var(--error);">Please enter at least one company domain.</p>';
+        resultDiv.className = 'card';
+        btn.disabled = false;
+        btn.textContent = 'Search Leads';
+        return;
+      }
 
       try {
         const res = await fetch('/api/search', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            person_titles: roles.length ? roles : undefined,
-            person_locations: locations.length ? locations : undefined,
-            organization_num_employees_ranges: [companySize],
-            person_seniorities: seniority.length ? seniority : undefined,
-            q_organization_keyword: keywords || undefined,
-            per_page: limit,
-          }),
+          body: JSON.stringify({ domains, seniority, department, limit }),
         });
         const data = await res.json();
         if (!res.ok) throw new Error(data.error || 'Search failed');
 
         lastLeadsResult = data.leads;
-        const total = data.pagination?.total_entries ?? data.leads.length;
+        const total = data.totalResults ?? data.leads.length;
 
-        let html = `<p style="margin-bottom:0.75rem;"><strong>${data.leads.length}</strong> leads found <span class="badge">${total.toLocaleString()} total</span></p>`;
+        let html = `<p style="margin-bottom:0.75rem;"><strong>${data.leads.length}</strong> leads found <span class="badge">${total.toLocaleString()} total contacts</span></p>`;
 
         if (data.leads.length > 0) {
-          html += '<table class="lead-table"><thead><tr><th>Name</th><th>Title</th><th>Company</th><th>Email</th><th>Location</th></tr></thead><tbody>';
+          html += '<table class="lead-table"><thead><tr><th>Name</th><th>Title</th><th>Company</th><th>Email</th><th>Seniority</th></tr></thead><tbody>';
           for (const l of data.leads) {
             html += `<tr>
               <td>${esc(l.firstName)} ${esc(l.lastName)}</td>
-              <td>${esc(l.title)}</td>
+              <td>${esc(l.title || '—')}</td>
               <td>${esc(l.company)}</td>
               <td>${esc(l.email || '—')}</td>
-              <td>${esc(l.location || '—')}</td>
+              <td>${esc(l.seniority || '—')}</td>
             </tr>`;
           }
           html += '</tbody></table>';

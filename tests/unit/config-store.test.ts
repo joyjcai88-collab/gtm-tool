@@ -68,8 +68,8 @@ describe('config-store', () => {
   it('sets and gets config values', async () => {
     const { setConfigValue, getConfigValue } = await import('../../src/lib/config-store.js');
 
-    setConfigValue('apollo.apiKey', 'test-key-123');
-    expect(getConfigValue('apollo.apiKey')).toBe('test-key-123');
+    setConfigValue('hunter.apiKey', 'test-key-123');
+    expect(getConfigValue('hunter.apiKey')).toBe('test-key-123');
 
     setConfigValue('smtp.port', '465');
     expect(getConfigValue('smtp.port')).toBe(465); // Parsed as number
