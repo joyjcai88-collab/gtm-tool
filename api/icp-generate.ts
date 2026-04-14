@@ -32,6 +32,8 @@ const ICP_GENERATION_TOOL: Anthropic.Messages.Tool = {
   },
 };
 
+export const maxDuration = 60;
+
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
@@ -70,6 +72,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     return res.status(200).json({ icp: toolBlock.input });
   } catch (err) {
-    return res.status(500).json({ error: (err as Error).message });
+    const error = err as Error;
+    return res.status(500).json({
+      error: error.message,
+      type: error.constructor.name,
+      cause: (error as any).cause?.message,
+    });
   }
 }
