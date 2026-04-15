@@ -122,6 +122,23 @@
       font-size: 0.75rem; background: var(--accent-light); color: var(--accent); font-weight: 600;
     }
     .badge-success { background: var(--success-light); color: var(--success); }
+    .icp-display { margin-top: 1rem; }
+    .icp-display h4 { font-size: 1rem; margin-bottom: 0.75rem; color: var(--accent); }
+    .icp-section { margin-bottom: 1.25rem; }
+    .icp-section .icp-label { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-dim); margin-bottom: 0.35rem; }
+    .icp-section .icp-value { font-size: 0.95rem; color: var(--text); }
+    .icp-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+    .icp-tag {
+      display: inline-block; padding: 0.2rem 0.6rem; border-radius: 100px;
+      font-size: 0.8rem; background: var(--accent-light); color: var(--accent); font-weight: 500;
+    }
+    .icp-tag.green { background: var(--success-light); color: var(--success); }
+    .icp-tag.orange { background: var(--warning-light); color: var(--warning); }
+    .icp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    @media (max-width: 600px) { .icp-grid { grid-template-columns: 1fr; } }
+    .icp-pain { padding: 0.4rem 0; font-size: 0.9rem; color: var(--text); border-bottom: 1px solid var(--border); }
+    .icp-pain:last-child { border-bottom: none; }
+    .icp-rationale { font-size: 0.9rem; color: var(--text-dim); line-height: 1.7; padding: 0.75rem; background: var(--bg); border-radius: var(--radius); }
     .badge-warning { background: var(--warning-light); color: var(--warning); }
     .badge-error { background: var(--error-light); color: var(--error); }
     .review-summary {
@@ -364,8 +381,8 @@
         if (!res.ok) throw new Error(data.error || 'Failed');
 
         lastICPResult = data.icp;
-        resultDiv.className = 'result success';
-        resultDiv.textContent = JSON.stringify(data.icp, null, 2);
+        resultDiv.className = 'card';
+        resultDiv.innerHTML = renderICPDisplay(data.icp);
       } catch (err) {
         resultDiv.className = 'result error';
         resultDiv.textContent = 'Error: ' + err.message;
@@ -684,6 +701,53 @@
 
       sendBtn.textContent = 'Done';
       renderReviewPanel();
+    }
+
+    function renderICPDisplay(icp) {
+      const tags = (arr, cls) => (arr || []).map(t => `<span class="icp-tag ${cls || ''}">${esc(t)}</span>`).join('');
+      const seniorityLabels = { c_suite: 'C-Suite', vp: 'VP', director: 'Director', manager: 'Manager', senior: 'Senior', entry: 'Entry' };
+
+      return `<div class="icp-display">
+        <h4>Ideal Customer Profile</h4>
+        <div class="icp-grid">
+          <div class="icp-section">
+            <div class="icp-label">Industry</div>
+            <div class="icp-value">${esc(icp.industry || '')}</div>
+          </div>
+          <div class="icp-section">
+            <div class="icp-label">Company Size</div>
+            <div class="icp-value">${icp.companySize ? esc(icp.companySize.min + ' \u2013 ' + icp.companySize.max + ' employees') : '\u2014'}</div>
+          </div>
+          <div class="icp-section">
+            <div class="icp-label">Geography</div>
+            <div class="icp-tags">${tags(icp.geography)}</div>
+          </div>
+          <div class="icp-section">
+            <div class="icp-label">Seniority</div>
+            <div class="icp-tags">${(icp.seniority || []).map(s => '<span class="icp-tag green">' + esc(seniorityLabels[s] || s) + '</span>').join('')}</div>
+          </div>
+        </div>
+        <div class="icp-section">
+          <div class="icp-label">Target Roles</div>
+          <div class="icp-tags">${tags(icp.targetRoles)}</div>
+        </div>
+        ${(icp.technologies && icp.technologies.length) ? `<div class="icp-section">
+          <div class="icp-label">Technologies</div>
+          <div class="icp-tags">${tags(icp.technologies, 'orange')}</div>
+        </div>` : ''}
+        ${(icp.keywords && icp.keywords.length) ? `<div class="icp-section">
+          <div class="icp-label">Keywords</div>
+          <div class="icp-tags">${tags(icp.keywords)}</div>
+        </div>` : ''}
+        ${(icp.painPoints && icp.painPoints.length) ? `<div class="icp-section">
+          <div class="icp-label">Pain Points</div>
+          <div>${icp.painPoints.map(p => '<div class="icp-pain">' + esc(p) + '</div>').join('')}</div>
+        </div>` : ''}
+        ${icp.rationale ? `<div class="icp-section">
+          <div class="icp-label">Rationale</div>
+          <div class="icp-rationale">${esc(icp.rationale)}</div>
+        </div>` : ''}
+      </div>`;
     }
 
     function esc(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
