@@ -7,16 +7,22 @@
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
-      --bg: #0a0a0f;
-      --surface: #14141f;
-      --border: #2a2a3a;
-      --text: #e4e4ef;
-      --text-dim: #8888a0;
-      --accent: #6c5ce7;
-      --accent-hover: #7e6ff0;
-      --success: #2ecc71;
-      --error: #e74c3c;
+      --bg: #f8f9fb;
+      --surface: #ffffff;
+      --border: #e2e5ea;
+      --text: #1a1d23;
+      --text-dim: #6b7280;
+      --accent: #5046e5;
+      --accent-hover: #4338ca;
+      --accent-light: #eef2ff;
+      --success: #059669;
+      --success-light: #ecfdf5;
+      --error: #dc2626;
+      --error-light: #fef2f2;
+      --warning: #d97706;
+      --warning-light: #fffbeb;
       --radius: 8px;
+      --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
     }
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
@@ -31,13 +37,14 @@
     header h1 span { color: var(--accent); }
     header p { color: var(--text-dim); font-size: 1.1rem; }
     .tabs {
-      display: flex; gap: 0; border-bottom: 1px solid var(--border);
+      display: flex; gap: 0; border-bottom: 2px solid var(--border);
       margin-bottom: 2rem;
     }
     .tab {
       padding: 0.75rem 1.5rem; cursor: pointer; border: none;
       background: none; color: var(--text-dim); font-size: 0.95rem;
-      border-bottom: 2px solid transparent; transition: all 0.2s;
+      border-bottom: 2px solid transparent; margin-bottom: -2px;
+      transition: all 0.2s; font-weight: 500;
     }
     .tab:hover { color: var(--text); }
     .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
@@ -46,9 +53,10 @@
     .card {
       background: var(--surface); border: 1px solid var(--border);
       border-radius: var(--radius); padding: 1.5rem; margin-bottom: 1.5rem;
+      box-shadow: var(--shadow);
     }
     .card h3 { font-size: 1.1rem; margin-bottom: 1rem; }
-    label { display: block; font-size: 0.85rem; color: var(--text-dim); margin-bottom: 0.3rem; }
+    label { display: block; font-size: 0.85rem; color: var(--text-dim); margin-bottom: 0.3rem; font-weight: 500; }
     input, textarea, select {
       width: 100%; padding: 0.6rem 0.8rem; background: var(--bg);
       border: 1px solid var(--border); border-radius: var(--radius);
@@ -56,7 +64,7 @@
       font-family: inherit;
     }
     input:focus, textarea:focus, select:focus {
-      outline: none; border-color: var(--accent);
+      outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(80,70,229,0.1);
     }
     textarea { resize: vertical; min-height: 80px; }
     .row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
@@ -71,15 +79,23 @@
       background: transparent; color: var(--accent);
       border: 1px solid var(--accent);
     }
-    .btn-secondary:hover { background: rgba(108,92,231,0.1); }
+    .btn-secondary:hover { background: var(--accent-light); }
+    .btn-success { background: var(--success); color: white; }
+    .btn-success:hover { background: #047857; }
+    .btn-success:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-danger {
+      background: transparent; color: var(--error);
+      border: 1px solid var(--error);
+    }
+    .btn-danger:hover { background: var(--error-light); }
     .result {
       background: var(--bg); border: 1px solid var(--border);
       border-radius: var(--radius); padding: 1rem; margin-top: 1rem;
       font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.85rem;
       white-space: pre-wrap; max-height: 500px; overflow-y: auto;
     }
-    .result.success { border-color: var(--success); }
-    .result.error { border-color: var(--error); }
+    .result.success { border-color: var(--success); background: var(--success-light); }
+    .result.error { border-color: var(--error); background: var(--error-light); }
     .spinner {
       display: inline-block; width: 16px; height: 16px;
       border: 2px solid var(--border); border-top-color: var(--accent);
@@ -88,23 +104,51 @@
     }
     @keyframes spin { to { transform: rotate(360deg); } }
     .lead-table { width: 100%; border-collapse: collapse; margin-top: 1rem; font-size: 0.85rem; }
-    .lead-table th { text-align: left; color: var(--text-dim); padding: 0.5rem; border-bottom: 1px solid var(--border); }
-    .lead-table td { padding: 0.5rem; border-bottom: 1px solid var(--border); }
-    .lead-table tr:hover { background: rgba(108,92,231,0.05); }
+    .lead-table th { text-align: left; color: var(--text-dim); padding: 0.5rem 0.75rem; border-bottom: 2px solid var(--border); font-weight: 600; }
+    .lead-table td { padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border); }
+    .lead-table tr:hover { background: var(--accent-light); }
     .email-preview {
-      background: var(--bg); border: 1px solid var(--border);
-      border-radius: var(--radius); padding: 1rem; margin-top: 1rem;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 1.25rem; margin-bottom: 1rem;
+      box-shadow: var(--shadow);
     }
-    .email-preview .subject { font-weight: 600; margin-bottom: 0.5rem; }
-    .email-preview .body { color: var(--text-dim); white-space: pre-wrap; }
+    .email-preview .ep-header { color: var(--text-dim); font-size: 0.8rem; margin-bottom: 0.5rem; }
+    .email-preview .ep-subject { font-weight: 600; margin-bottom: 0.75rem; font-size: 1rem; }
+    .email-preview .ep-body { color: var(--text); white-space: pre-wrap; line-height: 1.7; font-size: 0.9rem; }
+    .email-preview .ep-notes { color: var(--text-dim); font-size: 0.8rem; margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid var(--border); }
+    .email-preview .ep-actions { display: flex; gap: 0.5rem; margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid var(--border); }
     .badge {
       display: inline-block; padding: 0.15rem 0.5rem; border-radius: 100px;
-      font-size: 0.75rem; background: rgba(108,92,231,0.15); color: var(--accent);
+      font-size: 0.75rem; background: var(--accent-light); color: var(--accent); font-weight: 600;
     }
+    .badge-success { background: var(--success-light); color: var(--success); }
+    .badge-warning { background: var(--warning-light); color: var(--warning); }
+    .badge-error { background: var(--error-light); color: var(--error); }
+    .review-summary {
+      display: flex; gap: 1.5rem; padding: 1rem; background: var(--bg);
+      border-radius: var(--radius); margin-bottom: 1.5rem; flex-wrap: wrap;
+    }
+    .review-stat { text-align: center; }
+    .review-stat .num { font-size: 1.5rem; font-weight: 700; color: var(--accent); }
+    .review-stat .label { font-size: 0.75rem; color: var(--text-dim); }
+    .review-actions {
+      display: flex; gap: 0.75rem; justify-content: flex-end;
+      padding-top: 1rem; border-top: 1px solid var(--border); margin-top: 1rem;
+    }
+    .send-status { margin-top: 1rem; }
+    .send-status .status-item {
+      display: flex; align-items: center; gap: 0.5rem;
+      padding: 0.4rem 0; font-size: 0.85rem;
+    }
+    .send-status .status-icon { width: 18px; text-align: center; }
     footer { text-align: center; color: var(--text-dim); font-size: 0.8rem; margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); }
     footer a { color: var(--accent); text-decoration: none; }
     .actions { display: flex; gap: 0.75rem; margin-top: 1rem; }
     .hidden { display: none; }
+    hr.divider { border: none; border-top: 1px solid var(--border); margin: 1rem 0; }
+    .checkbox-row { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; }
+    .checkbox-row input[type="checkbox"] { width: auto; margin: 0; }
+    .checkbox-row label { margin: 0; font-size: 0.85rem; }
   </style>
 </head>
 <body>
@@ -118,6 +162,7 @@
       <button class="tab active" data-tab="icp">1. Define ICP</button>
       <button class="tab" data-tab="search">2. Source Leads</button>
       <button class="tab" data-tab="outreach">3. Outreach</button>
+      <button class="tab" data-tab="review">4. Review & Send</button>
     </div>
 
     <!-- ICP Panel -->
@@ -178,8 +223,8 @@
     <!-- Outreach Panel -->
     <div class="panel" id="panel-outreach">
       <div class="card">
-        <h3>Generate Personalized Email</h3>
-        <p style="color:var(--text-dim); margin-bottom:1rem; font-size:0.9rem;">Generate a personalized outreach email for a lead using Claude AI.</p>
+        <h3>Generate Personalized Emails</h3>
+        <p style="color:var(--text-dim); margin-bottom:1rem; font-size:0.9rem;">Configure your outreach context, then generate personalized emails for your sourced leads.</p>
         <div class="row">
           <div>
             <label>Lead First Name</label>
@@ -210,7 +255,7 @@
             <input id="out-size" type="number" placeholder="150">
           </div>
         </div>
-        <hr style="border-color:var(--border); margin:1rem 0;">
+        <hr class="divider">
         <label>Your Product Description</label>
         <textarea id="out-product" rows="3" placeholder="What your product does..."></textarea>
         <label>Value Proposition</label>
@@ -245,6 +290,34 @@
       </div>
     </div>
 
+    <!-- Review & Send Panel -->
+    <div class="panel" id="panel-review">
+      <div class="card">
+        <h3>Review & Send Emails</h3>
+        <p style="color:var(--text-dim); margin-bottom:1rem; font-size:0.9rem;">Review all generated emails before sending. You can edit, remove, or regenerate individual emails.</p>
+
+        <div id="review-empty" style="text-align:center; padding:3rem 1rem; color:var(--text-dim);">
+          <p style="font-size:1.1rem; margin-bottom:0.5rem;">No emails to review yet.</p>
+          <p style="font-size:0.85rem;">Generate emails in the Outreach tab first, then come back here to review and send.</p>
+        </div>
+
+        <div id="review-content" class="hidden">
+          <div class="review-summary" id="review-summary"></div>
+          <div id="review-emails"></div>
+          <div class="review-actions" id="review-actions">
+            <button class="btn-danger" onclick="clearAllEmails()">Clear All</button>
+            <button class="btn-secondary" onclick="downloadEmailsJSON()">Export JSON</button>
+            <button class="btn-success" id="send-all-btn" onclick="sendAllEmails()">Send All Approved</button>
+          </div>
+        </div>
+
+        <div id="send-progress" class="hidden">
+          <h3 style="margin-bottom:0.75rem;">Sending Emails...</h3>
+          <div class="send-status" id="send-status"></div>
+        </div>
+      </div>
+    </div>
+
     <footer>
       GTM Tool v0.1.0 &mdash; Built with Claude API, <a href="https://hunter.io" target="_blank">Hunter.io</a> &amp; Vercel
     </footer>
@@ -258,12 +331,17 @@
         document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
         tab.classList.add('active');
         document.getElementById('panel-' + tab.dataset.tab).classList.add('active');
+        if (tab.dataset.tab === 'review') renderReviewPanel();
       });
     });
 
     let lastICPResult = null;
     let lastLeadsResult = null;
+    let emailQueue = []; // { id, lead, email: { subject, body, personalizationNotes }, status: 'pending'|'approved'|'rejected'|'sent'|'failed', edited: false }
 
+    // ============================================================
+    // ICP
+    // ============================================================
     async function generateICP() {
       const desc = document.getElementById('icp-description').value.trim();
       if (desc.length < 10) return alert('Please provide a longer description.');
@@ -283,17 +361,11 @@
           body: JSON.stringify({ productDescription: desc }),
         });
         const data = await res.json();
-
         if (!res.ok) throw new Error(data.error || 'Failed');
 
         lastICPResult = data.icp;
         resultDiv.className = 'result success';
         resultDiv.textContent = JSON.stringify(data.icp, null, 2);
-
-        // Auto-fill search fields
-        if (data.icp.targetRoles) document.getElementById('search-roles').value = data.icp.targetRoles.join(', ');
-        if (data.icp.keywords) document.getElementById('search-keywords').value = [data.icp.industry, ...(data.icp.keywords || [])].join(', ');
-        if (data.icp.geography) document.getElementById('search-locations').value = data.icp.geography.join(', ');
       } catch (err) {
         resultDiv.className = 'result error';
         resultDiv.textContent = 'Error: ' + err.message;
@@ -303,6 +375,9 @@
       }
     }
 
+    // ============================================================
+    // SEARCH
+    // ============================================================
     async function searchLeads() {
       const btn = document.getElementById('search-btn');
       const resultDiv = document.getElementById('search-result');
@@ -344,10 +419,10 @@
           for (const l of data.leads) {
             html += `<tr>
               <td>${esc(l.firstName)} ${esc(l.lastName)}</td>
-              <td>${esc(l.title || '—')}</td>
+              <td>${esc(l.title || '\u2014')}</td>
               <td>${esc(l.company)}</td>
-              <td>${esc(l.email || '—')}</td>
-              <td>${esc(l.seniority || '—')}</td>
+              <td>${esc(l.email || '\u2014')}</td>
+              <td>${esc(l.seniority || '\u2014')}</td>
             </tr>`;
           }
           html += '</tbody></table>';
@@ -383,6 +458,9 @@
       a.click();
     }
 
+    // ============================================================
+    // OUTREACH — generate single email
+    // ============================================================
     async function generateEmail() {
       const btn = document.getElementById('out-btn');
       const resultDiv = document.getElementById('out-result');
@@ -418,14 +496,27 @@
         const data = await res.json();
         if (!res.ok) throw new Error(data.error || 'Failed');
 
+        // Add to review queue
+        const emailEntry = {
+          id: Date.now() + '-' + Math.random().toString(36).slice(2, 7),
+          lead,
+          email: data.email,
+          status: 'pending',
+          edited: false,
+        };
+        emailQueue.push(emailEntry);
+
         resultDiv.innerHTML = `
           <div class="email-preview">
-            <div style="color:var(--text-dim);font-size:0.8rem;margin-bottom:0.5rem;">To: ${esc(lead.firstName)} ${esc(lead.lastName)} &lt;${esc(lead.firstName.toLowerCase())}.${esc(lead.lastName.toLowerCase())}@${esc(lead.company.toLowerCase().replace(/\s+/g,''))}.com&gt;</div>
-            <div class="subject">Subject: ${esc(data.email.subject)}</div>
-            <hr style="border-color:var(--border);margin:0.5rem 0;">
-            <div class="body">${esc(data.email.body)}</div>
-            <hr style="border-color:var(--border);margin:0.5rem 0;">
-            <div style="color:var(--text-dim);font-size:0.8rem;"><strong>Personalization:</strong> ${esc(data.email.personalizationNotes)}</div>
+            <div class="ep-header">To: ${esc(lead.firstName)} ${esc(lead.lastName)} &lt;${esc(lead.firstName.toLowerCase())}.${esc(lead.lastName.toLowerCase())}@${esc(lead.company.toLowerCase().replace(/\\s+/g,''))}.com&gt;</div>
+            <div class="ep-subject">Subject: ${esc(data.email.subject)}</div>
+            <hr class="divider">
+            <div class="ep-body">${esc(data.email.body)}</div>
+            <hr class="divider">
+            <div class="ep-notes"><strong>Personalization:</strong> ${esc(data.email.personalizationNotes)}</div>
+          </div>
+          <div style="margin-top:0.75rem; padding:0.75rem; background:var(--success-light); border-radius:var(--radius); font-size:0.85rem; color:var(--success);">
+            Added to review queue. Go to <strong>4. Review & Send</strong> to review and send.
           </div>`;
         resultDiv.className = '';
       } catch (err) {
@@ -434,6 +525,165 @@
         btn.disabled = false;
         btn.textContent = 'Generate Email';
       }
+    }
+
+    // ============================================================
+    // REVIEW & SEND
+    // ============================================================
+    function renderReviewPanel() {
+      const empty = document.getElementById('review-empty');
+      const content = document.getElementById('review-content');
+
+      if (emailQueue.length === 0) {
+        empty.classList.remove('hidden');
+        content.classList.add('hidden');
+        return;
+      }
+
+      empty.classList.add('hidden');
+      content.classList.remove('hidden');
+
+      // Summary stats
+      const approved = emailQueue.filter(e => e.status === 'approved').length;
+      const pending = emailQueue.filter(e => e.status === 'pending').length;
+      const rejected = emailQueue.filter(e => e.status === 'rejected').length;
+      const sent = emailQueue.filter(e => e.status === 'sent').length;
+      const failed = emailQueue.filter(e => e.status === 'failed').length;
+
+      document.getElementById('review-summary').innerHTML = `
+        <div class="review-stat"><div class="num">${emailQueue.length}</div><div class="label">Total</div></div>
+        <div class="review-stat"><div class="num" style="color:var(--warning);">${pending}</div><div class="label">Pending</div></div>
+        <div class="review-stat"><div class="num" style="color:var(--success);">${approved}</div><div class="label">Approved</div></div>
+        <div class="review-stat"><div class="num" style="color:var(--error);">${rejected}</div><div class="label">Rejected</div></div>
+        ${sent ? `<div class="review-stat"><div class="num" style="color:var(--accent);">${sent}</div><div class="label">Sent</div></div>` : ''}
+        ${failed ? `<div class="review-stat"><div class="num" style="color:var(--error);">${failed}</div><div class="label">Failed</div></div>` : ''}
+      `;
+
+      // Email cards
+      const container = document.getElementById('review-emails');
+      container.innerHTML = '';
+
+      for (const entry of emailQueue) {
+        const statusBadge = {
+          pending: '<span class="badge badge-warning">Pending Review</span>',
+          approved: '<span class="badge badge-success">Approved</span>',
+          rejected: '<span class="badge badge-error">Rejected</span>',
+          sent: '<span class="badge badge-success">Sent</span>',
+          failed: '<span class="badge badge-error">Failed</span>',
+        }[entry.status];
+
+        const isSendable = entry.status === 'pending' || entry.status === 'approved';
+        const editId = 'edit-' + entry.id;
+
+        container.innerHTML += `
+          <div class="email-preview" id="card-${entry.id}" style="${entry.status === 'rejected' ? 'opacity:0.5;' : ''}">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
+              <div class="ep-header" style="margin:0;">To: ${esc(entry.lead.firstName)} ${esc(entry.lead.lastName)} (${esc(entry.lead.title)} at ${esc(entry.lead.company)})</div>
+              ${statusBadge}
+            </div>
+            <div class="ep-subject">Subject: <span id="subj-${entry.id}">${esc(entry.email.subject)}</span></div>
+            <hr class="divider">
+            <div class="ep-body" id="body-${entry.id}">${esc(entry.email.body)}</div>
+            <div class="ep-notes"><strong>Personalization:</strong> ${esc(entry.email.personalizationNotes)}${entry.edited ? ' <em>(edited)</em>' : ''}</div>
+            ${isSendable ? `
+              <div class="ep-actions">
+                <button class="btn-secondary" onclick="editEmail('${entry.id}')" style="padding:0.4rem 0.75rem; font-size:0.8rem;">Edit</button>
+                ${entry.status !== 'approved' ? `<button class="btn-success" onclick="setEmailStatus('${entry.id}','approved')" style="padding:0.4rem 0.75rem; font-size:0.8rem;">Approve</button>` : ''}
+                <button class="btn-danger" onclick="setEmailStatus('${entry.id}','rejected')" style="padding:0.4rem 0.75rem; font-size:0.8rem;">Reject</button>
+              </div>
+            ` : ''}
+          </div>`;
+      }
+
+      // Update send button
+      const sendBtn = document.getElementById('send-all-btn');
+      sendBtn.textContent = `Send All Approved (${approved})`;
+      sendBtn.disabled = approved === 0;
+    }
+
+    function setEmailStatus(id, status) {
+      const entry = emailQueue.find(e => e.id === id);
+      if (entry) {
+        entry.status = status;
+        renderReviewPanel();
+      }
+    }
+
+    function editEmail(id) {
+      const entry = emailQueue.find(e => e.id === id);
+      if (!entry) return;
+
+      const subjEl = document.getElementById('subj-' + id);
+      const bodyEl = document.getElementById('body-' + id);
+
+      const newSubject = prompt('Edit subject line:', entry.email.subject);
+      if (newSubject === null) return;
+
+      const newBody = prompt('Edit email body (tip: use \\n for line breaks):', entry.email.body);
+      if (newBody === null) return;
+
+      entry.email.subject = newSubject;
+      entry.email.body = newBody.replace(/\\n/g, '\n');
+      entry.edited = true;
+      entry.status = 'approved';
+      renderReviewPanel();
+    }
+
+    function clearAllEmails() {
+      if (!confirm('Remove all emails from the review queue?')) return;
+      emailQueue = [];
+      renderReviewPanel();
+    }
+
+    function downloadEmailsJSON() {
+      const blob = new Blob([JSON.stringify(emailQueue, null, 2)], { type: 'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'outreach-emails-' + Date.now() + '.json';
+      a.click();
+    }
+
+    async function sendAllEmails() {
+      const approved = emailQueue.filter(e => e.status === 'approved');
+      if (approved.length === 0) return alert('No approved emails to send.');
+      if (!confirm(`Send ${approved.length} email(s)? This will deliver real emails from your Gmail account.`)) return;
+
+      const sendBtn = document.getElementById('send-all-btn');
+      sendBtn.disabled = true;
+      sendBtn.innerHTML = '<span class="spinner"></span> Sending...';
+
+      const progressDiv = document.getElementById('send-progress');
+      const statusDiv = document.getElementById('send-status');
+      progressDiv.classList.remove('hidden');
+      statusDiv.innerHTML = '';
+
+      for (const entry of approved) {
+        const leadName = entry.lead.firstName + ' ' + entry.lead.lastName;
+        statusDiv.innerHTML += `<div class="status-item" id="status-${entry.id}"><span class="status-icon"><span class="spinner" style="width:14px;height:14px;"></span></span> Sending to ${esc(leadName)}...</div>`;
+
+        try {
+          const res = await fetch('/api/send-email', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              to: entry.lead.firstName.toLowerCase() + '.' + entry.lead.lastName.toLowerCase() + '@' + entry.lead.company.toLowerCase().replace(/\s+/g, '') + '.com',
+              subject: entry.email.subject,
+              body: entry.email.body,
+            }),
+          });
+          const data = await res.json();
+          if (!res.ok) throw new Error(data.error || 'Send failed');
+
+          entry.status = 'sent';
+          document.getElementById('status-' + entry.id).innerHTML = `<span class="status-icon" style="color:var(--success);">&#10003;</span> Sent to ${esc(leadName)}`;
+        } catch (err) {
+          entry.status = 'failed';
+          document.getElementById('status-' + entry.id).innerHTML = `<span class="status-icon" style="color:var(--error);">&#10007;</span> Failed: ${esc(leadName)} — ${esc(err.message)}`;
+        }
+      }
+
+      sendBtn.textContent = 'Done';
+      renderReviewPanel();
     }
 
     function esc(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
