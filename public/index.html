@@ -195,6 +195,31 @@
       background: none; border: none; color: var(--accent); cursor: pointer;
       font-size: 0.9rem; padding: 0; line-height: 1;
     }
+    .lead-table input[type="checkbox"] { width: 15px; height: 15px; margin: 0; cursor: pointer; accent-color: var(--accent); }
+    .lead-table th:first-child, .lead-table td:first-child { width: 36px; text-align: center; }
+    .lead-table tr.selected { background: var(--accent-light); }
+    .selection-bar {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0.75rem 1rem; background: var(--accent-light);
+      border-radius: var(--radius); margin-top: 1rem; gap: 1rem; flex-wrap: wrap;
+    }
+    .selection-bar .sel-count { font-weight: 600; color: var(--accent); font-size: 0.9rem; }
+    .outreach-context {
+      margin-top: 1rem; padding: 1.25rem; background: var(--bg);
+      border: 1px solid var(--border); border-radius: var(--radius);
+    }
+    .outreach-context h4 { font-size: 0.95rem; font-weight: 600; margin-bottom: 1rem; }
+    .ctx-collapse-btn {
+      background: none; border: none; color: var(--accent); cursor: pointer;
+      font-size: 0.8rem; padding: 0; float: right; font-weight: 500;
+    }
+    .gen-progress { margin-top: 1rem; }
+    .gen-progress .gp-item {
+      display: flex; align-items: center; gap: 0.5rem;
+      padding: 0.3rem 0; font-size: 0.85rem; color: var(--text-dim);
+    }
+    .gen-progress .gp-item.done { color: var(--success); }
+    .gen-progress .gp-item.fail { color: var(--error); }
   </style>
 </head>
 <body>
@@ -611,23 +636,215 @@
     }
 
     function renderLeadsTable(leads, total, resultDiv) {
-      let html = `<p style="margin-bottom:0.75rem;"><strong>${leads.length}</strong> leads found <span class="badge">${total.toLocaleString()} total</span></p>`;
+      let html = `<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;flex-wrap:wrap;gap:0.5rem;">
+        <span><strong>${leads.length}</strong> leads found <span class="badge">${total.toLocaleString()} total</span></span>
+        <button class="btn-secondary" onclick="downloadCSV()" style="padding:0.4rem 0.75rem;font-size:0.8rem;">Download CSV</button>
+      </div>`;
+
       if (leads.length > 0) {
-        html += '<table class="lead-table"><thead><tr><th>Name</th><th>Title</th><th>Company</th><th>Email</th><th>Source</th></tr></thead><tbody>';
-        for (const l of leads) {
-          html += `<tr>
+        html += `<table class="lead-table" id="leads-table">
+          <thead><tr>
+            <th><input type="checkbox" id="select-all-cb" onchange="toggleSelectAll(this)" title="Select all"></th>
+            <th>Name</th><th>Title</th><th>Company</th><th>Email</th><th>Source</th>
+          </tr></thead><tbody>`;
+        leads.forEach((l, i) => {
+          html += `<tr id="lead-row-${i}" onclick="toggleLeadRow(${i}, event)">
+            <td><input type="checkbox" class="lead-cb" data-idx="${i}" onchange="updateSelection()" onclick="event.stopPropagation()"></td>
             <td>${esc(l.firstName || '')} ${esc(l.lastName || '')}</td>
             <td>${esc(l.title || '\u2014')}</td>
             <td>${esc(l.company || '\u2014')}</td>
             <td>${esc(l.email || '\u2014')}</td>
             <td>${esc(l.source || l.seniority || '\u2014')}</td>
           </tr>`;
-        }
+        });
         html += '</tbody></table>';
-        html += '<div class="actions"><button class="btn-secondary" onclick="downloadCSV()">Download CSV</button></div>';
+
+        // Selection action bar (hidden until selection)
+        html += `<div class="selection-bar hidden" id="selection-bar">
+          <span class="sel-count" id="sel-count">0 leads selected</span>
+          <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+            <button class="btn-secondary" onclick="selectAllLeads()" style="padding:0.4rem 0.75rem;font-size:0.8rem;">Select All</button>
+            <button class="btn-secondary" onclick="clearSelection()" style="padding:0.4rem 0.75rem;font-size:0.8rem;">Clear</button>
+            <button class="btn-primary" id="gen-emails-btn" onclick="showOutreachContext()" style="padding:0.4rem 0.9rem;font-size:0.85rem;">Generate Emails for Selected ▸</button>
+          </div>
+        </div>`;
+
+        // Inline outreach context form
+        html += `<div class="outreach-context hidden" id="outreach-ctx-form">
+          <h4>Outreach Context <button class="ctx-collapse-btn" onclick="document.getElementById('outreach-ctx-form').classList.add('hidden')">✕ Close</button></h4>
+          <div class="row">
+            <div>
+              <label>Your Name</label>
+              <input id="ctx-sender" placeholder="Sarah Johnson" value="${esc(document.getElementById('out-sender')?.value || '')}">
+            </div>
+            <div>
+              <label>Your Title</label>
+              <input id="ctx-sender-title" placeholder="Co-founder & CEO" value="${esc(document.getElementById('out-sender-title')?.value || '')}">
+            </div>
+          </div>
+          <div class="row">
+            <div>
+              <label>Your Company</label>
+              <input id="ctx-company" placeholder="DevPulse" value="${esc(document.getElementById('out-sender-company')?.value || '')}">
+            </div>
+            <div>
+              <label>Tone</label>
+              <select id="ctx-tone">
+                <option value="professional">Professional</option>
+                <option value="casual">Casual</option>
+                <option value="friendly">Friendly</option>
+                <option value="direct">Direct</option>
+              </select>
+            </div>
+          </div>
+          <label>Product Description</label>
+          <textarea id="ctx-product" rows="2" placeholder="What your product does...">${esc(document.getElementById('out-product')?.value || '')}</textarea>
+          <label>Value Proposition</label>
+          <textarea id="ctx-value" rows="2" placeholder="Key benefit for the prospect...">${esc(document.getElementById('out-value')?.value || '')}</textarea>
+          <button class="btn-success" id="ctx-gen-btn" onclick="generateEmailsForSelected()">
+            Generate Emails for Selected Leads
+          </button>
+          <div class="gen-progress hidden" id="gen-progress"></div>
+        </div>`;
       }
+
       resultDiv.innerHTML = html;
       resultDiv.className = 'card';
+    }
+
+    function toggleLeadRow(idx, event) {
+      const cb = document.querySelector(`.lead-cb[data-idx="${idx}"]`);
+      if (cb) { cb.checked = !cb.checked; updateSelection(); }
+    }
+
+    function toggleSelectAll(masterCb) {
+      document.querySelectorAll('.lead-cb').forEach(cb => cb.checked = masterCb.checked);
+      updateSelection();
+    }
+
+    function selectAllLeads() {
+      document.querySelectorAll('.lead-cb').forEach(cb => cb.checked = true);
+      const master = document.getElementById('select-all-cb');
+      if (master) master.checked = true;
+      updateSelection();
+    }
+
+    function clearSelection() {
+      document.querySelectorAll('.lead-cb').forEach(cb => cb.checked = false);
+      const master = document.getElementById('select-all-cb');
+      if (master) master.checked = false;
+      updateSelection();
+    }
+
+    function updateSelection() {
+      const checked = document.querySelectorAll('.lead-cb:checked');
+      const bar = document.getElementById('selection-bar');
+      const countEl = document.getElementById('sel-count');
+      const master = document.getElementById('select-all-cb');
+      const all = document.querySelectorAll('.lead-cb');
+
+      // Highlight rows
+      document.querySelectorAll('.lead-cb').forEach(cb => {
+        document.getElementById('lead-row-' + cb.dataset.idx)?.classList.toggle('selected', cb.checked);
+      });
+
+      if (bar) {
+        bar.classList.toggle('hidden', checked.length === 0);
+        if (countEl) countEl.textContent = checked.length + ' lead' + (checked.length !== 1 ? 's' : '') + ' selected';
+      }
+      if (master) master.indeterminate = checked.length > 0 && checked.length < all.length;
+
+      const genBtn = document.getElementById('ctx-gen-btn');
+      if (genBtn) genBtn.textContent = `Generate Emails for ${checked.length} Selected Lead${checked.length !== 1 ? 's' : ''}`;
+    }
+
+    function showOutreachContext() {
+      const form = document.getElementById('outreach-ctx-form');
+      if (form) {
+        form.classList.remove('hidden');
+        form.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    }
+
+    function getSelectedLeads() {
+      return Array.from(document.querySelectorAll('.lead-cb:checked'))
+        .map(cb => lastLeadsResult[parseInt(cb.dataset.idx)])
+        .filter(Boolean);
+    }
+
+    async function generateEmailsForSelected() {
+      const selected = getSelectedLeads();
+      if (!selected.length) return alert('No leads selected.');
+
+      const senderName = document.getElementById('ctx-sender').value.trim();
+      const senderTitle = document.getElementById('ctx-sender-title').value.trim();
+      const companyName = document.getElementById('ctx-company').value.trim();
+      const productDescription = document.getElementById('ctx-product').value.trim();
+      const valueProposition = document.getElementById('ctx-value').value.trim();
+      const tone = document.getElementById('ctx-tone').value;
+
+      if (!senderName || !productDescription || !valueProposition) {
+        return alert('Please fill in Your Name, Product Description, and Value Proposition.');
+      }
+
+      const context = { productDescription, valueProposition, senderName, senderTitle, companyName, tone };
+
+      // Sync back to outreach tab fields
+      if (document.getElementById('out-sender')) document.getElementById('out-sender').value = senderName;
+      if (document.getElementById('out-sender-title')) document.getElementById('out-sender-title').value = senderTitle;
+      if (document.getElementById('out-sender-company')) document.getElementById('out-sender-company').value = companyName;
+      if (document.getElementById('out-product')) document.getElementById('out-product').value = productDescription;
+      if (document.getElementById('out-value')) document.getElementById('out-value').value = valueProposition;
+
+      const btn = document.getElementById('ctx-gen-btn');
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner"></span> Generating...';
+
+      const progressDiv = document.getElementById('gen-progress');
+      progressDiv.classList.remove('hidden');
+      progressDiv.innerHTML = '';
+
+      let successCount = 0;
+      for (const lead of selected) {
+        const name = (lead.firstName || '') + ' ' + (lead.lastName || '');
+        const itemId = 'gp-' + Math.random().toString(36).slice(2, 7);
+        progressDiv.innerHTML += `<div class="gp-item" id="${itemId}"><span class="spinner" style="width:12px;height:12px;border-width:2px;"></span> Generating for ${esc(name)} at ${esc(lead.company || '')}...</div>`;
+
+        try {
+          const res = await fetch('/api/generate-email', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ lead, context }),
+          });
+          const data = await res.json();
+          if (!res.ok) throw new Error(data.error || 'Failed');
+
+          emailQueue.push({
+            id: Date.now() + '-' + Math.random().toString(36).slice(2, 7),
+            lead, email: data.email, status: 'pending', edited: false,
+          });
+          successCount++;
+          document.getElementById(itemId).className = 'gp-item done';
+          document.getElementById(itemId).innerHTML = `&#10003; ${esc(name)} — added to review queue`;
+        } catch (err) {
+          document.getElementById(itemId).className = 'gp-item fail';
+          document.getElementById(itemId).innerHTML = `&#10007; ${esc(name)} — ${esc(err.message)}`;
+        }
+      }
+
+      btn.disabled = false;
+      btn.textContent = 'Generate Emails for Selected Leads';
+      progressDiv.innerHTML += `<div style="margin-top:0.75rem;padding:0.75rem;background:var(--success-light);border-radius:var(--radius);font-size:0.85rem;color:var(--success);">
+        &#10003; ${successCount} email${successCount !== 1 ? 's' : ''} generated. <strong style="cursor:pointer;text-decoration:underline;" onclick="switchToReview()">Go to Review &amp; Send →</strong>
+      </div>`;
+    }
+
+    function switchToReview() {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+      document.querySelector('.tab[data-tab="review"]').classList.add('active');
+      document.getElementById('panel-review').classList.add('active');
+      renderReviewPanel();
     }
 
     // ============================================================
