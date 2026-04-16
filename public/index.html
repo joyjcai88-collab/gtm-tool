@@ -139,6 +139,15 @@
     .icp-pain { padding: 0.4rem 0; font-size: 0.9rem; color: var(--text); border-bottom: 1px solid var(--border); }
     .icp-pain:last-child { border-bottom: none; }
     .icp-rationale { font-size: 0.9rem; color: var(--text-dim); line-height: 1.7; padding: 0.75rem; background: var(--bg); border-radius: var(--radius); }
+    .company-table { width: 100%; border-collapse: collapse; margin-top: 0.75rem; font-size: 0.85rem; }
+    .company-table th { text-align: left; color: var(--text-dim); padding: 0.5rem 0.75rem; border-bottom: 2px solid var(--border); font-weight: 600; }
+    .company-table td { padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+    .company-table tr:hover td { background: var(--accent-light); }
+    .company-domain { font-family: 'SF Mono','Fira Code',monospace; font-size: 0.8rem; color: var(--accent); }
+    .relevance-text { font-size: 0.8rem; color: var(--text-dim); line-height: 1.5; }
+    .companies-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem; flex-wrap: wrap; gap: 0.5rem; }
+    .companies-meta { font-size: 0.8rem; color: var(--text-dim); margin-top: 0.2rem; }
+    .icp-action-bar { margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem; }
     .badge-warning { background: var(--warning-light); color: var(--warning); }
     .badge-error { background: var(--error-light); color: var(--error); }
     .review-summary {
@@ -250,6 +259,14 @@
 
     <!-- Search Panel -->
     <div class="panel" id="panel-search">
+
+      <!-- Target Companies Section (populated from ICP) -->
+      <div class="card hidden" id="companies-section">
+        <h3>Target Companies</h3>
+        <p style="color:var(--text-dim); font-size:0.9rem; margin-bottom:1rem;">These organizations were identified as strong prospects based on your ICP rationale. Click <strong>Use These Domains</strong> to auto-fill Hunter.io and start sourcing contacts.</p>
+        <div id="companies-content"><!-- populated by JS --></div>
+      </div>
+
       <div class="card">
         <h3>Source Leads</h3>
         <div class="source-tabs">
@@ -459,6 +476,7 @@
 
     let lastICPResult = null;
     let lastLeadsResult = null;
+    let lastCompaniesResult = null;
     let emailQueue = []; // { id, lead, email: { subject, body, personalizationNotes }, status: 'pending'|'approved'|'rejected'|'sent'|'failed', edited: false }
 
     // ============================================================
@@ -495,6 +513,121 @@
         btn.disabled = false;
         btn.textContent = 'Generate ICP';
       }
+    }
+
+    // ============================================================
+    // FIND TARGET COMPANIES (from ICP rationale)
+    // ============================================================
+    async function findTargetCompanies() {
+      if (!lastICPResult) return alert('Please generate an ICP first.');
+
+      const btn = document.getElementById('find-companies-btn');
+      const statusEl = document.getElementById('find-companies-status');
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner"></span> Finding companies...';
+      if (statusEl) statusEl.textContent = '';
+
+      try {
+        const res = await fetch('/api/find-companies', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ icp: lastICPResult, limit: 15 }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Failed');
+
+        lastCompaniesResult = data.companies;
+        renderCompaniesSection(data.companies);
+
+        // Switch to Source Leads tab
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+        document.querySelector('.tab[data-tab="search"]').classList.add('active');
+        document.getElementById('panel-search').classList.add('active');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+
+        if (statusEl) statusEl.innerHTML = '<span style="color:var(--success);">&#10003; ' + data.companies.length + ' companies found</span>';
+      } catch (err) {
+        if (statusEl) statusEl.innerHTML = '<span style="color:var(--error);">Error: ' + esc(err.message) + '</span>';
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Find Target Companies →';
+      }
+    }
+
+    function renderCompaniesSection(companies) {
+      const section = document.getElementById('companies-section');
+      const content = document.getElementById('companies-content');
+      if (!section || !content) return;
+
+      if (!companies || !companies.length) {
+        section.classList.add('hidden');
+        return;
+      }
+
+      let html = `
+        <div class="companies-header">
+          <div>
+            <strong>${companies.length} organizations</strong> matched your ICP
+            <div class="companies-meta">Domains auto-populated from ICP rationale · Click "Use These Domains" to search for contacts</div>
+          </div>
+          <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+            <button class="btn-primary" onclick="autofillDomainsFromCompanies()" style="padding:0.45rem 1rem; font-size:0.85rem;">Use These Domains ↓</button>
+            <button class="btn-secondary" onclick="downloadCompaniesCSV()" style="padding:0.45rem 0.75rem; font-size:0.8rem;">Download CSV</button>
+          </div>
+        </div>
+        <div style="overflow-x:auto;">
+        <table class="company-table">
+          <thead><tr>
+            <th>Company</th>
+            <th>Domain</th>
+            <th>Industry</th>
+            <th>Size</th>
+            <th>Location</th>
+            <th>Why They Fit</th>
+          </tr></thead>
+          <tbody>`;
+
+      for (const c of companies) {
+        html += `<tr>
+          <td><strong>${esc(c.name)}</strong></td>
+          <td><span class="company-domain">${esc(c.domain)}</span></td>
+          <td>${esc(c.industry || '—')}</td>
+          <td>${c.employeeCount ? Number(c.employeeCount).toLocaleString() : '—'}</td>
+          <td>${esc(c.location || '—')}</td>
+          <td class="relevance-text">${esc(c.relevance)}</td>
+        </tr>`;
+      }
+
+      html += `</tbody></table></div>`;
+      content.innerHTML = html;
+      section.classList.remove('hidden');
+    }
+
+    function autofillDomainsFromCompanies() {
+      if (!lastCompaniesResult || !lastCompaniesResult.length) return;
+      const domains = lastCompaniesResult.map(c => c.domain).filter(Boolean);
+      const textarea = document.getElementById('search-domains');
+      if (textarea) textarea.value = domains.join('\n');
+      switchSource('hunter');
+      document.getElementById('source-hunter').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    function downloadCompaniesCSV() {
+      if (!lastCompaniesResult || !lastCompaniesResult.length) return alert('No companies to export.');
+      const headers = ['Company', 'Domain', 'Industry', 'Employee Count', 'Location', 'Why They Fit'];
+      const rows = lastCompaniesResult.map(c => [
+        c.name, c.domain, c.industry || '', c.employeeCount || '', c.location || '', c.relevance,
+      ]);
+      let csv = headers.join(',') + '\n';
+      for (const row of rows) {
+        csv += row.map(v => '"' + String(v || '').replace(/"/g, '""') + '"').join(',') + '\n';
+      }
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'target-companies-' + Date.now() + '.csv';
+      a.click();
     }
 
     // ============================================================
@@ -1119,6 +1252,15 @@
           <div class="icp-label">Rationale</div>
           <div class="icp-rationale">${esc(icp.rationale)}</div>
         </div>` : ''}
+        <div class="icp-action-bar">
+          <span style="font-size:0.85rem; color:var(--text-dim);">Use this ICP to discover companies that are the best fit.</span>
+          <div style="display:flex; align-items:center; gap:0.75rem; flex-wrap:wrap;">
+            <span id="find-companies-status" style="font-size:0.85rem;"></span>
+            <button class="btn-primary" id="find-companies-btn" onclick="findTargetCompanies()" style="padding:0.5rem 1.1rem;">
+              Find Target Companies →
+            </button>
+          </div>
+        </div>
       </div>`;
     }
 
