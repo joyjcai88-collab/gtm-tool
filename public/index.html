@@ -166,6 +166,35 @@
     .checkbox-row { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; }
     .checkbox-row input[type="checkbox"] { width: auto; margin: 0; }
     .checkbox-row label { margin: 0; font-size: 0.85rem; }
+    .source-tabs { display: flex; gap: 0.5rem; margin-bottom: 1.25rem; }
+    .source-tab {
+      padding: 0.5rem 1rem; border-radius: 100px; border: 1px solid var(--border);
+      background: var(--bg); color: var(--text-dim); font-size: 0.85rem;
+      font-weight: 500; cursor: pointer; transition: all 0.2s;
+    }
+    .source-tab:hover { border-color: var(--accent); color: var(--accent); }
+    .source-tab.active { background: var(--accent); color: white; border-color: var(--accent); }
+    .source-panel { display: none; }
+    .source-panel.active { display: block; }
+    .search-links { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.75rem; }
+    .search-link {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      padding: 0.4rem 0.75rem; border-radius: var(--radius); border: 1px solid var(--border);
+      background: var(--surface); color: var(--text); font-size: 0.8rem;
+      text-decoration: none; font-weight: 500; transition: all 0.2s;
+    }
+    .search-link:hover { border-color: var(--accent); background: var(--accent-light); }
+    .search-link img { width: 16px; height: 16px; }
+    .url-chips { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.75rem; }
+    .url-chip {
+      display: inline-flex; align-items: center; gap: 0.3rem;
+      padding: 0.25rem 0.6rem; border-radius: 100px; background: var(--accent-light);
+      color: var(--accent); font-size: 0.8rem;
+    }
+    .url-chip button {
+      background: none; border: none; color: var(--accent); cursor: pointer;
+      font-size: 0.9rem; padding: 0; line-height: 1;
+    }
   </style>
 </head>
 <body>
@@ -197,42 +226,85 @@
     <!-- Search Panel -->
     <div class="panel" id="panel-search">
       <div class="card">
-        <h3>Source Leads from Hunter.io</h3>
-        <p style="color:var(--text-dim); margin-bottom:1rem; font-size:0.9rem;">Enter target company domains to find contacts. Hunter.io will return emails and roles for each domain.</p>
-        <label>Company Domains (one per line or comma-separated)</label>
-        <textarea id="search-domains" rows="4" placeholder="stripe.com&#10;datadog.com&#10;vercel.com"></textarea>
-        <div class="row">
-          <div>
-            <label>Seniority Filter</label>
-            <select id="search-seniority">
-              <option value="">All seniorities</option>
-              <option value="executive">Executive (C-suite, VP)</option>
-              <option value="senior" selected>Senior (Directors, Managers)</option>
-              <option value="junior">Junior</option>
-            </select>
+        <h3>Source Leads</h3>
+        <div class="source-tabs">
+          <button class="source-tab active" onclick="switchSource('hunter')">Hunter.io</button>
+          <button class="source-tab" onclick="switchSource('web')">Web Search</button>
+          <button class="source-tab" onclick="switchSource('url')">URL Import</button>
+        </div>
+
+        <!-- Hunter.io Source -->
+        <div class="source-panel active" id="source-hunter">
+          <p style="color:var(--text-dim); margin-bottom:1rem; font-size:0.9rem;">Enter company domains to find contacts with verified emails via Hunter.io.</p>
+          <label>Company Domains (one per line or comma-separated)</label>
+          <textarea id="search-domains" rows="4" placeholder="stripe.com&#10;datadog.com&#10;vercel.com"></textarea>
+          <div class="row">
+            <div>
+              <label>Seniority Filter</label>
+              <select id="search-seniority">
+                <option value="">All seniorities</option>
+                <option value="executive">Executive (C-suite, VP)</option>
+                <option value="senior" selected>Senior (Directors, Managers)</option>
+                <option value="junior">Junior</option>
+              </select>
+            </div>
+            <div>
+              <label>Department Filter</label>
+              <select id="search-department">
+                <option value="">All departments</option>
+                <option value="executive">Executive</option>
+                <option value="it" selected>IT / Engineering</option>
+                <option value="management">Management</option>
+                <option value="sales">Sales</option>
+                <option value="marketing">Marketing</option>
+                <option value="finance">Finance</option>
+                <option value="operations">Operations</option>
+              </select>
+            </div>
           </div>
-          <div>
-            <label>Department Filter</label>
-            <select id="search-department">
-              <option value="">All departments</option>
-              <option value="executive">Executive</option>
-              <option value="it" selected>IT / Engineering</option>
-              <option value="management">Management</option>
-              <option value="sales">Sales</option>
-              <option value="marketing">Marketing</option>
-              <option value="finance">Finance</option>
-              <option value="operations">Operations</option>
-            </select>
+          <div class="row">
+            <div>
+              <label>Max results</label>
+              <input id="search-limit" type="number" value="25" min="1" max="100">
+            </div>
+            <div></div>
+          </div>
+          <button class="btn-primary" id="search-btn" onclick="searchLeads()">Search Hunter.io</button>
+        </div>
+
+        <!-- Web Search Source -->
+        <div class="source-panel" id="source-web">
+          <p style="color:var(--text-dim); margin-bottom:1rem; font-size:0.9rem;">Describe who you're looking for. Claude AI will use web search to find matching leads and extract contact information.</p>
+          <label>Search Query</label>
+          <textarea id="web-query" rows="3" placeholder="e.g., Pediatric medical directors and lab directors at children's hospitals in the US who make decisions about laboratory testing services"></textarea>
+          <div class="row">
+            <div>
+              <label>Max leads to extract</label>
+              <input id="web-limit" type="number" value="10" min="1" max="25">
+            </div>
+            <div></div>
+          </div>
+          <button class="btn-primary" id="web-search-btn" onclick="webSearchLeads()">Search with AI</button>
+          <div style="margin-top:1rem;">
+            <label style="margin-bottom:0.5rem;">Quick search on external engines:</label>
+            <div class="search-links" id="web-quick-links">
+              <a class="search-link" href="https://www.perplexity.ai/" target="_blank" rel="noopener">Perplexity AI</a>
+              <a class="search-link" href="https://www.google.com/" target="_blank" rel="noopener">Google</a>
+              <a class="search-link" href="https://go.pulsepoint.com/" target="_blank" rel="noopener">PulsePoint HCP</a>
+            </div>
           </div>
         </div>
-        <div class="row">
-          <div>
-            <label>Max results</label>
-            <input id="search-limit" type="number" value="25" min="1" max="100">
-          </div>
-          <div></div>
+
+        <!-- URL Import Source -->
+        <div class="source-panel" id="source-url">
+          <p style="color:var(--text-dim); margin-bottom:1rem; font-size:0.9rem;">Paste any URL and Claude AI will extract lead information from the page. Works with company team pages, directories, search results, and more.</p>
+          <label>URLs to scan (one per line)</label>
+          <textarea id="url-input" rows="4" placeholder="https://go.pulsepoint.com/hcp-marketing-campaigns&#10;https://www.example.com/our-team&#10;https://directory.example.com/physicians"></textarea>
+          <label>Context (helps Claude extract the right leads)</label>
+          <textarea id="url-context" rows="2" placeholder="e.g., Looking for pediatric healthcare decision-makers, medical directors, lab directors"></textarea>
+          <button class="btn-primary" id="url-import-btn" onclick="urlImportLeads()">Extract Leads from URLs</button>
         </div>
-        <button class="btn-primary" id="search-btn" onclick="searchLeads()">Search Leads</button>
+
         <div id="search-result" class="hidden"></div>
       </div>
     </div>
@@ -352,6 +424,14 @@
       });
     });
 
+    // Source sub-tab switching
+    function switchSource(name) {
+      document.querySelectorAll('.source-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.source-panel').forEach(p => p.classList.remove('active'));
+      document.querySelector(`.source-tab[onclick*="${name}"]`).classList.add('active');
+      document.getElementById('source-' + name).classList.add('active');
+    }
+
     let lastICPResult = null;
     let lastLeadsResult = null;
     let emailQueue = []; // { id, lead, email: { subject, body, personalizationNotes }, status: 'pending'|'approved'|'rejected'|'sent'|'failed', edited: false }
@@ -428,26 +508,8 @@
 
         lastLeadsResult = data.leads;
         const total = data.totalResults ?? data.leads.length;
-
-        let html = `<p style="margin-bottom:0.75rem;"><strong>${data.leads.length}</strong> leads found <span class="badge">${total.toLocaleString()} total contacts</span></p>`;
-
-        if (data.leads.length > 0) {
-          html += '<table class="lead-table"><thead><tr><th>Name</th><th>Title</th><th>Company</th><th>Email</th><th>Seniority</th></tr></thead><tbody>';
-          for (const l of data.leads) {
-            html += `<tr>
-              <td>${esc(l.firstName)} ${esc(l.lastName)}</td>
-              <td>${esc(l.title || '\u2014')}</td>
-              <td>${esc(l.company)}</td>
-              <td>${esc(l.email || '\u2014')}</td>
-              <td>${esc(l.seniority || '\u2014')}</td>
-            </tr>`;
-          }
-          html += '</tbody></table>';
-          html += '<div class="actions"><button class="btn-secondary" onclick="downloadCSV()">Download CSV</button></div>';
-        }
-
-        resultDiv.innerHTML = html;
-        resultDiv.className = 'card';
+        for (const l of data.leads) l.source = 'Hunter.io';
+        renderLeadsTable(data.leads, total, resultDiv);
       } catch (err) {
         resultDiv.innerHTML = '<p style="color:var(--error);">Error: ' + esc(err.message) + '</p>';
         resultDiv.className = 'card';
@@ -473,6 +535,99 @@
       a.href = URL.createObjectURL(blob);
       a.download = 'leads-' + Date.now() + '.csv';
       a.click();
+    }
+
+    // ============================================================
+    // WEB SEARCH — AI-powered lead discovery
+    // ============================================================
+    async function webSearchLeads() {
+      const btn = document.getElementById('web-search-btn');
+      const resultDiv = document.getElementById('search-result');
+      const query = document.getElementById('web-query').value.trim();
+      const limit = parseInt(document.getElementById('web-limit').value) || 10;
+
+      if (query.length < 10) return alert('Please describe who you are looking for in more detail.');
+
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner"></span> Searching...';
+      resultDiv.classList.remove('hidden');
+      resultDiv.innerHTML = '<p><span class="spinner"></span> Claude AI is searching the web and extracting leads...</p>';
+
+      try {
+        const res = await fetch('/api/web-leads', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ query, limit }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Search failed');
+
+        lastLeadsResult = data.leads;
+        renderLeadsTable(data.leads, data.leads.length, resultDiv);
+      } catch (err) {
+        resultDiv.innerHTML = '<p style="color:var(--error);">Error: ' + esc(err.message) + '</p>';
+        resultDiv.className = 'card';
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Search with AI';
+      }
+    }
+
+    // ============================================================
+    // URL IMPORT — extract leads from any URL
+    // ============================================================
+    async function urlImportLeads() {
+      const btn = document.getElementById('url-import-btn');
+      const resultDiv = document.getElementById('search-result');
+      const urlsRaw = document.getElementById('url-input').value;
+      const context = document.getElementById('url-context').value.trim();
+      const urls = urlsRaw.split('\n').map(s => s.trim()).filter(s => s.startsWith('http'));
+
+      if (!urls.length) return alert('Please enter at least one valid URL.');
+
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner"></span> Extracting...';
+      resultDiv.classList.remove('hidden');
+      resultDiv.innerHTML = '<p><span class="spinner"></span> Fetching pages and extracting leads with Claude AI...</p>';
+
+      try {
+        const res = await fetch('/api/web-leads', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ urls, context, limit: 25 }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Extraction failed');
+
+        lastLeadsResult = data.leads;
+        renderLeadsTable(data.leads, data.leads.length, resultDiv);
+      } catch (err) {
+        resultDiv.innerHTML = '<p style="color:var(--error);">Error: ' + esc(err.message) + '</p>';
+        resultDiv.className = 'card';
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Extract Leads from URLs';
+      }
+    }
+
+    function renderLeadsTable(leads, total, resultDiv) {
+      let html = `<p style="margin-bottom:0.75rem;"><strong>${leads.length}</strong> leads found <span class="badge">${total.toLocaleString()} total</span></p>`;
+      if (leads.length > 0) {
+        html += '<table class="lead-table"><thead><tr><th>Name</th><th>Title</th><th>Company</th><th>Email</th><th>Source</th></tr></thead><tbody>';
+        for (const l of leads) {
+          html += `<tr>
+            <td>${esc(l.firstName || '')} ${esc(l.lastName || '')}</td>
+            <td>${esc(l.title || '\u2014')}</td>
+            <td>${esc(l.company || '\u2014')}</td>
+            <td>${esc(l.email || '\u2014')}</td>
+            <td>${esc(l.source || l.seniority || '\u2014')}</td>
+          </tr>`;
+        }
+        html += '</tbody></table>';
+        html += '<div class="actions"><button class="btn-secondary" onclick="downloadCSV()">Download CSV</button></div>';
+      }
+      resultDiv.innerHTML = html;
+      resultDiv.className = 'card';
     }
 
     // ============================================================
