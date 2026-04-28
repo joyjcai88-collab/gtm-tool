@@ -287,7 +287,7 @@
         <h3>Source Leads</h3>
         <div class="source-tabs">
           <button class="source-tab active" onclick="switchSource('hunter')">🎯 Hunter.io</button>
-          <button class="source-tab" onclick="switchSource('perplexity')">🔍 Perplexity</button>
+          <button class="source-tab" onclick="switchSource('perplexity')">🔍 Tavily</button>
           <button class="source-tab" onclick="switchSource('apollo')">🚀 Apollo.io</button>
           <button class="source-tab" onclick="switchSource('csv')">📄 CSV Upload</button>
           <button class="source-tab" onclick="switchSource('directories')">📚 Directories</button>
@@ -334,9 +334,9 @@
           <button class="btn-primary" id="search-btn" onclick="searchLeads()">Search Hunter.io</button>
         </div>
 
-        <!-- Perplexity Source -->
+        <!-- Tavily Source -->
         <div class="source-panel" id="source-perplexity">
-          <p style="color:var(--text-dim); margin-bottom:1rem; font-size:0.9rem;">Search the <strong>live web</strong> with Perplexity AI to find real, up-to-date leads. Returns people from current web sources with citations. Requires <code>PERPLEXITY_API_KEY</code>.</p>
+          <p style="color:var(--text-dim); margin-bottom:1rem; font-size:0.9rem;">Search the <strong>live web</strong> with Tavily AI Search to find real, up-to-date leads. Returns verified results from current web sources. Free tier: 1,000 searches/month.</p>
           <label>Search Query</label>
           <textarea id="perp-query" rows="3" placeholder="e.g., Medical directors and VP of Operations at regional health systems in the southeastern US"></textarea>
           <div class="row">
@@ -346,7 +346,7 @@
             </div>
             <div></div>
           </div>
-          <button class="btn-primary" id="perp-btn" onclick="perplexitySearchLeads()">Search with Perplexity</button>
+          <button class="btn-primary" id="perp-btn" onclick="perplexitySearchLeads()">Search with Tavily</button>
         </div>
 
         <!-- Apollo.io Source -->
@@ -828,12 +828,12 @@
       if (query.length < 5) return alert('Please describe who you are looking for.');
 
       btn.disabled = true;
-      btn.innerHTML = '<span class="spinner"></span> Searching Perplexity...';
+      btn.innerHTML = '<span class="spinner"></span> Searching the web...';
       resultDiv.classList.remove('hidden');
-      resultDiv.innerHTML = '<p><span class="spinner"></span> Perplexity is searching the live web for leads...</p>';
+      resultDiv.innerHTML = '<p><span class="spinner"></span> Tavily is searching the live web for leads...</p>';
 
       try {
-        const res = await fetch('/api/perplexity-leads', {
+        const res = await fetch('/api/tavily-leads', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ query, limit }),
@@ -842,13 +842,13 @@
         if (!res.ok) throw new Error(data.error || 'Search failed');
 
         lastLeadsResult = data.leads;
-        for (const l of data.leads) l.source = 'Perplexity';
+        for (const l of data.leads) l.source = 'Tavily Search';
         renderLeadsTable(data.leads, data.leads.length, resultDiv);
 
-        if (data.citations?.length) {
+        if (data.sources?.length) {
           const citDiv = document.createElement('div');
           citDiv.style.cssText = 'margin-top:0.75rem; font-size:0.78rem; color:var(--text-dim);';
-          citDiv.innerHTML = '<strong>Sources:</strong> ' + data.citations.slice(0, 5).map(c => `<a href="${esc(c)}" target="_blank" rel="noopener" style="color:var(--accent);">${esc(new URL(c).hostname)}</a>`).join(', ');
+          citDiv.innerHTML = '<strong>Sources:</strong> ' + data.sources.slice(0, 5).map(c => { try { return `<a href="${esc(c)}" target="_blank" rel="noopener" style="color:var(--accent);">${esc(new URL(c).hostname)}</a>`; } catch { return ''; } }).filter(Boolean).join(', ');
           resultDiv.appendChild(citDiv);
         }
       } catch (err) {
@@ -856,7 +856,7 @@
         resultDiv.className = 'card';
       } finally {
         btn.disabled = false;
-        btn.textContent = 'Search with Perplexity';
+        btn.textContent = 'Search with Tavily';
       }
     }
 
