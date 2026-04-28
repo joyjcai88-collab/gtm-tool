@@ -7,6 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
@@ -509,6 +510,41 @@
       box-shadow: 0 0 0 1px rgba(123,111,255,0.2);
     }
     .dir-icon { font-size: 1.75rem; margin-bottom: 0.4rem; }
+    .icon {
+      font-family: 'Material Symbols Rounded';
+      font-weight: 300;
+      font-style: normal;
+      font-size: 18px;
+      line-height: 1;
+      letter-spacing: normal;
+      text-transform: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      white-space: nowrap;
+      word-wrap: normal;
+      direction: ltr;
+      -webkit-font-smoothing: antialiased;
+      font-feature-settings: 'liga';
+      font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 20;
+      vertical-align: middle;
+      user-select: none;
+    }
+    .icon-lg {
+      font-size: 22px;
+      font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+    }
+    .icon-filled {
+      font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+    }
+    .dir-icon.icon {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+      display: flex;
+      justify-content: center;
+      color: var(--accent-2);
+      font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+    }
     .dir-name { font-weight: 600; font-size: 0.88rem; margin-bottom: 0.25rem; color: var(--text); }
     .dir-desc { font-size: 0.72rem; color: var(--text-dim); line-height: 1.4; margin-bottom: 0.5rem; }
     .dir-link { font-size: 0.72rem; color: var(--accent-2); text-decoration: none; font-weight: 500; }
@@ -694,23 +730,23 @@
   <aside class="sidebar">
     <div class="sidebar-logo">
       <div class="logo-wrap">
-        <div class="logo-icon">⚡</div>
+        <div class="logo-icon"><span class="icon icon-filled" style="font-size:16px; color:white; font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 20;">bolt</span></div>
         <span class="logo-name">GTM Tool</span>
       </div>
     </div>
     <nav class="sidebar-nav">
       <div class="nav-label">Workflow</div>
       <button class="tab active" data-tab="icp">
-        <span>◎ Define ICP</span><span class="tab-step">01</span>
+        <span class="icon">person_search</span><span>Define ICP</span><span class="tab-step">01</span>
       </button>
       <button class="tab" data-tab="search">
-        <span>◎ Source Leads</span><span class="tab-step">02</span>
+        <span class="icon">manage_search</span><span>Source Leads</span><span class="tab-step">02</span>
       </button>
       <button class="tab" data-tab="outreach">
-        <span>◎ Outreach</span><span class="tab-step">03</span>
+        <span class="icon">mail</span><span>Outreach</span><span class="tab-step">03</span>
       </button>
       <button class="tab" data-tab="review">
-        <span>◎ Review &amp; Send</span><span class="tab-step">04</span>
+        <span class="icon">send</span><span>Review &amp; Send</span><span class="tab-step">04</span>
       </button>
     </nav>
     <div class="sidebar-footer">
@@ -757,13 +793,13 @@
         <div class="card">
           <h3>Source Leads</h3>
           <div class="source-tabs">
-            <button class="source-tab active" onclick="switchSource('hunter')">🎯 Hunter.io</button>
-            <button class="source-tab" onclick="switchSource('perplexity')">🔍 Tavily</button>
-            <button class="source-tab" onclick="switchSource('apollo')">🚀 Apollo.io</button>
-            <button class="source-tab" onclick="switchSource('csv')">📄 CSV Upload</button>
-            <button class="source-tab" onclick="switchSource('directories')">📚 Directories</button>
-            <button class="source-tab" onclick="switchSource('web')">🤖 AI Search</button>
-            <button class="source-tab" onclick="switchSource('url')">🔗 URL Import</button>
+            <button class="source-tab active" onclick="switchSource('hunter')"><span class="icon" style="font-size:14px;">radar</span> Hunter.io</button>
+            <button class="source-tab" onclick="switchSource('perplexity')"><span class="icon" style="font-size:14px;">travel_explore</span> Tavily</button>
+            <button class="source-tab" onclick="switchSource('apollo')"><span class="icon" style="font-size:14px;">rocket_launch</span> Apollo.io</button>
+            <button class="source-tab" onclick="switchSource('csv')"><span class="icon" style="font-size:14px;">upload_file</span> CSV Upload</button>
+            <button class="source-tab" onclick="switchSource('directories')"><span class="icon" style="font-size:14px;">folder_open</span> Directories</button>
+            <button class="source-tab" onclick="switchSource('web')"><span class="icon" style="font-size:14px;">psychology</span> AI Search</button>
+            <button class="source-tab" onclick="switchSource('url')"><span class="icon" style="font-size:14px;">link</span> URL Import</button>
           </div>
 
           <!-- Hunter.io Source -->
@@ -859,7 +895,7 @@
           <div class="source-panel" id="source-csv">
             <p style="color:var(--text-dim); margin-bottom:1rem; font-size:0.88rem;">Import leads from any CSV file. Automatically detects LinkedIn Connections exports, Apollo exports, and any CSV with name/email/company columns. <strong>No API key needed.</strong></p>
             <div class="csv-drop-zone" id="csv-drop-zone" onclick="document.getElementById('csv-file-input').click()">
-              <div style="font-size:2rem; margin-bottom:0.5rem;">📄</div>
+              <span class="icon" style="font-size:2.25rem; margin-bottom:0.5rem; display:block; color:var(--accent-2);">upload_file</span>
               <div style="font-weight:600; margin-bottom:0.3rem; color:var(--text);">Click to upload a CSV file</div>
               <div style="font-size:0.78rem; color:var(--text-dim);">LinkedIn Connections · Apollo Export · Any CSV with names &amp; emails</div>
               <input type="file" id="csv-file-input" accept=".csv,.tsv" style="display:none" onchange="handleCSVUpload(event)">
@@ -876,37 +912,37 @@
             <p style="color:var(--text-dim); margin-bottom:1rem; font-size:0.88rem;">Search professional directories and import leads. Click a platform to open it, find relevant profiles, then paste the URL below to extract leads.</p>
             <div class="directory-grid">
               <div class="directory-card" onclick="openDirectoryImport('https://www.doximity.com/clinician_search','Paste a Doximity search results page URL below')">
-                <div class="dir-icon">🏥</div>
+                <div class="dir-icon icon">local_hospital</div>
                 <div class="dir-name">Doximity</div>
                 <div class="dir-desc">Physicians &amp; healthcare professionals</div>
                 <a href="https://www.doximity.com/clinician_search" target="_blank" rel="noopener" class="dir-link" onclick="event.stopPropagation()">Open Doximity ↗</a>
               </div>
               <div class="directory-card" onclick="openDirectoryImport('https://www.crunchbase.com/people','Paste a Crunchbase search or profile URL below')">
-                <div class="dir-icon">🦄</div>
+                <div class="dir-icon icon">trending_up</div>
                 <div class="dir-name">Crunchbase</div>
                 <div class="dir-desc">Startup founders &amp; C-suite at funded companies</div>
                 <a href="https://www.crunchbase.com/people" target="_blank" rel="noopener" class="dir-link" onclick="event.stopPropagation()">Open Crunchbase ↗</a>
               </div>
               <div class="directory-card" onclick="openDirectoryImport('https://www.g2.com/products','Paste a G2 product reviews page URL below')">
-                <div class="dir-icon">⭐</div>
+                <div class="dir-icon icon">star</div>
                 <div class="dir-name">G2</div>
                 <div class="dir-desc">Software buyers who reviewed competitor tools</div>
                 <a href="https://www.g2.com/products" target="_blank" rel="noopener" class="dir-link" onclick="event.stopPropagation()">Open G2 ↗</a>
               </div>
               <div class="directory-card" onclick="openDirectoryImport('https://www.capterra.com','Paste a Capterra product page URL below')">
-                <div class="dir-icon">🖥️</div>
+                <div class="dir-icon icon">computer</div>
                 <div class="dir-name">Capterra</div>
                 <div class="dir-desc">Software buyers &amp; reviewers by category</div>
                 <a href="https://www.capterra.com" target="_blank" rel="noopener" class="dir-link" onclick="event.stopPropagation()">Open Capterra ↗</a>
               </div>
               <div class="directory-card" onclick="openDirectoryImport('https://sessionize.com/speakers','Paste a conference speakers page URL below')">
-                <div class="dir-icon">🎤</div>
+                <div class="dir-icon icon">record_voice_over</div>
                 <div class="dir-name">Conference Speakers</div>
                 <div class="dir-desc">High-intent senior decision-makers</div>
                 <a href="https://sessionize.com/speakers" target="_blank" rel="noopener" class="dir-link" onclick="event.stopPropagation()">Browse Speakers ↗</a>
               </div>
               <div class="directory-card" onclick="openDirectoryImport('https://go.pulsepoint.com','Paste a PulsePoint page URL below')">
-                <div class="dir-icon">💊</div>
+                <div class="dir-icon icon">medication</div>
                 <div class="dir-name">PulsePoint HCP</div>
                 <div class="dir-desc">Healthcare professionals &amp; HCPs</div>
                 <a href="https://go.pulsepoint.com" target="_blank" rel="noopener" class="dir-link" onclick="event.stopPropagation()">Open PulsePoint ↗</a>
