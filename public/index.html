@@ -4,587 +4,1048 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GTM Tool — AI-Powered Lead Generation & Outreach</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
-      --bg: #f8f9fb;
-      --surface: #ffffff;
-      --border: #e2e5ea;
-      --text: #1a1d23;
-      --text-dim: #6b7280;
-      --accent: #5046e5;
-      --accent-hover: #4338ca;
-      --accent-light: #eef2ff;
-      --success: #059669;
-      --success-light: #ecfdf5;
-      --error: #dc2626;
-      --error-light: #fef2f2;
-      --warning: #d97706;
-      --warning-light: #fffbeb;
-      --radius: 8px;
-      --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
+      --bg: #0B0B0F;
+      --bg-2: #111116;
+      --bg-3: #17171E;
+      --surface: rgba(255,255,255,0.045);
+      --surface-2: rgba(255,255,255,0.07);
+      --border: rgba(255,255,255,0.08);
+      --border-strong: rgba(255,255,255,0.14);
+      --text: #EEEEF5;
+      --text-dim: #8080A8;
+      --text-muted: #50507A;
+      --accent: #7B6FFF;
+      --accent-2: #A78BFA;
+      --accent-hover: #6A5EEE;
+      --accent-light: rgba(123,111,255,0.12);
+      --success: #34D399;
+      --success-light: rgba(52,211,153,0.12);
+      --error: #F87171;
+      --error-light: rgba(248,113,113,0.12);
+      --warning: #FBBF24;
+      --warning-light: rgba(251,191,36,0.12);
+      --radius: 10px;
+      --radius-lg: 14px;
+      --shadow: 0 8px 32px rgba(0,0,0,0.5);
     }
+
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      font-family: 'Inter', -apple-system, sans-serif;
       background: var(--bg);
       color: var(--text);
       line-height: 1.6;
+      display: flex;
       min-height: 100vh;
     }
-    .container { max-width: 960px; margin: 0 auto; padding: 2rem 1.5rem; }
-    header { text-align: center; margin-bottom: 3rem; }
-    header h1 { font-size: 2.5rem; font-weight: 700; margin-bottom: 0.5rem; }
-    header h1 span { color: var(--accent); }
-    header p { color: var(--text-dim); font-size: 1.1rem; }
-    .tabs {
-      display: flex; gap: 0; border-bottom: 2px solid var(--border);
-      margin-bottom: 2rem;
+
+    /* ── Sidebar ── */
+    .sidebar {
+      width: 240px;
+      min-height: 100vh;
+      background: var(--bg-2);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0; left: 0; bottom: 0;
+      z-index: 100;
+    }
+    .sidebar-logo {
+      padding: 1.375rem 1.25rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .logo-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.625rem;
+    }
+    .logo-icon {
+      width: 30px; height: 30px;
+      background: linear-gradient(135deg, #7B6FFF, #A78BFA);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      flex-shrink: 0;
+    }
+    .logo-name {
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      background: linear-gradient(135deg, #fff 40%, #A78BFA);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .sidebar-nav {
+      padding: 1rem 0.75rem;
+      flex: 1;
+      overflow-y: auto;
+    }
+    .nav-label {
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      padding: 0.25rem 0.625rem 0.625rem;
     }
     .tab {
-      padding: 0.75rem 1.5rem; cursor: pointer; border: none;
-      background: none; color: var(--text-dim); font-size: 0.95rem;
-      border-bottom: 2px solid transparent; margin-bottom: -2px;
-      transition: all 0.2s; font-weight: 500;
-    }
-    .tab:hover { color: var(--text); }
-    .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
-    .panel { display: none; }
-    .panel.active { display: block; }
-    .card {
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: var(--radius); padding: 1.5rem; margin-bottom: 1.5rem;
-      box-shadow: var(--shadow);
-    }
-    .card h3 { font-size: 1.1rem; margin-bottom: 1rem; }
-    label { display: block; font-size: 0.85rem; color: var(--text-dim); margin-bottom: 0.3rem; font-weight: 500; }
-    input, textarea, select {
-      width: 100%; padding: 0.6rem 0.8rem; background: var(--bg);
-      border: 1px solid var(--border); border-radius: var(--radius);
-      color: var(--text); font-size: 0.95rem; margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.625rem;
+      padding: 0.55rem 0.75rem;
+      border-radius: 8px;
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      color: var(--text-dim);
+      font-size: 0.875rem;
+      font-weight: 500;
+      width: 100%;
+      text-align: left;
+      transition: all 0.15s;
+      margin-bottom: 2px;
       font-family: inherit;
     }
+    .tab:hover { background: var(--surface-2); color: var(--text); }
+    .tab.active { background: var(--accent-light); color: var(--accent-2); }
+    .tab-step {
+      margin-left: auto;
+      font-size: 0.65rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      font-variant-numeric: tabular-nums;
+    }
+    .tab.active .tab-step { color: var(--accent-2); }
+    .sidebar-footer {
+      padding: 1rem 1.25rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* ── Main content ── */
+    .main {
+      margin-left: 240px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      position: relative;
+    }
+    .main::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background-image: radial-gradient(circle, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 28px 28px;
+    }
+    .main > * { position: relative; z-index: 1; }
+
+    /* ── Panels ── */
+    .panel { display: none; flex-direction: column; min-height: 100vh; }
+    .panel.active { display: flex; }
+    .panel-header {
+      padding: 2rem 2.25rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .panel-header h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: -0.035em;
+      background: linear-gradient(135deg, #fff 30%, #A78BFA);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.25rem;
+    }
+    .panel-header p {
+      font-size: 0.85rem;
+      color: var(--text-dim);
+    }
+    .panel-body {
+      padding: 1.75rem 2.25rem 3rem;
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    /* ── Gradient text ── */
+    .gradient-text {
+      background: linear-gradient(135deg, #fff 30%, #A78BFA);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* ── Cards ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      margin-bottom: 1.25rem;
+      backdrop-filter: blur(12px);
+    }
+    .card h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 0.875rem;
+      color: var(--text);
+      letter-spacing: -0.02em;
+    }
+
+    /* ── Form elements ── */
+    label {
+      display: block;
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      margin-bottom: 0.3rem;
+      font-weight: 500;
+    }
+    input, textarea, select {
+      width: 100%;
+      padding: 0.6rem 0.8rem;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+      font-family: inherit;
+      transition: all 0.15s;
+    }
     input:focus, textarea:focus, select:focus {
-      outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(80,70,229,0.1);
+      outline: none;
+      border-color: rgba(123,111,255,0.5);
+      box-shadow: 0 0 0 3px rgba(123,111,255,0.1);
+      background: rgba(255,255,255,0.06);
     }
     textarea { resize: vertical; min-height: 80px; }
+    select option { background: #1A1A24; }
     .row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+    /* ── Buttons ── */
     button {
-      padding: 0.7rem 1.5rem; border-radius: var(--radius); border: none;
-      font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: all 0.2s;
+      padding: 0.65rem 1.25rem;
+      border-radius: 8px;
+      border: none;
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+      font-family: inherit;
     }
-    .btn-primary { background: var(--accent); color: white; }
-    .btn-primary:hover { background: var(--accent-hover); }
-    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-primary {
+      background: linear-gradient(135deg, #7B6FFF, #A78BFA);
+      color: white;
+      box-shadow: 0 2px 16px rgba(123,111,255,0.3);
+    }
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 24px rgba(123,111,255,0.45);
+    }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
     .btn-secondary {
-      background: transparent; color: var(--accent);
-      border: 1px solid var(--accent);
+      background: var(--surface-2);
+      color: var(--text);
+      border: 1px solid var(--border);
     }
-    .btn-secondary:hover { background: var(--accent-light); }
-    .btn-success { background: var(--success); color: white; }
-    .btn-success:hover { background: #047857; }
-    .btn-success:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-secondary:hover { background: var(--surface); border-color: var(--border-strong); }
+    .btn-success {
+      background: linear-gradient(135deg, #059669, #34D399);
+      color: white;
+    }
+    .btn-success:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(52,211,153,0.3); }
+    .btn-success:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
     .btn-danger {
-      background: transparent; color: var(--error);
-      border: 1px solid var(--error);
+      background: var(--error-light);
+      color: var(--error);
+      border: 1px solid rgba(248,113,113,0.2);
     }
-    .btn-danger:hover { background: var(--error-light); }
-    .result {
-      background: var(--bg); border: 1px solid var(--border);
-      border-radius: var(--radius); padding: 1rem; margin-top: 1rem;
-      font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.85rem;
-      white-space: pre-wrap; max-height: 500px; overflow-y: auto;
-    }
-    .result.success { border-color: var(--success); background: var(--success-light); }
-    .result.error { border-color: var(--error); background: var(--error-light); }
+    .btn-danger:hover { background: rgba(248,113,113,0.2); }
+
+    /* ── Spinner ── */
     .spinner {
-      display: inline-block; width: 16px; height: 16px;
-      border: 2px solid var(--border); border-top-color: var(--accent);
-      border-radius: 50%; animation: spin 0.6s linear infinite;
-      vertical-align: middle; margin-right: 0.5rem;
+      display: inline-block;
+      width: 16px; height: 16px;
+      border: 2px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+      vertical-align: middle;
+      margin-right: 0.5rem;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
-    .lead-table { width: 100%; border-collapse: collapse; margin-top: 1rem; font-size: 0.85rem; }
-    .lead-table th { text-align: left; color: var(--text-dim); padding: 0.5rem 0.75rem; border-bottom: 2px solid var(--border); font-weight: 600; }
-    .lead-table td { padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border); }
-    .lead-table tr:hover { background: var(--accent-light); }
-    .email-preview {
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: var(--radius); padding: 1.25rem; margin-bottom: 1rem;
-      box-shadow: var(--shadow);
+
+    /* ── Result boxes ── */
+    .result {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1rem;
+      margin-top: 1rem;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 0.85rem;
+      white-space: pre-wrap;
+      max-height: 500px;
+      overflow-y: auto;
+      color: var(--text-dim);
     }
-    .email-preview .ep-header { color: var(--text-dim); font-size: 0.8rem; margin-bottom: 0.5rem; }
-    .email-preview .ep-subject { font-weight: 600; margin-bottom: 0.75rem; font-size: 1rem; }
-    .email-preview .ep-body { color: var(--text); white-space: pre-wrap; line-height: 1.7; font-size: 0.9rem; }
-    .email-preview .ep-notes { color: var(--text-dim); font-size: 0.8rem; margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid var(--border); }
-    .email-preview .ep-actions { display: flex; gap: 0.5rem; margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid var(--border); }
-    .badge {
-      display: inline-block; padding: 0.15rem 0.5rem; border-radius: 100px;
-      font-size: 0.75rem; background: var(--accent-light); color: var(--accent); font-weight: 600;
+    .result.success { border-color: rgba(52,211,153,0.3); background: var(--success-light); color: var(--success); }
+    .result.error { border-color: rgba(248,113,113,0.3); background: var(--error-light); color: var(--error); }
+
+    /* ── Lead & company tables ── */
+    .lead-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+      font-size: 0.85rem;
     }
-    .badge-success { background: var(--success-light); color: var(--success); }
-    .icp-display { margin-top: 1rem; }
-    .icp-display h4 { font-size: 1rem; margin-bottom: 0.75rem; color: var(--accent); }
-    .icp-section { margin-bottom: 1.25rem; }
-    .icp-section .icp-label { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-dim); margin-bottom: 0.35rem; }
-    .icp-section .icp-value { font-size: 0.95rem; color: var(--text); }
-    .icp-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
-    .icp-tag {
-      display: inline-block; padding: 0.2rem 0.6rem; border-radius: 100px;
-      font-size: 0.8rem; background: var(--accent-light); color: var(--accent); font-weight: 500;
+    .lead-table th {
+      text-align: left;
+      color: var(--text-muted);
+      padding: 0.5rem 0.75rem;
+      border-bottom: 1px solid var(--border);
+      font-weight: 600;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
     }
-    .icp-tag.green { background: var(--success-light); color: var(--success); }
-    .icp-tag.orange { background: var(--warning-light); color: var(--warning); }
-    .icp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-    @media (max-width: 600px) { .icp-grid { grid-template-columns: 1fr; } }
-    .icp-pain { padding: 0.4rem 0; font-size: 0.9rem; color: var(--text); border-bottom: 1px solid var(--border); }
-    .icp-pain:last-child { border-bottom: none; }
-    .icp-rationale { font-size: 0.9rem; color: var(--text-dim); line-height: 1.7; padding: 0.75rem; background: var(--bg); border-radius: var(--radius); }
-    .company-table { width: 100%; border-collapse: collapse; margin-top: 0.75rem; font-size: 0.85rem; }
-    .company-table th { text-align: left; color: var(--text-dim); padding: 0.5rem 0.75rem; border-bottom: 2px solid var(--border); font-weight: 600; }
-    .company-table td { padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border); vertical-align: top; }
-    .company-table tr:hover td { background: var(--accent-light); }
+    .lead-table td {
+      padding: 0.5rem 0.75rem;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      color: var(--text);
+    }
+    .lead-table tr:hover td { background: rgba(255,255,255,0.03); }
+    .lead-table tr.selected td { background: var(--accent-light); }
+    .lead-table input[type="checkbox"] { width: 15px; height: 15px; margin: 0; cursor: pointer; accent-color: var(--accent); }
+    .lead-table th:first-child, .lead-table td:first-child { width: 36px; text-align: center; }
+
+    .company-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 0.75rem;
+      font-size: 0.85rem;
+    }
+    .company-table th {
+      text-align: left;
+      color: var(--text-muted);
+      padding: 0.5rem 0.75rem;
+      border-bottom: 1px solid var(--border);
+      font-weight: 600;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .company-table td {
+      padding: 0.5rem 0.75rem;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      vertical-align: top;
+      color: var(--text);
+    }
+    .company-table tr:hover td { background: rgba(255,255,255,0.03); }
     .company-table tr.co-selected td { background: var(--accent-light); }
     .company-table input[type="checkbox"] { width: 15px; height: 15px; margin: 0; cursor: pointer; accent-color: var(--accent); }
     .company-table th:first-child, .company-table td:first-child { width: 36px; text-align: center; }
-    .company-domain { font-family: 'SF Mono','Fira Code',monospace; font-size: 0.8rem; color: var(--accent); }
-    .relevance-text { font-size: 0.8rem; color: var(--text-dim); line-height: 1.5; }
-    .companies-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem; flex-wrap: wrap; gap: 0.5rem; }
-    .companies-meta { font-size: 0.8rem; color: var(--text-dim); margin-top: 0.2rem; }
-    .icp-action-bar { margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem; }
-    .co-selection-bar { display: flex; align-items: center; justify-content: space-between; padding: 0.65rem 1rem; background: var(--accent-light); border: 1px solid rgba(80,70,229,0.2); border-radius: var(--radius); margin-top: 0.75rem; gap: 0.75rem; flex-wrap: wrap; }
-    .co-selection-bar .co-sel-count { font-weight: 600; color: var(--accent); font-size: 0.88rem; }
-    .csv-drop-zone { border: 2px dashed var(--border); border-radius: var(--radius); padding: 2rem 1rem; text-align: center; cursor: pointer; transition: all 0.2s; background: var(--bg); }
-    .csv-drop-zone:hover { border-color: var(--accent); background: var(--accent-light); }
-    .directory-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 0.75rem; margin-bottom: 1rem; }
-    .directory-card { border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem; cursor: pointer; transition: all 0.2s; background: var(--surface); text-align: center; }
-    .directory-card:hover { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(80,70,229,0.08); }
-    .dir-icon { font-size: 1.75rem; margin-bottom: 0.4rem; }
-    .dir-name { font-weight: 600; font-size: 0.9rem; margin-bottom: 0.25rem; }
-    .dir-desc { font-size: 0.75rem; color: var(--text-dim); line-height: 1.4; margin-bottom: 0.5rem; }
-    .dir-link { font-size: 0.75rem; color: var(--accent); text-decoration: none; font-weight: 500; }
-    .dir-link:hover { text-decoration: underline; }
-    .source-tab { font-size: 0.82rem; padding: 0.4rem 0.75rem; }
+
+    /* ── Email preview ── */
+    .email-preview {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem;
+      margin-bottom: 1rem;
+      backdrop-filter: blur(12px);
+    }
+    .email-preview .ep-header { color: var(--text-dim); font-size: 0.8rem; margin-bottom: 0.5rem; }
+    .email-preview .ep-subject { font-weight: 600; margin-bottom: 0.75rem; font-size: 0.95rem; color: var(--text); }
+    .email-preview .ep-body { color: var(--text); white-space: pre-wrap; line-height: 1.7; font-size: 0.88rem; }
+    .email-preview .ep-notes { color: var(--text-dim); font-size: 0.78rem; margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid var(--border); }
+    .email-preview .ep-actions { display: flex; gap: 0.5rem; margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid var(--border); }
+
+    /* ── Badges ── */
+    .badge {
+      display: inline-block;
+      padding: 0.15rem 0.5rem;
+      border-radius: 100px;
+      font-size: 0.72rem;
+      background: var(--accent-light);
+      color: var(--accent-2);
+      font-weight: 600;
+    }
+    .badge-success { background: var(--success-light); color: var(--success); }
     .badge-warning { background: var(--warning-light); color: var(--warning); }
     .badge-error { background: var(--error-light); color: var(--error); }
+
+    /* ── ICP display ── */
+    .icp-display { margin-top: 1rem; }
+    .icp-display h4 {
+      font-size: 1rem;
+      margin-bottom: 0.75rem;
+      background: linear-gradient(135deg, #fff 30%, #A78BFA);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: 600;
+    }
+    .icp-section { margin-bottom: 1.25rem; }
+    .icp-section .icp-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--text-muted);
+      margin-bottom: 0.35rem;
+    }
+    .icp-section .icp-value { font-size: 0.92rem; color: var(--text); }
+    .icp-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+    .icp-tag {
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      border-radius: 100px;
+      font-size: 0.78rem;
+      background: var(--accent-light);
+      color: var(--accent-2);
+      font-weight: 500;
+      border: 1px solid rgba(123,111,255,0.2);
+    }
+    .icp-tag.green {
+      background: var(--success-light);
+      color: var(--success);
+      border-color: rgba(52,211,153,0.2);
+    }
+    .icp-tag.orange {
+      background: var(--warning-light);
+      color: var(--warning);
+      border-color: rgba(251,191,36,0.2);
+    }
+    .icp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    @media (max-width: 600px) { .icp-grid { grid-template-columns: 1fr; } }
+    .icp-pain {
+      padding: 0.4rem 0;
+      font-size: 0.88rem;
+      color: var(--text-dim);
+      border-bottom: 1px solid var(--border);
+    }
+    .icp-pain:last-child { border-bottom: none; }
+    .icp-rationale {
+      font-size: 0.88rem;
+      color: var(--text-dim);
+      line-height: 1.7;
+      padding: 0.875rem;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+    }
+
+    /* ── Source tabs (pill style) ── */
+    .source-tabs { display: flex; gap: 0.4rem; margin-bottom: 1.25rem; flex-wrap: wrap; }
+    .source-tab {
+      padding: 0.4rem 0.85rem;
+      border-radius: 100px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-dim);
+      font-size: 0.78rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s;
+      font-family: inherit;
+    }
+    .source-tab:hover { border-color: var(--border-strong); color: var(--text); }
+    .source-tab.active {
+      background: var(--accent-light);
+      color: var(--accent-2);
+      border-color: rgba(123,111,255,0.3);
+    }
+    .source-panel { display: none; }
+    .source-panel.active { display: block; }
+
+    /* ── Directory cards ── */
+    .directory-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 0.75rem; margin-bottom: 1rem; }
+    .directory-card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1rem;
+      cursor: pointer;
+      transition: all 0.15s;
+      background: rgba(255,255,255,0.02);
+      text-align: center;
+    }
+    .directory-card:hover {
+      border-color: rgba(123,111,255,0.4);
+      background: var(--accent-light);
+      box-shadow: 0 0 0 1px rgba(123,111,255,0.2);
+    }
+    .dir-icon { font-size: 1.75rem; margin-bottom: 0.4rem; }
+    .dir-name { font-weight: 600; font-size: 0.88rem; margin-bottom: 0.25rem; color: var(--text); }
+    .dir-desc { font-size: 0.72rem; color: var(--text-dim); line-height: 1.4; margin-bottom: 0.5rem; }
+    .dir-link { font-size: 0.72rem; color: var(--accent-2); text-decoration: none; font-weight: 500; }
+    .dir-link:hover { text-decoration: underline; }
+
+    /* ── CSV drop zone ── */
+    .csv-drop-zone {
+      border: 2px dashed var(--border);
+      border-radius: var(--radius);
+      padding: 2rem 1rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.15s;
+      background: rgba(255,255,255,0.02);
+    }
+    .csv-drop-zone:hover { border-color: rgba(123,111,255,0.5); background: var(--accent-light); }
+
+    /* ── Companies meta ── */
+    .company-domain { font-family: 'SF Mono','Fira Code',monospace; font-size: 0.78rem; color: var(--accent-2); }
+    .relevance-text { font-size: 0.78rem; color: var(--text-dim); line-height: 1.5; }
+    .companies-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem; flex-wrap: wrap; gap: 0.5rem; }
+    .companies-meta { font-size: 0.78rem; color: var(--text-dim); margin-top: 0.2rem; }
+    .icp-action-bar {
+      margin-top: 1.5rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+    .co-selection-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.65rem 1rem;
+      background: var(--accent-light);
+      border: 1px solid rgba(123,111,255,0.2);
+      border-radius: var(--radius);
+      margin-top: 0.75rem;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+    .co-selection-bar .co-sel-count { font-weight: 600; color: var(--accent-2); font-size: 0.85rem; }
+
+    /* ── Selection bar ── */
+    .selection-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.75rem 1rem;
+      background: var(--accent-light);
+      border: 1px solid rgba(123,111,255,0.2);
+      border-radius: var(--radius);
+      margin-top: 1rem;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .selection-bar .sel-count { font-weight: 600; color: var(--accent-2); font-size: 0.88rem; }
+
+    /* ── Outreach context box ── */
+    .outreach-context {
+      margin-top: 1rem;
+      padding: 1.25rem;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+    }
+    .outreach-context h4 { font-size: 0.92rem; font-weight: 600; margin-bottom: 1rem; color: var(--text); }
+    .ctx-collapse-btn {
+      background: none;
+      border: none;
+      color: var(--accent-2);
+      cursor: pointer;
+      font-size: 0.78rem;
+      padding: 0;
+      float: right;
+      font-weight: 500;
+    }
+
+    /* ── Gen progress ── */
+    .gen-progress { margin-top: 1rem; }
+    .gen-progress .gp-item { display: flex; align-items: center; gap: 0.5rem; padding: 0.3rem 0; font-size: 0.83rem; color: var(--text-dim); }
+    .gen-progress .gp-item.done { color: var(--success); }
+    .gen-progress .gp-item.fail { color: var(--error); }
+
+    /* ── Search links ── */
+    .search-links { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.75rem; }
+    .search-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.4rem 0.75rem;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      font-size: 0.78rem;
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.15s;
+    }
+    .search-link:hover { border-color: rgba(123,111,255,0.4); background: var(--accent-light); }
+    .search-link img { width: 16px; height: 16px; }
+
+    /* ── URL chips ── */
+    .url-chips { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.75rem; }
+    .url-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.25rem 0.6rem;
+      border-radius: 100px;
+      background: var(--accent-light);
+      color: var(--accent-2);
+      font-size: 0.78rem;
+      border: 1px solid rgba(123,111,255,0.2);
+    }
+    .url-chip button {
+      background: none;
+      border: none;
+      color: var(--accent-2);
+      cursor: pointer;
+      font-size: 0.9rem;
+      padding: 0;
+      line-height: 1;
+    }
+
+    /* ── Review summary ── */
     .review-summary {
-      display: flex; gap: 1.5rem; padding: 1rem; background: var(--bg);
-      border-radius: var(--radius); margin-bottom: 1.5rem; flex-wrap: wrap;
+      display: flex;
+      gap: 1.5rem;
+      padding: 1rem 1.25rem;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
     }
     .review-stat { text-align: center; }
-    .review-stat .num { font-size: 1.5rem; font-weight: 700; color: var(--accent); }
-    .review-stat .label { font-size: 0.75rem; color: var(--text-dim); }
+    .review-stat .num { font-size: 1.5rem; font-weight: 700; color: var(--accent-2); }
+    .review-stat .label { font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
     .review-actions {
-      display: flex; gap: 0.75rem; justify-content: flex-end;
-      padding-top: 1rem; border-top: 1px solid var(--border); margin-top: 1rem;
+      display: flex;
+      gap: 0.75rem;
+      justify-content: flex-end;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+      margin-top: 1rem;
+      flex-wrap: wrap;
     }
+
+    /* ── Send progress ── */
     .send-status { margin-top: 1rem; }
-    .send-status .status-item {
-      display: flex; align-items: center; gap: 0.5rem;
-      padding: 0.4rem 0; font-size: 0.85rem;
-    }
+    .send-status .status-item { display: flex; align-items: center; gap: 0.5rem; padding: 0.4rem 0; font-size: 0.85rem; color: var(--text-dim); }
     .send-status .status-icon { width: 18px; text-align: center; }
-    footer { text-align: center; color: var(--text-dim); font-size: 0.8rem; margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); }
-    footer a { color: var(--accent); text-decoration: none; }
+
+    /* ── Misc ── */
     .actions { display: flex; gap: 0.75rem; margin-top: 1rem; }
     .hidden { display: none; }
     hr.divider { border: none; border-top: 1px solid var(--border); margin: 1rem 0; }
     .checkbox-row { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; }
     .checkbox-row input[type="checkbox"] { width: auto; margin: 0; }
     .checkbox-row label { margin: 0; font-size: 0.85rem; }
-    .source-tabs { display: flex; gap: 0.5rem; margin-bottom: 1.25rem; }
-    .source-tab {
-      padding: 0.5rem 1rem; border-radius: 100px; border: 1px solid var(--border);
-      background: var(--bg); color: var(--text-dim); font-size: 0.85rem;
-      font-weight: 500; cursor: pointer; transition: all 0.2s;
+
+    /* ── Footer ── */
+    footer {
+      padding: 1.25rem 2.25rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      position: relative;
+      z-index: 1;
     }
-    .source-tab:hover { border-color: var(--accent); color: var(--accent); }
-    .source-tab.active { background: var(--accent); color: white; border-color: var(--accent); }
-    .source-panel { display: none; }
-    .source-panel.active { display: block; }
-    .search-links { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.75rem; }
-    .search-link {
-      display: inline-flex; align-items: center; gap: 0.4rem;
-      padding: 0.4rem 0.75rem; border-radius: var(--radius); border: 1px solid var(--border);
-      background: var(--surface); color: var(--text); font-size: 0.8rem;
-      text-decoration: none; font-weight: 500; transition: all 0.2s;
-    }
-    .search-link:hover { border-color: var(--accent); background: var(--accent-light); }
-    .search-link img { width: 16px; height: 16px; }
-    .url-chips { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.75rem; }
-    .url-chip {
-      display: inline-flex; align-items: center; gap: 0.3rem;
-      padding: 0.25rem 0.6rem; border-radius: 100px; background: var(--accent-light);
-      color: var(--accent); font-size: 0.8rem;
-    }
-    .url-chip button {
-      background: none; border: none; color: var(--accent); cursor: pointer;
-      font-size: 0.9rem; padding: 0; line-height: 1;
-    }
-    .lead-table input[type="checkbox"] { width: 15px; height: 15px; margin: 0; cursor: pointer; accent-color: var(--accent); }
-    .lead-table th:first-child, .lead-table td:first-child { width: 36px; text-align: center; }
-    .lead-table tr.selected { background: var(--accent-light); }
-    .selection-bar {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 0.75rem 1rem; background: var(--accent-light);
-      border-radius: var(--radius); margin-top: 1rem; gap: 1rem; flex-wrap: wrap;
-    }
-    .selection-bar .sel-count { font-weight: 600; color: var(--accent); font-size: 0.9rem; }
-    .outreach-context {
-      margin-top: 1rem; padding: 1.25rem; background: var(--bg);
-      border: 1px solid var(--border); border-radius: var(--radius);
-    }
-    .outreach-context h4 { font-size: 0.95rem; font-weight: 600; margin-bottom: 1rem; }
-    .ctx-collapse-btn {
-      background: none; border: none; color: var(--accent); cursor: pointer;
-      font-size: 0.8rem; padding: 0; float: right; font-weight: 500;
-    }
-    .gen-progress { margin-top: 1rem; }
-    .gen-progress .gp-item {
-      display: flex; align-items: center; gap: 0.5rem;
-      padding: 0.3rem 0; font-size: 0.85rem; color: var(--text-dim);
-    }
-    .gen-progress .gp-item.done { color: var(--success); }
-    .gen-progress .gp-item.fail { color: var(--error); }
+    footer a { color: var(--accent-2); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
   </style>
 </head>
 <body>
-  <div class="container">
-    <header>
-      <h1><span>GTM</span> Tool</h1>
-      <p>AI-powered lead generation and personalized outreach</p>
-    </header>
 
-    <div class="tabs">
-      <button class="tab active" data-tab="icp">1. Define ICP</button>
-      <button class="tab" data-tab="search">2. Source Leads</button>
-      <button class="tab" data-tab="outreach">3. Outreach</button>
-      <button class="tab" data-tab="review">4. Review & Send</button>
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-wrap">
+        <div class="logo-icon">⚡</div>
+        <span class="logo-name">GTM Tool</span>
+      </div>
     </div>
+    <nav class="sidebar-nav">
+      <div class="nav-label">Workflow</div>
+      <button class="tab active" data-tab="icp">
+        <span>◎ Define ICP</span><span class="tab-step">01</span>
+      </button>
+      <button class="tab" data-tab="search">
+        <span>◎ Source Leads</span><span class="tab-step">02</span>
+      </button>
+      <button class="tab" data-tab="outreach">
+        <span>◎ Outreach</span><span class="tab-step">03</span>
+      </button>
+      <button class="tab" data-tab="review">
+        <span>◎ Review &amp; Send</span><span class="tab-step">04</span>
+      </button>
+    </nav>
+    <div class="sidebar-footer">
+      AI-powered GTM<br>Claude · Hunter.io · Tavily
+    </div>
+  </aside>
+
+  <!-- Main content -->
+  <main class="main">
 
     <!-- ICP Panel -->
     <div class="panel active" id="panel-icp">
-      <div class="card">
-        <h3>Generate ICP with AI</h3>
-        <p style="color:var(--text-dim); margin-bottom:1rem; font-size:0.9rem;">Describe your product or service and Claude will generate an Ideal Customer Profile.</p>
-        <label>Product / Service Description</label>
-        <textarea id="icp-description" rows="5" placeholder="e.g., DevPulse is a developer productivity platform that integrates with GitHub and Jira to provide real-time engineering metrics and AI-powered code review suggestions..."></textarea>
-        <button class="btn-primary" id="icp-generate-btn" onclick="generateICP()">Generate ICP</button>
-        <div id="icp-result" class="hidden"></div>
+      <div class="panel-header">
+        <h1>Ideal Customer Profile</h1>
+        <p>Describe your product and Claude will define your target buyer</p>
+      </div>
+      <div class="panel-body">
+        <div class="card">
+          <h3>Generate ICP with AI</h3>
+          <p style="color:var(--text-dim); margin-bottom:1rem; font-size:0.88rem;">Describe your product or service and Claude will generate an Ideal Customer Profile.</p>
+          <label>Product / Service Description</label>
+          <textarea id="icp-description" rows="5" placeholder="e.g., DevPulse is a developer productivity platform that integrates with GitHub and Jira to provide real-time engineering metrics and AI-powered code review suggestions..."></textarea>
+          <button class="btn-primary" id="icp-generate-btn" onclick="generateICP()">Generate ICP</button>
+          <div id="icp-result" class="hidden"></div>
+        </div>
       </div>
     </div>
 
     <!-- Search Panel -->
     <div class="panel" id="panel-search">
-
-      <!-- Target Companies Section (populated from ICP) -->
-      <div class="card hidden" id="companies-section">
-        <h3>Target Companies</h3>
-        <p style="color:var(--text-dim); font-size:0.9rem; margin-bottom:1rem;">These organizations were identified as strong prospects based on your ICP rationale. Click <strong>Use These Domains</strong> to auto-fill Hunter.io and start sourcing contacts.</p>
-        <div id="companies-content"><!-- populated by JS --></div>
+      <div class="panel-header">
+        <h1>Source Leads</h1>
+        <p>Find contacts across 7 data sources — Hunter.io, Tavily, Apollo, CSV, directories and more</p>
       </div>
+      <div class="panel-body">
 
-      <div class="card">
-        <h3>Source Leads</h3>
-        <div class="source-tabs">
-          <button class="source-tab active" onclick="switchSource('hunter')">🎯 Hunter.io</button>
-          <button class="source-tab" onclick="switchSource('perplexity')">🔍 Tavily</button>
-          <button class="source-tab" onclick="switchSource('apollo')">🚀 Apollo.io</button>
-          <button class="source-tab" onclick="switchSource('csv')">📄 CSV Upload</button>
-          <button class="source-tab" onclick="switchSource('directories')">📚 Directories</button>
-          <button class="source-tab" onclick="switchSource('web')">🤖 AI Search</button>
-          <button class="source-tab" onclick="switchSource('url')">🔗 URL Import</button>
+        <!-- Target Companies Section (populated from ICP) -->
+        <div class="card hidden" id="companies-section">
+          <h3>Target Companies</h3>
+          <p style="color:var(--text-dim); font-size:0.88rem; margin-bottom:1rem;">These organizations were identified as strong prospects based on your ICP rationale. Click <strong>Use These Domains</strong> to auto-fill Hunter.io and start sourcing contacts.</p>
+          <div id="companies-content"><!-- populated by JS --></div>
         </div>
 
-        <!-- Hunter.io Source -->
-        <div class="source-panel active" id="source-hunter">
-          <p style="color:var(--text-dim); margin-bottom:1rem; font-size:0.9rem;">Find verified work emails by company domain. Best for targeted outreach once you know which companies to pursue.</p>
-          <label>Company Domains (one per line or comma-separated)</label>
-          <textarea id="search-domains" rows="4" placeholder="stripe.com&#10;datadog.com&#10;vercel.com"></textarea>
-          <div class="row">
-            <div>
-              <label>Seniority Filter</label>
-              <select id="search-seniority">
-                <option value="">All seniorities</option>
-                <option value="executive">Executive (C-suite, VP)</option>
-                <option value="senior" selected>Senior (Directors, Managers)</option>
-                <option value="junior">Junior</option>
-              </select>
-            </div>
-            <div>
-              <label>Department Filter</label>
-              <select id="search-department">
-                <option value="">All departments</option>
-                <option value="executive">Executive</option>
-                <option value="it" selected>IT / Engineering</option>
-                <option value="management">Management</option>
-                <option value="sales">Sales</option>
-                <option value="marketing">Marketing</option>
-                <option value="finance">Finance</option>
-                <option value="operations">Operations</option>
-              </select>
-            </div>
+        <div class="card">
+          <h3>Source Leads</h3>
+          <div class="source-tabs">
+            <button class="source-tab active" onclick="switchSource('hunter')">🎯 Hunter.io</button>
+            <button class="source-tab" onclick="switchSource('perplexity')">🔍 Tavily</button>
+            <button class="source-tab" onclick="switchSource('apollo')">🚀 Apollo.io</button>
+            <button class="source-tab" onclick="switchSource('csv')">📄 CSV Upload</button>
+            <button class="source-tab" onclick="switchSource('directories')">📚 Directories</button>
+            <button class="source-tab" onclick="switchSource('web')">🤖 AI Search</button>
+            <button class="source-tab" onclick="switchSource('url')">🔗 URL Import</button>
           </div>
-          <div class="row">
-            <div>
-              <label>Max results</label>
-              <input id="search-limit" type="number" value="25" min="1" max="100">
-            </div>
-            <div></div>
-          </div>
-          <button class="btn-primary" id="search-btn" onclick="searchLeads()">Search Hunter.io</button>
-        </div>
 
-        <!-- Tavily Source -->
-        <div class="source-panel" id="source-perplexity">
-          <p style="color:var(--text-dim); margin-bottom:1rem; font-size:0.9rem;">Search the <strong>live web</strong> with Tavily AI Search to find real, up-to-date leads. Returns verified results from current web sources. Free tier: 1,000 searches/month.</p>
-          <label>Search Query</label>
-          <textarea id="perp-query" rows="3" placeholder="e.g., Medical directors and VP of Operations at regional health systems in the southeastern US"></textarea>
-          <div class="row">
-            <div>
-              <label>Max leads to find</label>
-              <input id="perp-limit" type="number" value="10" min="1" max="25">
+          <!-- Hunter.io Source -->
+          <div class="source-panel active" id="source-hunter">
+            <p style="color:var(--text-dim); margin-bottom:1rem; font-size:0.88rem;">Find verified work emails by company domain. Best for targeted outreach once you know which companies to pursue.</p>
+            <label>Company Domains (one per line or comma-separated)</label>
+            <textarea id="search-domains" rows="4" placeholder="stripe.com&#10;datadog.com&#10;vercel.com"></textarea>
+            <div class="row">
+              <div>
+                <label>Seniority Filter</label>
+                <select id="search-seniority">
+                  <option value="">All seniorities</option>
+                  <option value="executive">Executive (C-suite, VP)</option>
+                  <option value="senior" selected>Senior (Directors, Managers)</option>
+                  <option value="junior">Junior</option>
+                </select>
+              </div>
+              <div>
+                <label>Department Filter</label>
+                <select id="search-department">
+                  <option value="">All departments</option>
+                  <option value="executive">Executive</option>
+                  <option value="it" selected>IT / Engineering</option>
+                  <option value="management">Management</option>
+                  <option value="sales">Sales</option>
+                  <option value="marketing">Marketing</option>
+                  <option value="finance">Finance</option>
+                  <option value="operations">Operations</option>
+                </select>
+              </div>
             </div>
-            <div></div>
+            <div class="row">
+              <div>
+                <label>Max results</label>
+                <input id="search-limit" type="number" value="25" min="1" max="100">
+              </div>
+              <div></div>
+            </div>
+            <button class="btn-primary" id="search-btn" onclick="searchLeads()">Search Hunter.io</button>
           </div>
-          <button class="btn-primary" id="perp-btn" onclick="perplexitySearchLeads()">Search with Tavily</button>
-        </div>
 
-        <!-- Apollo.io Source -->
-        <div class="source-panel" id="source-apollo">
-          <p style="color:var(--text-dim); margin-bottom:1rem; font-size:0.9rem;">Search Apollo.io's database of 275M+ contacts by title, location, and company size. Free tier: 50 exports/month. Requires <code>APOLLO_API_KEY</code>.</p>
-          <label>Job Titles (comma-separated)</label>
-          <input id="apollo-titles" placeholder="VP of Engineering, CTO, Director of Engineering, Head of Product">
-          <div class="row">
-            <div>
-              <label>Locations (comma-separated)</label>
-              <input id="apollo-locations" placeholder="United States, Canada, United Kingdom">
+          <!-- Tavily Source -->
+          <div class="source-panel" id="source-perplexity">
+            <p style="color:var(--text-dim); margin-bottom:1rem; font-size:0.88rem;">Search the <strong>live web</strong> with Tavily AI Search to find real, up-to-date leads. Returns verified results from current web sources. Free tier: 1,000 searches/month.</p>
+            <label>Search Query</label>
+            <textarea id="perp-query" rows="3" placeholder="e.g., Medical directors and VP of Operations at regional health systems in the southeastern US"></textarea>
+            <div class="row">
+              <div>
+                <label>Max leads to find</label>
+                <input id="perp-limit" type="number" value="10" min="1" max="25">
+              </div>
+              <div></div>
             </div>
-            <div>
-              <label>Company Size</label>
-              <select id="apollo-emp-range">
-                <option value="">Any size</option>
-                <option value="1,10">1–10</option>
-                <option value="11,50">11–50</option>
-                <option value="51,200">51–200</option>
-                <option value="201,500">201–500</option>
-                <option value="501,1000">501–1,000</option>
-                <option value="1001,5000">1,001–5,000</option>
-                <option value="5001,10000">5,001–10,000</option>
-                <option value="10001,100000000">10,001+</option>
-              </select>
-            </div>
+            <button class="btn-primary" id="perp-btn" onclick="perplexitySearchLeads()">Search with Tavily</button>
           </div>
-          <div class="row">
-            <div>
-              <label>Max results</label>
-              <input id="apollo-limit" type="number" value="25" min="1" max="50">
-            </div>
-            <div></div>
-          </div>
-          <button class="btn-primary" id="apollo-btn" onclick="apolloSearchLeads()">Search Apollo.io</button>
-        </div>
 
-        <!-- CSV Upload Source -->
-        <div class="source-panel" id="source-csv">
-          <p style="color:var(--text-dim); margin-bottom:1rem; font-size:0.9rem;">Import leads from any CSV file. Automatically detects LinkedIn Connections exports, Apollo exports, and any CSV with name/email/company columns. <strong>No API key needed.</strong></p>
-          <div class="csv-drop-zone" id="csv-drop-zone" onclick="document.getElementById('csv-file-input').click()">
-            <div style="font-size:2rem; margin-bottom:0.5rem;">📄</div>
-            <div style="font-weight:600; margin-bottom:0.3rem;">Click to upload a CSV file</div>
-            <div style="font-size:0.8rem; color:var(--text-dim);">LinkedIn Connections · Apollo Export · Any CSV with names &amp; emails</div>
-            <input type="file" id="csv-file-input" accept=".csv,.tsv" style="display:none" onchange="handleCSVUpload(event)">
+          <!-- Apollo.io Source -->
+          <div class="source-panel" id="source-apollo">
+            <p style="color:var(--text-dim); margin-bottom:1rem; font-size:0.88rem;">Search Apollo.io's database of 275M+ contacts by title, location, and company size. Free tier: 50 exports/month. Requires <code>APOLLO_API_KEY</code>.</p>
+            <label>Job Titles (comma-separated)</label>
+            <input id="apollo-titles" placeholder="VP of Engineering, CTO, Director of Engineering, Head of Product">
+            <div class="row">
+              <div>
+                <label>Locations (comma-separated)</label>
+                <input id="apollo-locations" placeholder="United States, Canada, United Kingdom">
+              </div>
+              <div>
+                <label>Company Size</label>
+                <select id="apollo-emp-range">
+                  <option value="">Any size</option>
+                  <option value="1,10">1–10</option>
+                  <option value="11,50">11–50</option>
+                  <option value="51,200">51–200</option>
+                  <option value="201,500">201–500</option>
+                  <option value="501,1000">501–1,000</option>
+                  <option value="1001,5000">1,001–5,000</option>
+                  <option value="5001,10000">5,001–10,000</option>
+                  <option value="10001,100000000">10,001+</option>
+                </select>
+              </div>
+            </div>
+            <div class="row">
+              <div>
+                <label>Max results</label>
+                <input id="apollo-limit" type="number" value="25" min="1" max="50">
+              </div>
+              <div></div>
+            </div>
+            <button class="btn-primary" id="apollo-btn" onclick="apolloSearchLeads()">Search Apollo.io</button>
           </div>
-          <div style="margin-top:0.75rem; font-size:0.8rem; color:var(--text-dim);">
-            <strong>How to export from LinkedIn:</strong> LinkedIn.com → Me → Settings &amp; Privacy → Data Privacy → Get a copy of your data → Connections<br>
-            <strong>How to export from Apollo:</strong> Apollo.io → People → Select contacts → Export CSV
-          </div>
-          <div id="csv-preview" class="hidden" style="margin-top:1rem;"></div>
-        </div>
 
-        <!-- Directories Source -->
-        <div class="source-panel" id="source-directories">
-          <p style="color:var(--text-dim); margin-bottom:1rem; font-size:0.9rem;">Search professional directories and import leads. Click a platform to open it, find relevant profiles, then paste the URL below to extract leads.</p>
-          <div class="directory-grid">
-            <div class="directory-card" onclick="openDirectoryImport('https://www.doximity.com/clinician_search','Paste a Doximity search results page URL below')">
-              <div class="dir-icon">🏥</div>
-              <div class="dir-name">Doximity</div>
-              <div class="dir-desc">Physicians &amp; healthcare professionals</div>
-              <a href="https://www.doximity.com/clinician_search" target="_blank" rel="noopener" class="dir-link" onclick="event.stopPropagation()">Open Doximity ↗</a>
+          <!-- CSV Upload Source -->
+          <div class="source-panel" id="source-csv">
+            <p style="color:var(--text-dim); margin-bottom:1rem; font-size:0.88rem;">Import leads from any CSV file. Automatically detects LinkedIn Connections exports, Apollo exports, and any CSV with name/email/company columns. <strong>No API key needed.</strong></p>
+            <div class="csv-drop-zone" id="csv-drop-zone" onclick="document.getElementById('csv-file-input').click()">
+              <div style="font-size:2rem; margin-bottom:0.5rem;">📄</div>
+              <div style="font-weight:600; margin-bottom:0.3rem; color:var(--text);">Click to upload a CSV file</div>
+              <div style="font-size:0.78rem; color:var(--text-dim);">LinkedIn Connections · Apollo Export · Any CSV with names &amp; emails</div>
+              <input type="file" id="csv-file-input" accept=".csv,.tsv" style="display:none" onchange="handleCSVUpload(event)">
             </div>
-            <div class="directory-card" onclick="openDirectoryImport('https://www.crunchbase.com/people','Paste a Crunchbase search or profile URL below')">
-              <div class="dir-icon">🦄</div>
-              <div class="dir-name">Crunchbase</div>
-              <div class="dir-desc">Startup founders &amp; C-suite at funded companies</div>
-              <a href="https://www.crunchbase.com/people" target="_blank" rel="noopener" class="dir-link" onclick="event.stopPropagation()">Open Crunchbase ↗</a>
+            <div style="margin-top:0.75rem; font-size:0.78rem; color:var(--text-dim);">
+              <strong style="color:var(--text-dim);">How to export from LinkedIn:</strong> LinkedIn.com → Me → Settings &amp; Privacy → Data Privacy → Get a copy of your data → Connections<br>
+              <strong style="color:var(--text-dim);">How to export from Apollo:</strong> Apollo.io → People → Select contacts → Export CSV
             </div>
-            <div class="directory-card" onclick="openDirectoryImport('https://www.g2.com/products','Paste a G2 product reviews page URL below')">
-              <div class="dir-icon">⭐</div>
-              <div class="dir-name">G2</div>
-              <div class="dir-desc">Software buyers who reviewed competitor tools</div>
-              <a href="https://www.g2.com/products" target="_blank" rel="noopener" class="dir-link" onclick="event.stopPropagation()">Open G2 ↗</a>
+            <div id="csv-preview" class="hidden" style="margin-top:1rem;"></div>
+          </div>
+
+          <!-- Directories Source -->
+          <div class="source-panel" id="source-directories">
+            <p style="color:var(--text-dim); margin-bottom:1rem; font-size:0.88rem;">Search professional directories and import leads. Click a platform to open it, find relevant profiles, then paste the URL below to extract leads.</p>
+            <div class="directory-grid">
+              <div class="directory-card" onclick="openDirectoryImport('https://www.doximity.com/clinician_search','Paste a Doximity search results page URL below')">
+                <div class="dir-icon">🏥</div>
+                <div class="dir-name">Doximity</div>
+                <div class="dir-desc">Physicians &amp; healthcare professionals</div>
+                <a href="https://www.doximity.com/clinician_search" target="_blank" rel="noopener" class="dir-link" onclick="event.stopPropagation()">Open Doximity ↗</a>
+              </div>
+              <div class="directory-card" onclick="openDirectoryImport('https://www.crunchbase.com/people','Paste a Crunchbase search or profile URL below')">
+                <div class="dir-icon">🦄</div>
+                <div class="dir-name">Crunchbase</div>
+                <div class="dir-desc">Startup founders &amp; C-suite at funded companies</div>
+                <a href="https://www.crunchbase.com/people" target="_blank" rel="noopener" class="dir-link" onclick="event.stopPropagation()">Open Crunchbase ↗</a>
+              </div>
+              <div class="directory-card" onclick="openDirectoryImport('https://www.g2.com/products','Paste a G2 product reviews page URL below')">
+                <div class="dir-icon">⭐</div>
+                <div class="dir-name">G2</div>
+                <div class="dir-desc">Software buyers who reviewed competitor tools</div>
+                <a href="https://www.g2.com/products" target="_blank" rel="noopener" class="dir-link" onclick="event.stopPropagation()">Open G2 ↗</a>
+              </div>
+              <div class="directory-card" onclick="openDirectoryImport('https://www.capterra.com','Paste a Capterra product page URL below')">
+                <div class="dir-icon">🖥️</div>
+                <div class="dir-name">Capterra</div>
+                <div class="dir-desc">Software buyers &amp; reviewers by category</div>
+                <a href="https://www.capterra.com" target="_blank" rel="noopener" class="dir-link" onclick="event.stopPropagation()">Open Capterra ↗</a>
+              </div>
+              <div class="directory-card" onclick="openDirectoryImport('https://sessionize.com/speakers','Paste a conference speakers page URL below')">
+                <div class="dir-icon">🎤</div>
+                <div class="dir-name">Conference Speakers</div>
+                <div class="dir-desc">High-intent senior decision-makers</div>
+                <a href="https://sessionize.com/speakers" target="_blank" rel="noopener" class="dir-link" onclick="event.stopPropagation()">Browse Speakers ↗</a>
+              </div>
+              <div class="directory-card" onclick="openDirectoryImport('https://go.pulsepoint.com','Paste a PulsePoint page URL below')">
+                <div class="dir-icon">💊</div>
+                <div class="dir-name">PulsePoint HCP</div>
+                <div class="dir-desc">Healthcare professionals &amp; HCPs</div>
+                <a href="https://go.pulsepoint.com" target="_blank" rel="noopener" class="dir-link" onclick="event.stopPropagation()">Open PulsePoint ↗</a>
+              </div>
             </div>
-            <div class="directory-card" onclick="openDirectoryImport('https://www.capterra.com','Paste a Capterra product page URL below')">
-              <div class="dir-icon">🖥️</div>
-              <div class="dir-name">Capterra</div>
-              <div class="dir-desc">Software buyers &amp; reviewers by category</div>
-              <a href="https://www.capterra.com" target="_blank" rel="noopener" class="dir-link" onclick="event.stopPropagation()">Open Capterra ↗</a>
-            </div>
-            <div class="directory-card" onclick="openDirectoryImport('https://sessionize.com/speakers','Paste a conference speakers page URL below')">
-              <div class="dir-icon">🎤</div>
-              <div class="dir-name">Conference Speakers</div>
-              <div class="dir-desc">High-intent senior decision-makers</div>
-              <a href="https://sessionize.com/speakers" target="_blank" rel="noopener" class="dir-link" onclick="event.stopPropagation()">Browse Speakers ↗</a>
-            </div>
-            <div class="directory-card" onclick="openDirectoryImport('https://go.pulsepoint.com','Paste a PulsePoint page URL below')">
-              <div class="dir-icon">💊</div>
-              <div class="dir-name">PulsePoint HCP</div>
-              <div class="dir-desc">Healthcare professionals &amp; HCPs</div>
-              <a href="https://go.pulsepoint.com" target="_blank" rel="noopener" class="dir-link" onclick="event.stopPropagation()">Open PulsePoint ↗</a>
+            <div id="directory-import-box" class="hidden" style="margin-top:1.25rem; padding:1rem; background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:var(--radius);">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem;">
+                <strong style="font-size:0.88rem;" id="dir-import-label">Paste URL to extract leads from</strong>
+                <button onclick="document.getElementById('directory-import-box').classList.add('hidden')" style="background:none; border:none; color:var(--text-dim); cursor:pointer; font-size:1rem; padding:0;">✕</button>
+              </div>
+              <label>URL</label>
+              <input id="dir-url" type="url" placeholder="https://...">
+              <label>What to look for (optional)</label>
+              <input id="dir-context" placeholder="e.g., Chief Medical Officers, VPs of Clinical Operations">
+              <button class="btn-primary" id="dir-import-btn" onclick="directoryImportLeads()">Extract Leads with AI</button>
             </div>
           </div>
-          <div id="directory-import-box" class="hidden" style="margin-top:1.25rem; padding:1rem; background:var(--bg); border:1px solid var(--border); border-radius:var(--radius);">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem;">
-              <strong style="font-size:0.9rem;" id="dir-import-label">Paste URL to extract leads from</strong>
-              <button onclick="document.getElementById('directory-import-box').classList.add('hidden')" style="background:none; border:none; color:var(--text-dim); cursor:pointer; font-size:1rem;">✕</button>
+
+          <!-- AI Search Source (Claude) -->
+          <div class="source-panel" id="source-web">
+            <p style="color:var(--text-dim); margin-bottom:1rem; font-size:0.88rem;">Describe who you're looking for. Claude AI will draw on its knowledge to generate a list of realistic matching leads.</p>
+            <label>Search Query</label>
+            <textarea id="web-query" rows="3" placeholder="e.g., Pediatric medical directors and lab directors at children's hospitals in the US who make decisions about laboratory testing services"></textarea>
+            <div class="row">
+              <div>
+                <label>Max leads to extract</label>
+                <input id="web-limit" type="number" value="10" min="1" max="25">
+              </div>
+              <div></div>
             </div>
-            <label>URL</label>
-            <input id="dir-url" type="url" placeholder="https://...">
-            <label>What to look for (optional)</label>
-            <input id="dir-context" placeholder="e.g., Chief Medical Officers, VPs of Clinical Operations">
-            <button class="btn-primary" id="dir-import-btn" onclick="directoryImportLeads()">Extract Leads with AI</button>
+            <button class="btn-primary" id="web-search-btn" onclick="webSearchLeads()">Search with Claude AI</button>
           </div>
-        </div>
 
-        <!-- AI Search Source (Claude) -->
-        <div class="source-panel" id="source-web">
-          <p style="color:var(--text-dim); margin-bottom:1rem; font-size:0.9rem;">Describe who you're looking for. Claude AI will draw on its knowledge to generate a list of realistic matching leads.</p>
-          <label>Search Query</label>
-          <textarea id="web-query" rows="3" placeholder="e.g., Pediatric medical directors and lab directors at children's hospitals in the US who make decisions about laboratory testing services"></textarea>
-          <div class="row">
-            <div>
-              <label>Max leads to extract</label>
-              <input id="web-limit" type="number" value="10" min="1" max="25">
-            </div>
-            <div></div>
+          <!-- URL Import Source -->
+          <div class="source-panel" id="source-url">
+            <p style="color:var(--text-dim); margin-bottom:1rem; font-size:0.88rem;">Paste any URL and Claude AI will extract lead information from the page. Works with team pages, directories, search results, and more.</p>
+            <label>URLs to scan (one per line)</label>
+            <textarea id="url-input" rows="4" placeholder="https://go.pulsepoint.com/hcp-marketing-campaigns&#10;https://www.example.com/our-team&#10;https://directory.example.com/physicians"></textarea>
+            <label>Context (helps Claude extract the right leads)</label>
+            <textarea id="url-context" rows="2" placeholder="e.g., Looking for pediatric healthcare decision-makers, medical directors, lab directors"></textarea>
+            <button class="btn-primary" id="url-import-btn" onclick="urlImportLeads()">Extract Leads from URLs</button>
           </div>
-          <button class="btn-primary" id="web-search-btn" onclick="webSearchLeads()">Search with Claude AI</button>
-        </div>
 
-        <!-- URL Import Source -->
-        <div class="source-panel" id="source-url">
-          <p style="color:var(--text-dim); margin-bottom:1rem; font-size:0.9rem;">Paste any URL and Claude AI will extract lead information from the page. Works with team pages, directories, search results, and more.</p>
-          <label>URLs to scan (one per line)</label>
-          <textarea id="url-input" rows="4" placeholder="https://go.pulsepoint.com/hcp-marketing-campaigns&#10;https://www.example.com/our-team&#10;https://directory.example.com/physicians"></textarea>
-          <label>Context (helps Claude extract the right leads)</label>
-          <textarea id="url-context" rows="2" placeholder="e.g., Looking for pediatric healthcare decision-makers, medical directors, lab directors"></textarea>
-          <button class="btn-primary" id="url-import-btn" onclick="urlImportLeads()">Extract Leads from URLs</button>
+          <div id="search-result" class="hidden"></div>
         </div>
-
-        <div id="search-result" class="hidden"></div>
       </div>
     </div>
 
     <!-- Outreach Panel -->
     <div class="panel" id="panel-outreach">
-      <div class="card">
-        <h3>Generate Personalized Emails</h3>
-        <p style="color:var(--text-dim); margin-bottom:1rem; font-size:0.9rem;">Configure your outreach context, then generate personalized emails for your sourced leads.</p>
-        <div class="row">
-          <div>
-            <label>Lead First Name</label>
-            <input id="out-first" placeholder="Jane">
+      <div class="panel-header">
+        <h1>Outreach</h1>
+        <p>Generate personalized cold emails with Claude</p>
+      </div>
+      <div class="panel-body">
+        <div class="card">
+          <h3>Generate Personalized Emails</h3>
+          <p style="color:var(--text-dim); margin-bottom:1rem; font-size:0.88rem;">Configure your outreach context, then generate personalized emails for your sourced leads.</p>
+          <div class="row">
+            <div>
+              <label>Lead First Name</label>
+              <input id="out-first" placeholder="Jane">
+            </div>
+            <div>
+              <label>Lead Last Name</label>
+              <input id="out-last" placeholder="Smith">
+            </div>
           </div>
-          <div>
-            <label>Lead Last Name</label>
-            <input id="out-last" placeholder="Smith">
+          <div class="row">
+            <div>
+              <label>Lead Title</label>
+              <input id="out-title" placeholder="CTO">
+            </div>
+            <div>
+              <label>Lead Company</label>
+              <input id="out-company" placeholder="Acme Corp">
+            </div>
           </div>
+          <div class="row">
+            <div>
+              <label>Industry</label>
+              <input id="out-industry" placeholder="SaaS">
+            </div>
+            <div>
+              <label>Company Size</label>
+              <input id="out-size" type="number" placeholder="150">
+            </div>
+          </div>
+          <hr class="divider">
+          <label>Your Product Description</label>
+          <textarea id="out-product" rows="3" placeholder="What your product does..."></textarea>
+          <label>Value Proposition</label>
+          <textarea id="out-value" rows="2" placeholder="Key benefit to the prospect..."></textarea>
+          <div class="row">
+            <div>
+              <label>Your Name</label>
+              <input id="out-sender" placeholder="Sarah Johnson">
+            </div>
+            <div>
+              <label>Your Title</label>
+              <input id="out-sender-title" placeholder="Co-founder & CEO">
+            </div>
+          </div>
+          <div class="row">
+            <div>
+              <label>Your Company</label>
+              <input id="out-sender-company" placeholder="DevPulse">
+            </div>
+            <div>
+              <label>Tone</label>
+              <select id="out-tone">
+                <option value="professional">Professional</option>
+                <option value="casual">Casual</option>
+                <option value="friendly">Friendly</option>
+                <option value="direct">Direct</option>
+              </select>
+            </div>
+          </div>
+          <button class="btn-primary" id="out-btn" onclick="generateEmail()">Generate Email</button>
+          <div id="out-result" class="hidden"></div>
         </div>
-        <div class="row">
-          <div>
-            <label>Lead Title</label>
-            <input id="out-title" placeholder="CTO">
-          </div>
-          <div>
-            <label>Lead Company</label>
-            <input id="out-company" placeholder="Acme Corp">
-          </div>
-        </div>
-        <div class="row">
-          <div>
-            <label>Industry</label>
-            <input id="out-industry" placeholder="SaaS">
-          </div>
-          <div>
-            <label>Company Size</label>
-            <input id="out-size" type="number" placeholder="150">
-          </div>
-        </div>
-        <hr class="divider">
-        <label>Your Product Description</label>
-        <textarea id="out-product" rows="3" placeholder="What your product does..."></textarea>
-        <label>Value Proposition</label>
-        <textarea id="out-value" rows="2" placeholder="Key benefit to the prospect..."></textarea>
-        <div class="row">
-          <div>
-            <label>Your Name</label>
-            <input id="out-sender" placeholder="Sarah Johnson">
-          </div>
-          <div>
-            <label>Your Title</label>
-            <input id="out-sender-title" placeholder="Co-founder & CEO">
-          </div>
-        </div>
-        <div class="row">
-          <div>
-            <label>Your Company</label>
-            <input id="out-sender-company" placeholder="DevPulse">
-          </div>
-          <div>
-            <label>Tone</label>
-            <select id="out-tone">
-              <option value="professional">Professional</option>
-              <option value="casual">Casual</option>
-              <option value="friendly">Friendly</option>
-              <option value="direct">Direct</option>
-            </select>
-          </div>
-        </div>
-        <button class="btn-primary" id="out-btn" onclick="generateEmail()">Generate Email</button>
-        <div id="out-result" class="hidden"></div>
       </div>
     </div>
 
     <!-- Review & Send Panel -->
     <div class="panel" id="panel-review">
-      <div class="card">
-        <h3>Review & Send Emails</h3>
-        <p style="color:var(--text-dim); margin-bottom:1rem; font-size:0.9rem;">Review all generated emails before sending. You can edit, remove, or regenerate individual emails.</p>
+      <div class="panel-header">
+        <h1>Review &amp; Send</h1>
+        <p>Approve and deliver your personalized outreach</p>
+      </div>
+      <div class="panel-body">
+        <div class="card">
+          <h3>Review &amp; Send Emails</h3>
+          <p style="color:var(--text-dim); margin-bottom:1rem; font-size:0.88rem;">Review all generated emails before sending. You can edit, remove, or regenerate individual emails.</p>
 
-        <div id="review-empty" style="text-align:center; padding:3rem 1rem; color:var(--text-dim);">
-          <p style="font-size:1.1rem; margin-bottom:0.5rem;">No emails to review yet.</p>
-          <p style="font-size:0.85rem;">Generate emails in the Outreach tab first, then come back here to review and send.</p>
-        </div>
-
-        <div id="review-content" class="hidden">
-          <div class="review-summary" id="review-summary"></div>
-          <div id="review-emails"></div>
-          <div class="review-actions" id="review-actions">
-            <button class="btn-danger" onclick="clearAllEmails()">Clear All</button>
-            <button class="btn-secondary" onclick="downloadEmailsJSON()">Export JSON</button>
-            <button class="btn-success" id="send-all-btn" onclick="sendAllEmails()">Send All Approved</button>
+          <div id="review-empty" style="text-align:center; padding:3rem 1rem; color:var(--text-dim);">
+            <p style="font-size:1.05rem; margin-bottom:0.5rem;">No emails to review yet.</p>
+            <p style="font-size:0.83rem;">Generate emails in the Outreach tab first, then come back here to review and send.</p>
           </div>
-        </div>
 
-        <div id="send-progress" class="hidden">
-          <h3 style="margin-bottom:0.75rem;">Sending Emails...</h3>
-          <div class="send-status" id="send-status"></div>
+          <div id="review-content" class="hidden">
+            <div class="review-summary" id="review-summary"></div>
+            <div id="review-emails"></div>
+            <div class="review-actions" id="review-actions">
+              <button class="btn-danger" onclick="clearAllEmails()">Clear All</button>
+              <button class="btn-secondary" onclick="downloadEmailsJSON()">Export JSON</button>
+              <button class="btn-success" id="send-all-btn" onclick="sendAllEmails()">Send All Approved</button>
+            </div>
+          </div>
+
+          <div id="send-progress" class="hidden">
+            <h3 style="margin-bottom:0.75rem;">Sending Emails...</h3>
+            <div class="send-status" id="send-status"></div>
+          </div>
         </div>
       </div>
     </div>
 
     <footer>
-      GTM Tool v0.1.0 &mdash; Built with Claude API, <a href="https://hunter.io" target="_blank">Hunter.io</a> &amp; Vercel
+      GTM Tool v0.1.0 &mdash; Built with <a href="https://anthropic.com" target="_blank">Claude API</a>, <a href="https://hunter.io" target="_blank">Hunter.io</a> &amp; <a href="https://tavily.com" target="_blank">Tavily</a>
     </footer>
-  </div>
+
+  </main>
 
   <script>
     // Tab switching
@@ -848,7 +1309,7 @@
         if (data.sources?.length) {
           const citDiv = document.createElement('div');
           citDiv.style.cssText = 'margin-top:0.75rem; font-size:0.78rem; color:var(--text-dim);';
-          citDiv.innerHTML = '<strong>Sources:</strong> ' + data.sources.slice(0, 5).map(c => { try { return `<a href="${esc(c)}" target="_blank" rel="noopener" style="color:var(--accent);">${esc(new URL(c).hostname)}</a>`; } catch { return ''; } }).filter(Boolean).join(', ');
+          citDiv.innerHTML = '<strong>Sources:</strong> ' + data.sources.slice(0, 5).map(c => { try { return `<a href="${esc(c)}" target="_blank" rel="noopener" style="color:var(--accent-2);">${esc(new URL(c).hostname)}</a>`; } catch { return ''; } }).filter(Boolean).join(', ');
           resultDiv.appendChild(citDiv);
         }
       } catch (err) {
@@ -1233,10 +1694,10 @@
           html += `<tr id="lead-row-${i}" onclick="toggleLeadRow(${i}, event)">
             <td><input type="checkbox" class="lead-cb" data-idx="${i}" onchange="updateSelection()" onclick="event.stopPropagation()"></td>
             <td>${esc(l.firstName || '')} ${esc(l.lastName || '')}</td>
-            <td>${esc(l.title || '\u2014')}</td>
-            <td>${esc(l.company || '\u2014')}</td>
-            <td>${esc(l.email || '\u2014')}</td>
-            <td>${esc(l.source || l.seniority || '\u2014')}</td>
+            <td>${esc(l.title || '—')}</td>
+            <td>${esc(l.company || '—')}</td>
+            <td>${esc(l.email || '—')}</td>
+            <td>${esc(l.source || l.seniority || '—')}</td>
           </tr>`;
         });
         html += '</tbody></table>';
@@ -1526,7 +1987,7 @@
         <div class="review-stat"><div class="num" style="color:var(--warning);">${pending}</div><div class="label">Pending</div></div>
         <div class="review-stat"><div class="num" style="color:var(--success);">${approved}</div><div class="label">Approved</div></div>
         <div class="review-stat"><div class="num" style="color:var(--error);">${rejected}</div><div class="label">Rejected</div></div>
-        ${sent ? `<div class="review-stat"><div class="num" style="color:var(--accent);">${sent}</div><div class="label">Sent</div></div>` : ''}
+        ${sent ? `<div class="review-stat"><div class="num" style="color:var(--accent-2);">${sent}</div><div class="label">Sent</div></div>` : ''}
         ${failed ? `<div class="review-stat"><div class="num" style="color:var(--error);">${failed}</div><div class="label">Failed</div></div>` : ''}
       `;
 
@@ -1670,7 +2131,7 @@
           </div>
           <div class="icp-section">
             <div class="icp-label">Company Size</div>
-            <div class="icp-value">${icp.companySize ? esc(icp.companySize.min + ' \u2013 ' + icp.companySize.max + ' employees') : '\u2014'}</div>
+            <div class="icp-value">${icp.companySize ? esc(icp.companySize.min + ' – ' + icp.companySize.max + ' employees') : '—'}</div>
           </div>
           <div class="icp-section">
             <div class="icp-label">Geography</div>
