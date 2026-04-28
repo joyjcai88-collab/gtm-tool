@@ -153,6 +153,17 @@
     .icp-action-bar { margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem; }
     .co-selection-bar { display: flex; align-items: center; justify-content: space-between; padding: 0.65rem 1rem; background: var(--accent-light); border: 1px solid rgba(80,70,229,0.2); border-radius: var(--radius); margin-top: 0.75rem; gap: 0.75rem; flex-wrap: wrap; }
     .co-selection-bar .co-sel-count { font-weight: 600; color: var(--accent); font-size: 0.88rem; }
+    .csv-drop-zone { border: 2px dashed var(--border); border-radius: var(--radius); padding: 2rem 1rem; text-align: center; cursor: pointer; transition: all 0.2s; background: var(--bg); }
+    .csv-drop-zone:hover { border-color: var(--accent); background: var(--accent-light); }
+    .directory-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 0.75rem; margin-bottom: 1rem; }
+    .directory-card { border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem; cursor: pointer; transition: all 0.2s; background: var(--surface); text-align: center; }
+    .directory-card:hover { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(80,70,229,0.08); }
+    .dir-icon { font-size: 1.75rem; margin-bottom: 0.4rem; }
+    .dir-name { font-weight: 600; font-size: 0.9rem; margin-bottom: 0.25rem; }
+    .dir-desc { font-size: 0.75rem; color: var(--text-dim); line-height: 1.4; margin-bottom: 0.5rem; }
+    .dir-link { font-size: 0.75rem; color: var(--accent); text-decoration: none; font-weight: 500; }
+    .dir-link:hover { text-decoration: underline; }
+    .source-tab { font-size: 0.82rem; padding: 0.4rem 0.75rem; }
     .badge-warning { background: var(--warning-light); color: var(--warning); }
     .badge-error { background: var(--error-light); color: var(--error); }
     .review-summary {
@@ -275,14 +286,18 @@
       <div class="card">
         <h3>Source Leads</h3>
         <div class="source-tabs">
-          <button class="source-tab active" onclick="switchSource('hunter')">Hunter.io</button>
-          <button class="source-tab" onclick="switchSource('web')">Web Search</button>
-          <button class="source-tab" onclick="switchSource('url')">URL Import</button>
+          <button class="source-tab active" onclick="switchSource('hunter')">🎯 Hunter.io</button>
+          <button class="source-tab" onclick="switchSource('perplexity')">🔍 Perplexity</button>
+          <button class="source-tab" onclick="switchSource('apollo')">🚀 Apollo.io</button>
+          <button class="source-tab" onclick="switchSource('csv')">📄 CSV Upload</button>
+          <button class="source-tab" onclick="switchSource('directories')">📚 Directories</button>
+          <button class="source-tab" onclick="switchSource('web')">🤖 AI Search</button>
+          <button class="source-tab" onclick="switchSource('url')">🔗 URL Import</button>
         </div>
 
         <!-- Hunter.io Source -->
         <div class="source-panel active" id="source-hunter">
-          <p style="color:var(--text-dim); margin-bottom:1rem; font-size:0.9rem;">Enter company domains to find contacts with verified emails via Hunter.io.</p>
+          <p style="color:var(--text-dim); margin-bottom:1rem; font-size:0.9rem;">Find verified work emails by company domain. Best for targeted outreach once you know which companies to pursue.</p>
           <label>Company Domains (one per line or comma-separated)</label>
           <textarea id="search-domains" rows="4" placeholder="stripe.com&#10;datadog.com&#10;vercel.com"></textarea>
           <div class="row">
@@ -319,9 +334,129 @@
           <button class="btn-primary" id="search-btn" onclick="searchLeads()">Search Hunter.io</button>
         </div>
 
-        <!-- Web Search Source -->
+        <!-- Perplexity Source -->
+        <div class="source-panel" id="source-perplexity">
+          <p style="color:var(--text-dim); margin-bottom:1rem; font-size:0.9rem;">Search the <strong>live web</strong> with Perplexity AI to find real, up-to-date leads. Returns people from current web sources with citations. Requires <code>PERPLEXITY_API_KEY</code>.</p>
+          <label>Search Query</label>
+          <textarea id="perp-query" rows="3" placeholder="e.g., Medical directors and VP of Operations at regional health systems in the southeastern US"></textarea>
+          <div class="row">
+            <div>
+              <label>Max leads to find</label>
+              <input id="perp-limit" type="number" value="10" min="1" max="25">
+            </div>
+            <div></div>
+          </div>
+          <button class="btn-primary" id="perp-btn" onclick="perplexitySearchLeads()">Search with Perplexity</button>
+        </div>
+
+        <!-- Apollo.io Source -->
+        <div class="source-panel" id="source-apollo">
+          <p style="color:var(--text-dim); margin-bottom:1rem; font-size:0.9rem;">Search Apollo.io's database of 275M+ contacts by title, location, and company size. Free tier: 50 exports/month. Requires <code>APOLLO_API_KEY</code>.</p>
+          <label>Job Titles (comma-separated)</label>
+          <input id="apollo-titles" placeholder="VP of Engineering, CTO, Director of Engineering, Head of Product">
+          <div class="row">
+            <div>
+              <label>Locations (comma-separated)</label>
+              <input id="apollo-locations" placeholder="United States, Canada, United Kingdom">
+            </div>
+            <div>
+              <label>Company Size</label>
+              <select id="apollo-emp-range">
+                <option value="">Any size</option>
+                <option value="1,10">1–10</option>
+                <option value="11,50">11–50</option>
+                <option value="51,200">51–200</option>
+                <option value="201,500">201–500</option>
+                <option value="501,1000">501–1,000</option>
+                <option value="1001,5000">1,001–5,000</option>
+                <option value="5001,10000">5,001–10,000</option>
+                <option value="10001,100000000">10,001+</option>
+              </select>
+            </div>
+          </div>
+          <div class="row">
+            <div>
+              <label>Max results</label>
+              <input id="apollo-limit" type="number" value="25" min="1" max="50">
+            </div>
+            <div></div>
+          </div>
+          <button class="btn-primary" id="apollo-btn" onclick="apolloSearchLeads()">Search Apollo.io</button>
+        </div>
+
+        <!-- CSV Upload Source -->
+        <div class="source-panel" id="source-csv">
+          <p style="color:var(--text-dim); margin-bottom:1rem; font-size:0.9rem;">Import leads from any CSV file. Automatically detects LinkedIn Connections exports, Apollo exports, and any CSV with name/email/company columns. <strong>No API key needed.</strong></p>
+          <div class="csv-drop-zone" id="csv-drop-zone" onclick="document.getElementById('csv-file-input').click()">
+            <div style="font-size:2rem; margin-bottom:0.5rem;">📄</div>
+            <div style="font-weight:600; margin-bottom:0.3rem;">Click to upload a CSV file</div>
+            <div style="font-size:0.8rem; color:var(--text-dim);">LinkedIn Connections · Apollo Export · Any CSV with names &amp; emails</div>
+            <input type="file" id="csv-file-input" accept=".csv,.tsv" style="display:none" onchange="handleCSVUpload(event)">
+          </div>
+          <div style="margin-top:0.75rem; font-size:0.8rem; color:var(--text-dim);">
+            <strong>How to export from LinkedIn:</strong> LinkedIn.com → Me → Settings &amp; Privacy → Data Privacy → Get a copy of your data → Connections<br>
+            <strong>How to export from Apollo:</strong> Apollo.io → People → Select contacts → Export CSV
+          </div>
+          <div id="csv-preview" class="hidden" style="margin-top:1rem;"></div>
+        </div>
+
+        <!-- Directories Source -->
+        <div class="source-panel" id="source-directories">
+          <p style="color:var(--text-dim); margin-bottom:1rem; font-size:0.9rem;">Search professional directories and import leads. Click a platform to open it, find relevant profiles, then paste the URL below to extract leads.</p>
+          <div class="directory-grid">
+            <div class="directory-card" onclick="openDirectoryImport('https://www.doximity.com/clinician_search','Paste a Doximity search results page URL below')">
+              <div class="dir-icon">🏥</div>
+              <div class="dir-name">Doximity</div>
+              <div class="dir-desc">Physicians &amp; healthcare professionals</div>
+              <a href="https://www.doximity.com/clinician_search" target="_blank" rel="noopener" class="dir-link" onclick="event.stopPropagation()">Open Doximity ↗</a>
+            </div>
+            <div class="directory-card" onclick="openDirectoryImport('https://www.crunchbase.com/people','Paste a Crunchbase search or profile URL below')">
+              <div class="dir-icon">🦄</div>
+              <div class="dir-name">Crunchbase</div>
+              <div class="dir-desc">Startup founders &amp; C-suite at funded companies</div>
+              <a href="https://www.crunchbase.com/people" target="_blank" rel="noopener" class="dir-link" onclick="event.stopPropagation()">Open Crunchbase ↗</a>
+            </div>
+            <div class="directory-card" onclick="openDirectoryImport('https://www.g2.com/products','Paste a G2 product reviews page URL below')">
+              <div class="dir-icon">⭐</div>
+              <div class="dir-name">G2</div>
+              <div class="dir-desc">Software buyers who reviewed competitor tools</div>
+              <a href="https://www.g2.com/products" target="_blank" rel="noopener" class="dir-link" onclick="event.stopPropagation()">Open G2 ↗</a>
+            </div>
+            <div class="directory-card" onclick="openDirectoryImport('https://www.capterra.com','Paste a Capterra product page URL below')">
+              <div class="dir-icon">🖥️</div>
+              <div class="dir-name">Capterra</div>
+              <div class="dir-desc">Software buyers &amp; reviewers by category</div>
+              <a href="https://www.capterra.com" target="_blank" rel="noopener" class="dir-link" onclick="event.stopPropagation()">Open Capterra ↗</a>
+            </div>
+            <div class="directory-card" onclick="openDirectoryImport('https://sessionize.com/speakers','Paste a conference speakers page URL below')">
+              <div class="dir-icon">🎤</div>
+              <div class="dir-name">Conference Speakers</div>
+              <div class="dir-desc">High-intent senior decision-makers</div>
+              <a href="https://sessionize.com/speakers" target="_blank" rel="noopener" class="dir-link" onclick="event.stopPropagation()">Browse Speakers ↗</a>
+            </div>
+            <div class="directory-card" onclick="openDirectoryImport('https://go.pulsepoint.com','Paste a PulsePoint page URL below')">
+              <div class="dir-icon">💊</div>
+              <div class="dir-name">PulsePoint HCP</div>
+              <div class="dir-desc">Healthcare professionals &amp; HCPs</div>
+              <a href="https://go.pulsepoint.com" target="_blank" rel="noopener" class="dir-link" onclick="event.stopPropagation()">Open PulsePoint ↗</a>
+            </div>
+          </div>
+          <div id="directory-import-box" class="hidden" style="margin-top:1.25rem; padding:1rem; background:var(--bg); border:1px solid var(--border); border-radius:var(--radius);">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem;">
+              <strong style="font-size:0.9rem;" id="dir-import-label">Paste URL to extract leads from</strong>
+              <button onclick="document.getElementById('directory-import-box').classList.add('hidden')" style="background:none; border:none; color:var(--text-dim); cursor:pointer; font-size:1rem;">✕</button>
+            </div>
+            <label>URL</label>
+            <input id="dir-url" type="url" placeholder="https://...">
+            <label>What to look for (optional)</label>
+            <input id="dir-context" placeholder="e.g., Chief Medical Officers, VPs of Clinical Operations">
+            <button class="btn-primary" id="dir-import-btn" onclick="directoryImportLeads()">Extract Leads with AI</button>
+          </div>
+        </div>
+
+        <!-- AI Search Source (Claude) -->
         <div class="source-panel" id="source-web">
-          <p style="color:var(--text-dim); margin-bottom:1rem; font-size:0.9rem;">Describe who you're looking for. Claude AI will use web search to find matching leads and extract contact information.</p>
+          <p style="color:var(--text-dim); margin-bottom:1rem; font-size:0.9rem;">Describe who you're looking for. Claude AI will draw on its knowledge to generate a list of realistic matching leads.</p>
           <label>Search Query</label>
           <textarea id="web-query" rows="3" placeholder="e.g., Pediatric medical directors and lab directors at children's hospitals in the US who make decisions about laboratory testing services"></textarea>
           <div class="row">
@@ -331,20 +466,12 @@
             </div>
             <div></div>
           </div>
-          <button class="btn-primary" id="web-search-btn" onclick="webSearchLeads()">Search with AI</button>
-          <div style="margin-top:1rem;">
-            <label style="margin-bottom:0.5rem;">Quick search on external engines:</label>
-            <div class="search-links" id="web-quick-links">
-              <a class="search-link" href="https://www.perplexity.ai/" target="_blank" rel="noopener">Perplexity AI</a>
-              <a class="search-link" href="https://www.google.com/" target="_blank" rel="noopener">Google</a>
-              <a class="search-link" href="https://go.pulsepoint.com/" target="_blank" rel="noopener">PulsePoint HCP</a>
-            </div>
-          </div>
+          <button class="btn-primary" id="web-search-btn" onclick="webSearchLeads()">Search with Claude AI</button>
         </div>
 
         <!-- URL Import Source -->
         <div class="source-panel" id="source-url">
-          <p style="color:var(--text-dim); margin-bottom:1rem; font-size:0.9rem;">Paste any URL and Claude AI will extract lead information from the page. Works with company team pages, directories, search results, and more.</p>
+          <p style="color:var(--text-dim); margin-bottom:1rem; font-size:0.9rem;">Paste any URL and Claude AI will extract lead information from the page. Works with team pages, directories, search results, and more.</p>
           <label>URLs to scan (one per line)</label>
           <textarea id="url-input" rows="4" placeholder="https://go.pulsepoint.com/hcp-marketing-campaigns&#10;https://www.example.com/our-team&#10;https://directory.example.com/physicians"></textarea>
           <label>Context (helps Claude extract the right leads)</label>
@@ -687,6 +814,269 @@
       a.href = URL.createObjectURL(blob);
       a.download = 'target-companies-' + Date.now() + '.csv';
       a.click();
+    }
+
+    // ============================================================
+    // PERPLEXITY — live web search
+    // ============================================================
+    async function perplexitySearchLeads() {
+      const btn = document.getElementById('perp-btn');
+      const resultDiv = document.getElementById('search-result');
+      const query = document.getElementById('perp-query').value.trim();
+      const limit = parseInt(document.getElementById('perp-limit').value) || 10;
+
+      if (query.length < 5) return alert('Please describe who you are looking for.');
+
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner"></span> Searching Perplexity...';
+      resultDiv.classList.remove('hidden');
+      resultDiv.innerHTML = '<p><span class="spinner"></span> Perplexity is searching the live web for leads...</p>';
+
+      try {
+        const res = await fetch('/api/perplexity-leads', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ query, limit }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Search failed');
+
+        lastLeadsResult = data.leads;
+        for (const l of data.leads) l.source = 'Perplexity';
+        renderLeadsTable(data.leads, data.leads.length, resultDiv);
+
+        if (data.citations?.length) {
+          const citDiv = document.createElement('div');
+          citDiv.style.cssText = 'margin-top:0.75rem; font-size:0.78rem; color:var(--text-dim);';
+          citDiv.innerHTML = '<strong>Sources:</strong> ' + data.citations.slice(0, 5).map(c => `<a href="${esc(c)}" target="_blank" rel="noopener" style="color:var(--accent);">${esc(new URL(c).hostname)}</a>`).join(', ');
+          resultDiv.appendChild(citDiv);
+        }
+      } catch (err) {
+        resultDiv.innerHTML = '<p style="color:var(--error);">Error: ' + esc(err.message) + '</p>';
+        resultDiv.className = 'card';
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Search with Perplexity';
+      }
+    }
+
+    // ============================================================
+    // APOLLO.IO — contacts database
+    // ============================================================
+    async function apolloSearchLeads() {
+      const btn = document.getElementById('apollo-btn');
+      const resultDiv = document.getElementById('search-result');
+
+      const titlesRaw = document.getElementById('apollo-titles').value.trim();
+      const locationsRaw = document.getElementById('apollo-locations').value.trim();
+      const empRange = document.getElementById('apollo-emp-range').value;
+      const limit = parseInt(document.getElementById('apollo-limit').value) || 25;
+
+      const titles = titlesRaw ? titlesRaw.split(',').map(s => s.trim()).filter(Boolean) : [];
+      const locations = locationsRaw ? locationsRaw.split(',').map(s => s.trim()).filter(Boolean) : [];
+      const employeeRanges = empRange ? [empRange] : [];
+
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner"></span> Searching Apollo.io...';
+      resultDiv.classList.remove('hidden');
+      resultDiv.innerHTML = 'Querying Apollo.io...';
+
+      try {
+        const res = await fetch('/api/apollo-leads', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ titles, locations, employeeRanges, limit }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Apollo search failed');
+
+        lastLeadsResult = data.leads;
+        for (const l of data.leads) l.source = 'Apollo.io';
+        renderLeadsTable(data.leads, data.totalResults ?? data.leads.length, resultDiv);
+      } catch (err) {
+        resultDiv.innerHTML = '<p style="color:var(--error);">Error: ' + esc(err.message) + '</p>';
+        resultDiv.className = 'card';
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Search Apollo.io';
+      }
+    }
+
+    // ============================================================
+    // CSV UPLOAD — parse LinkedIn / Apollo / generic exports
+    // ============================================================
+    let parsedCSVLeads = null;
+
+    function handleCSVUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (e) => parseAndPreviewCSV(e.target.result, file.name);
+      reader.readAsText(file);
+      // Reset input so same file can be re-selected
+      event.target.value = '';
+    }
+
+    function parseCSVText(text) {
+      const lines = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n').split('\n');
+      const result = [];
+      for (const line of lines) {
+        if (!line.trim()) continue;
+        // Simple CSV parse (handles quoted fields)
+        const cols = [];
+        let cur = '', inQuote = false;
+        for (let i = 0; i < line.length; i++) {
+          const ch = line[i];
+          if (ch === '"') { inQuote = !inQuote; }
+          else if (ch === ',' && !inQuote) { cols.push(cur); cur = ''; }
+          else { cur += ch; }
+        }
+        cols.push(cur);
+        result.push(cols.map(c => c.trim()));
+      }
+      return result;
+    }
+
+    function detectCSVFormat(headers) {
+      const h = headers.map(s => s.toLowerCase());
+      if (h.includes('connected on') || h.includes('url')) return 'linkedin';
+      if (h.includes('email status') || h.includes('company name for emails')) return 'apollo';
+      return 'generic';
+    }
+
+    function mapCSVRow(headers, row, format) {
+      const h = headers.map(s => s.toLowerCase());
+      const get = (...keys) => {
+        for (const k of keys) {
+          const idx = h.indexOf(k.toLowerCase());
+          if (idx !== -1 && row[idx]) return row[idx].trim();
+        }
+        return '';
+      };
+
+      let firstName, lastName, email, title, company, location;
+
+      if (format === 'linkedin') {
+        firstName = get('first name');
+        lastName = get('last name');
+        email = get('email address');
+        title = get('position');
+        company = get('company');
+        location = '';
+      } else if (format === 'apollo') {
+        firstName = get('first name');
+        lastName = get('last name');
+        email = get('email');
+        title = get('title');
+        company = get('company', 'company name for emails');
+        location = [get('city'), get('state'), get('country')].filter(Boolean).join(', ');
+      } else {
+        firstName = get('first name', 'firstname', 'first_name');
+        lastName = get('last name', 'lastname', 'last_name');
+        email = get('email', 'email address', 'work email');
+        title = get('title', 'job title', 'position', 'role');
+        company = get('company', 'organization', 'employer', 'company name');
+        location = get('location', 'city', 'country');
+      }
+
+      return { firstName, lastName, email: email || null, title, company, location: location || null, source: 'CSV Upload', seniority: null };
+    }
+
+    function parseAndPreviewCSV(text, filename) {
+      const rows = parseCSVText(text);
+      if (rows.length < 2) {
+        alert('CSV appears empty or invalid.');
+        return;
+      }
+      const headers = rows[0];
+      const format = detectCSVFormat(headers);
+      const formatLabels = { linkedin: 'LinkedIn Connections', apollo: 'Apollo Export', generic: 'Generic CSV' };
+
+      const leads = rows.slice(1)
+        .map(row => mapCSVRow(headers, row, format))
+        .filter(l => l.firstName || l.lastName || l.email);
+
+      parsedCSVLeads = leads;
+
+      const preview = document.getElementById('csv-preview');
+      preview.classList.remove('hidden');
+      preview.innerHTML = `
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.75rem; flex-wrap:wrap; gap:0.5rem;">
+          <div>
+            <strong>${leads.length} leads</strong> detected in <em>${esc(filename)}</em>
+            <span class="badge" style="margin-left:0.4rem;">${esc(formatLabels[format])}</span>
+          </div>
+          <button class="btn-primary" onclick="importCSVLeads()" style="padding:0.4rem 0.9rem; font-size:0.85rem;">Import ${leads.length} Leads</button>
+        </div>
+        <div style="overflow-x:auto; max-height:220px; border:1px solid var(--border); border-radius:var(--radius);">
+          <table class="lead-table" style="margin-top:0;">
+            <thead><tr><th>Name</th><th>Title</th><th>Company</th><th>Email</th></tr></thead>
+            <tbody>
+              ${leads.slice(0, 5).map(l => `<tr>
+                <td>${esc(l.firstName)} ${esc(l.lastName)}</td>
+                <td>${esc(l.title || '—')}</td>
+                <td>${esc(l.company || '—')}</td>
+                <td>${esc(l.email || '—')}</td>
+              </tr>`).join('')}
+              ${leads.length > 5 ? `<tr><td colspan="4" style="text-align:center; color:var(--text-dim); font-size:0.8rem;">... and ${leads.length - 5} more</td></tr>` : ''}
+            </tbody>
+          </table>
+        </div>`;
+    }
+
+    function importCSVLeads() {
+      if (!parsedCSVLeads || !parsedCSVLeads.length) return;
+      lastLeadsResult = parsedCSVLeads;
+      const resultDiv = document.getElementById('search-result');
+      resultDiv.classList.remove('hidden');
+      renderLeadsTable(parsedCSVLeads, parsedCSVLeads.length, resultDiv);
+      resultDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    // ============================================================
+    // DIRECTORIES — URL import with context
+    // ============================================================
+    function openDirectoryImport(defaultUrl, label) {
+      const box = document.getElementById('directory-import-box');
+      const labelEl = document.getElementById('dir-import-label');
+      const urlInput = document.getElementById('dir-url');
+      if (labelEl) labelEl.textContent = label;
+      if (urlInput && !urlInput.value) urlInput.value = defaultUrl;
+      box.classList.remove('hidden');
+      box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    async function directoryImportLeads() {
+      const btn = document.getElementById('dir-import-btn');
+      const resultDiv = document.getElementById('search-result');
+      const url = document.getElementById('dir-url').value.trim();
+      const context = document.getElementById('dir-context').value.trim();
+
+      if (!url.startsWith('http')) return alert('Please enter a valid URL.');
+
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner"></span> Extracting leads...';
+      resultDiv.classList.remove('hidden');
+      resultDiv.innerHTML = '<p><span class="spinner"></span> Fetching page and extracting leads with Claude AI...</p>';
+
+      try {
+        const res = await fetch('/api/web-leads', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ urls: [url], context, limit: 25 }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Extraction failed');
+
+        lastLeadsResult = data.leads;
+        renderLeadsTable(data.leads, data.leads.length, resultDiv);
+      } catch (err) {
+        resultDiv.innerHTML = '<p style="color:var(--error);">Error: ' + esc(err.message) + '</p>';
+        resultDiv.className = 'card';
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Extract Leads with AI';
+      }
     }
 
     // ============================================================
