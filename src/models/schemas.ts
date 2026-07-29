@@ -101,7 +101,7 @@ export const GtmConfigSchema = z.object({
   }).default({}),
   claude: z.object({
     apiKey: z.string().optional(),
-    model: z.string().default('claude-sonnet-4-20250514'),
+    model: z.string().default('claude-sonnet-5'),
   }).default({}),
   smtp: z.object({
     host: z.string().optional(),

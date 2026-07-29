@@ -91,7 +91,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     const response = await client.messages.create({
-      model: process.env.CLAUDE_MODEL ?? 'claude-sonnet-4-20250514',
+      model: process.env.CLAUDE_MODEL ?? 'claude-sonnet-5',
       max_tokens: 4096,
       system: `You are a B2B lead research assistant. Extract or generate realistic lead data from the provided content or query. Always return structured data using the submit_leads tool. Focus on decision-makers: directors, VPs, C-suite, managers. Include as much detail as possible for each lead.`,
       tools: [LEAD_EXTRACTION_TOOL],

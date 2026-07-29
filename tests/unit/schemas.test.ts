@@ -127,7 +127,7 @@ describe('GtmConfigSchema', () => {
       expect(result.data.smtp.port).toBe(587);
       expect(result.data.defaults.batchSize).toBe(10);
       expect(result.data.defaults.emailDelayMs).toBe(3000);
-      expect(result.data.claude.model).toBe('claude-sonnet-4-20250514');
+      expect(result.data.claude.model).toBe('claude-sonnet-5');
     }
   });
 

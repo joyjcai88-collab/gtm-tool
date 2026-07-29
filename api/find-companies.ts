@@ -60,7 +60,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     ].filter(Boolean).join('\n');
 
     const response = await client.messages.create({
-      model: process.env.CLAUDE_MODEL ?? 'claude-sonnet-4-20250514',
+      model: process.env.CLAUDE_MODEL ?? 'claude-sonnet-5',
       max_tokens: 4096,
       system: `You are an expert GTM researcher. Given an Ideal Customer Profile (ICP), identify real, named companies and organizations that are the best prospects. Return specific real companies with accurate, working domain names. Focus on companies that match ALL key criteria: industry, company size, geography, and the pain points and rationale described. Prioritize well-known, verifiable organizations. Be specific — return actual company names, not generic categories.`,
       tools: [COMPANY_FINDING_TOOL],

@@ -52,7 +52,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     const client = new Anthropic({ apiKey });
     const response = await client.messages.create({
-      model: process.env.CLAUDE_MODEL ?? 'claude-sonnet-4-20250514',
+      model: process.env.CLAUDE_MODEL ?? 'claude-sonnet-5',
       max_tokens: 2048,
       system: `You are an expert GTM (Go-To-Market) strategist. Given a product or service description, generate a detailed Ideal Customer Profile (ICP) that identifies the best-fit companies and decision-makers to target. Be specific and actionable.`,
       tools: [ICP_GENERATION_TOOL],
