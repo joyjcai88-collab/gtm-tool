@@ -45,7 +45,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
-    const client = new Anthropic({ apiKey });
+    const client = new Anthropic({ apiKey, maxRetries: 5 });
 
     const icpSummary = [
       `Industry: ${icp.industry || 'Not specified'}`,

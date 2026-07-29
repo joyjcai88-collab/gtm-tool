@@ -50,7 +50,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
-    const client = new Anthropic({ apiKey });
+    const client = new Anthropic({ apiKey, maxRetries: 5 });
     const response = await client.messages.create({
       model: process.env.CLAUDE_MODEL ?? 'claude-sonnet-5',
       max_tokens: 2048,

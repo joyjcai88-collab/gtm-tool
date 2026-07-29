@@ -73,7 +73,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
-    const client = new Anthropic({ apiKey });
+    const client = new Anthropic({ apiKey, maxRetries: 5 });
     let userContent = '';
 
     if (urls && urls.length > 0) {

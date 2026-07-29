@@ -102,7 +102,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     // Step 2: Extract structured leads from the Perplexity text with Claude
-    const client = new Anthropic({ apiKey: anthropicKey });
+    const client = new Anthropic({ apiKey: anthropicKey, maxRetries: 5 });
     const response = await client.messages.create({
       model: process.env.CLAUDE_MODEL ?? 'claude-sonnet-5',
       max_tokens: 4096,
