@@ -6,297 +6,343 @@
   <title>GTM Tool — AI-Powered Lead Generation & Outreach</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
+    /* GTM Tool — Paradigm edition
+       White paper, black ink, Georgia serif + IBM Plex Mono, cyan accent. */
     * { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
-      --bg: #0B0B0F;
-      --bg-2: #111116;
-      --bg-3: #17171E;
-      --surface: rgba(255,255,255,0.045);
-      --surface-2: rgba(255,255,255,0.07);
-      --border: rgba(255,255,255,0.08);
-      --border-strong: rgba(255,255,255,0.14);
-      --text: #EEEEF5;
-      --text-dim: #8080A8;
-      --text-muted: #50507A;
-      --accent: #7B6FFF;
-      --accent-2: #A78BFA;
-      --accent-hover: #6A5EEE;
-      --accent-light: rgba(123,111,255,0.12);
-      --success: #34D399;
-      --success-light: rgba(52,211,153,0.12);
-      --error: #F87171;
-      --error-light: rgba(248,113,113,0.12);
-      --warning: #FBBF24;
-      --warning-light: rgba(251,191,36,0.12);
-      --radius: 10px;
-      --radius-lg: 14px;
-      --shadow: 0 8px 32px rgba(0,0,0,0.5);
+      --bg: #ffffff;
+      --bg-2: #f5f5f5;
+      --bg-3: #efefef;
+      --surface: #ffffff;
+      --surface-2: #f5f5f5;
+      --border: #e6e6e6;
+      --border-strong: #000000;
+      --text: #0a0a0a;
+      --text-dim: #757575;
+      --text-muted: #a3a3a3;
+      --accent: #000000;
+      --accent-2: #000000;
+      --accent-hover: #000000;
+      --accent-light: #f5f5f5;
+      --hover-bg: #fafafa;
+      --pill: #ececec;
+      --pill-hi: #e0e0e0;
+      --cyan: #00b6c4;
+      --success: #00949f;
+      --success-light: #e4f6f8;
+      --error: #b4433f;
+      --error-light: #fbf0ef;
+      --warning: #927019;
+      --warning-light: #f8f2e2;
+      --radius: 0px;
+      --radius-lg: 0px;
+      --radius-full: 999px;
+      --shadow: none;
+      --serif: Georgia, 'Times New Roman', Times, serif;
+      --mono: 'IBM Plex Mono', 'SF Mono', SFMono-Regular, Menlo, Monaco, Consolas, monospace;
     }
 
     body {
-      font-family: 'Inter', -apple-system, sans-serif;
-      font-weight: 450;
+      font-family: var(--serif);
+      font-weight: 400;
       font-size: 15px;
       background: var(--bg);
       color: var(--text);
-      line-height: 1.5;
-      letter-spacing: -0.01em;
+      line-height: 1.55;
+      letter-spacing: 0;
       display: flex;
+      flex-direction: column;
       min-height: 100vh;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
     }
+    ::selection { background: #c9f7fb; }
 
-    /* ── Sidebar ── */
-    .sidebar {
-      width: 240px;
-      min-height: 100vh;
-      background: var(--bg-2);
-      border-right: 1px solid var(--border);
-      display: flex;
-      flex-direction: column;
-      position: fixed;
-      top: 0; left: 0; bottom: 0;
-      z-index: 100;
-    }
-    .sidebar-logo {
-      padding: 1.375rem 1.25rem;
-      border-bottom: 1px solid var(--border);
-    }
-    .logo-wrap {
+    /* ── Header / breadcrumb wordmark ── */
+    .topnav {
       display: flex;
       align-items: center;
-      gap: 0.625rem;
+      justify-content: space-between;
+      gap: 1rem;
+      height: 68px;
+      padding: 0 2rem;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      flex-shrink: 0;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--serif);
+      font-size: 21px;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      min-width: 0;
     }
     .logo-icon {
-      width: 30px; height: 30px;
-      background: linear-gradient(135deg, #7B6FFF, #A78BFA);
-      border-radius: 8px;
+      width: 22px; height: 22px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 15px;
+      color: var(--text);
       flex-shrink: 0;
     }
+    .logo-icon svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.6; }
+    .logo-home { color: var(--text); text-decoration: none; }
+    .logo-home:hover { text-decoration: underline; text-underline-offset: 4px; }
+    .logo-sep { color: var(--text-muted); margin: 0 -2px; }
     .logo-name {
-      font-size: 0.975rem;
-      font-weight: 650;
-      letter-spacing: -0.03em;
-      background: linear-gradient(135deg, #fff 40%, #A78BFA);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      font-family: var(--serif);
+      font-size: 21px;
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      white-space: nowrap;
     }
-    .sidebar-nav {
-      padding: 1rem 0.75rem;
-      flex: 1;
-      overflow-y: auto;
-    }
-    .nav-label {
-      font-size: 0.62rem;
-      font-weight: 600;
+    .topnav-meta {
+      font-family: var(--mono);
+      font-size: 9.5px;
       text-transform: uppercase;
-      letter-spacing: 0.09em;
+      letter-spacing: 0.1em;
       color: var(--text-muted);
-      padding: 0.25rem 0.625rem 0.625rem;
+      white-space: nowrap;
     }
-    .tab {
+
+    /* ── Workflow tabs ── */
+    .sidebar-nav {
       display: flex;
       align-items: center;
-      gap: 0.625rem;
-      padding: 0.55rem 0.75rem;
-      border-radius: 8px;
-      cursor: pointer;
+      gap: 1.5rem;
+      padding: 0 2rem;
+      border-bottom: 1px solid var(--border);
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      flex-shrink: 0;
+    }
+    .sidebar-nav::-webkit-scrollbar { display: none; }
+    .nav-label {
+      font-family: var(--mono);
+      font-size: 9.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      white-space: nowrap;
+      padding-right: 0.5rem;
+    }
+    .tab {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 8px;
+      padding: 14px 0;
       border: none;
-      background: transparent;
+      border-bottom: 1px solid transparent;
+      background: none;
+      border-radius: 0;
       color: var(--text-dim);
-      font-size: 0.875rem;
-      font-weight: 450;
+      font-family: var(--serif);
+      font-size: 17px;
+      font-weight: 400;
       letter-spacing: -0.01em;
-      width: 100%;
+      text-transform: none;
       text-align: left;
-      transition: all 0.15s;
-      margin-bottom: 2px;
-      font-family: inherit;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: color 0.15s;
+      flex-shrink: 0;
     }
-    .tab:hover { background: var(--surface-2); color: var(--text); }
-    .tab.active { background: var(--accent-light); color: var(--accent-2); }
-    .tab-step {
-      margin-left: auto;
-      font-size: 0.65rem;
-      font-weight: 700;
+    .tab::before {
+      content: "[" attr(data-key) "]";
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.02em;
       color: var(--text-muted);
-      font-variant-numeric: tabular-nums;
     }
-    .tab.active .tab-step { color: var(--accent-2); }
-    .sidebar-footer {
-      padding: 1rem 1.25rem;
-      border-top: 1px solid var(--border);
-      font-size: 0.72rem;
-      font-weight: 300;
-      color: var(--text-muted);
-      line-height: 1.65;
-      letter-spacing: -0.005em;
+    .tab:hover { background: none; color: var(--text); }
+    .tab.active {
+      background: none;
+      color: var(--text);
+      border-bottom-color: var(--text);
     }
+    .tab.active::before { content: "[ ]"; color: var(--text); }
+    .tab-step { display: none; }
+    .icon { display: none; }
 
     /* ── Main content ── */
     .main {
-      margin-left: 240px;
       flex: 1;
       display: flex;
       flex-direction: column;
-      min-height: 100vh;
+      min-height: 0;
       position: relative;
     }
-    .main::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 0;
-      background-image: radial-gradient(circle, rgba(255,255,255,0.03) 1px, transparent 1px);
-      background-size: 28px 28px;
-    }
-    .main > * { position: relative; z-index: 1; }
 
     /* ── Panels ── */
-    .panel { display: none; flex-direction: column; min-height: 100vh; }
+    .panel { display: none; flex-direction: column; flex: 1; }
     .panel.active { display: flex; }
     .panel-header {
-      padding: 2rem 2.25rem 1.5rem;
+      padding: 3rem 2rem 1.75rem;
       border-bottom: 1px solid var(--border);
       flex-shrink: 0;
     }
     .panel-header h1 {
-      font-size: 1.625rem;
-      font-weight: 700;
-      letter-spacing: -0.04em;
-      line-height: 1.05;
-      background: linear-gradient(135deg, #fff 40%, #A78BFA);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      margin-bottom: 0.375rem;
+      font-family: var(--serif);
+      font-size: 44px;
+      font-weight: 400;
+      letter-spacing: -0.025em;
+      line-height: 1.08;
+      color: var(--text);
+      margin-bottom: 0.5rem;
     }
     .panel-header p {
-      font-size: 0.875rem;
+      font-family: var(--serif);
+      font-size: 15px;
       font-weight: 400;
-      letter-spacing: -0.01em;
       color: var(--text-dim);
-      line-height: 1.5;
+      line-height: 1.55;
+      max-width: 60ch;
     }
     .panel-body {
-      padding: 1.75rem 2.25rem 3rem;
+      padding: 2rem 2rem 4rem;
       flex: 1;
-      overflow-y: auto;
     }
 
-    /* ── Gradient text ── */
-    .gradient-text {
-      background: linear-gradient(135deg, #fff 30%, #A78BFA);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
+    .gradient-text { color: var(--text); }
 
     /* ── Cards ── */
     .card {
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 1.5rem;
-      margin-bottom: 1.25rem;
-      backdrop-filter: blur(12px);
+      border-radius: 0;
+      padding: 1.75rem;
+      margin-bottom: 1.5rem;
     }
     .card h3 {
-      font-size: 1rem;
-      font-weight: 600;
-      margin-bottom: 0.875rem;
+      font-family: var(--serif);
+      font-size: 20px;
+      font-weight: 400;
+      margin-bottom: 1rem;
       color: var(--text);
-      letter-spacing: -0.025em;
-      line-height: 1.2;
+      letter-spacing: -0.02em;
+      line-height: 1.25;
     }
+    .card-desc {
+      font-family: var(--serif);
+      font-size: 14.5px;
+      line-height: 1.55;
+      color: var(--text-dim);
+      margin-bottom: 1.25rem;
+      max-width: 72ch;
+    }
+    .card-desc code {
+      font-family: var(--mono);
+      font-size: 12px;
+      background: var(--bg-2);
+      padding: 1px 5px;
+    }
+    .card-desc strong { font-weight: 400; color: var(--text); }
 
     /* ── Form elements ── */
     label {
       display: block;
-      font-size: 0.775rem;
-      color: var(--text-dim);
-      margin-bottom: 0.3rem;
-      font-weight: 500;
-      letter-spacing: -0.005em;
-    }
-    input, textarea, select {
-      width: 100%;
-      padding: 0.6rem 0.8rem;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      color: var(--text);
-      font-size: 0.9rem;
+      font-family: var(--mono);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      color: var(--text-muted);
+      margin-bottom: 0.35rem;
       font-weight: 400;
-      letter-spacing: -0.01em;
-      margin-bottom: 1rem;
-      font-family: inherit;
-      transition: all 0.15s;
     }
-    input:focus, textarea:focus, select:focus {
+    input:not([type="checkbox"]):not([type="file"]), textarea, select {
+      width: 100%;
+      padding: 7px 0;
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid var(--border);
+      border-radius: 0;
+      color: var(--text);
+      font-family: var(--serif);
+      font-size: 15px;
+      font-weight: 400;
+      letter-spacing: 0;
+      margin-bottom: 1.25rem;
+      transition: border-color 0.15s;
+    }
+    input::placeholder, textarea::placeholder { color: var(--text-muted); }
+    input:not([type="checkbox"]):focus, textarea:focus, select:focus {
       outline: none;
-      border-color: rgba(123,111,255,0.5);
-      box-shadow: 0 0 0 3px rgba(123,111,255,0.1);
-      background: rgba(255,255,255,0.06);
+      border-bottom-color: var(--cyan);
+      box-shadow: none;
+      background: transparent;
     }
-    textarea { resize: vertical; min-height: 80px; }
-    select option { background: #1A1A24; }
-    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    textarea { resize: vertical; min-height: 80px; line-height: 1.55; }
+    select option { background: #ffffff; }
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
 
     /* ── Buttons ── */
     button {
-      padding: 0.65rem 1.25rem;
-      border-radius: 8px;
+      padding: 11px 26px;
+      border-radius: var(--radius-full);
       border: none;
-      font-size: 0.875rem;
-      font-weight: 500;
-      letter-spacing: -0.015em;
+      font-family: var(--mono);
+      font-size: 10.5px;
+      font-weight: 400;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
       cursor: pointer;
-      transition: all 0.15s;
-      font-family: inherit;
+      transition: background 0.15s, opacity 0.15s, color 0.15s;
     }
     .btn-primary {
-      background: linear-gradient(135deg, #7B6FFF, #A78BFA);
-      color: white;
-      box-shadow: 0 2px 16px rgba(123,111,255,0.3);
+      background: #000000;
+      color: #ffffff;
+      box-shadow: none;
     }
-    .btn-primary:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 4px 24px rgba(123,111,255,0.45);
-    }
-    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+    .btn-primary:hover { opacity: 0.82; transform: none; box-shadow: none; }
+    .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
     .btn-secondary {
-      background: var(--surface-2);
+      background: var(--pill);
       color: var(--text);
-      border: 1px solid var(--border);
+      border: none;
     }
-    .btn-secondary:hover { background: var(--surface); border-color: var(--border-strong); }
+    .btn-secondary:hover { background: var(--pill-hi); border-color: transparent; }
+    .btn-secondary:disabled { opacity: 0.4; cursor: not-allowed; }
     .btn-success {
-      background: linear-gradient(135deg, #059669, #34D399);
-      color: white;
+      background: #000000;
+      color: #ffffff;
     }
-    .btn-success:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(52,211,153,0.3); }
-    .btn-success:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+    .btn-success:hover { opacity: 0.82; transform: none; box-shadow: none; }
+    .btn-success:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
     .btn-danger {
       background: var(--error-light);
       color: var(--error);
-      border: 1px solid rgba(248,113,113,0.2);
+      border: none;
     }
-    .btn-danger:hover { background: rgba(248,113,113,0.2); }
+    .btn-danger:hover { background: #f6e3e2; }
+    .btn-plain {
+      background: none;
+      border: none;
+      padding: 0;
+      border-radius: 0;
+      color: var(--text-muted);
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      cursor: pointer;
+    }
+    .btn-plain:hover { color: var(--text); background: none; }
 
     /* ── Spinner ── */
     .spinner {
       display: inline-block;
-      width: 16px; height: 16px;
-      border: 2px solid var(--border);
-      border-top-color: var(--accent);
+      width: 12px; height: 12px;
+      border: 1.5px solid var(--border);
+      border-top-color: var(--text);
       border-radius: 50%;
       animation: spin 0.6s linear infinite;
       vertical-align: middle;
@@ -306,331 +352,469 @@
 
     /* ── Result boxes ── */
     .result {
-      background: rgba(255,255,255,0.03);
+      background: var(--bg-2);
       border: 1px solid var(--border);
-      border-radius: var(--radius);
+      border-radius: 0;
       padding: 1rem;
       margin-top: 1rem;
-      font-family: 'SF Mono', 'Fira Code', monospace;
-      font-size: 0.85rem;
+      font-family: var(--mono);
+      font-size: 11.5px;
+      line-height: 1.6;
       white-space: pre-wrap;
       max-height: 500px;
       overflow-y: auto;
       color: var(--text-dim);
     }
-    .result.success { border-color: rgba(52,211,153,0.3); background: var(--success-light); color: var(--success); }
-    .result.error { border-color: rgba(248,113,113,0.3); background: var(--error-light); color: var(--error); }
+    .result.success { border-color: var(--border); background: var(--success-light); color: var(--success); }
+    .result.error { border-color: var(--border); background: var(--error-light); color: var(--error); }
 
     /* ── Lead & company tables ── */
+    .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
     .lead-table {
       width: 100%;
       border-collapse: collapse;
       margin-top: 1rem;
-      font-size: 0.85rem;
     }
     .lead-table th {
       text-align: left;
+      background: var(--bg-2);
       color: var(--text-muted);
       padding: 0.5rem 0.75rem;
       border-bottom: 1px solid var(--border);
-      font-weight: 500;
-      font-size: 0.7rem;
+      font-family: var(--mono);
+      font-weight: 400;
+      font-size: 10px;
       text-transform: uppercase;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.09em;
+      white-space: nowrap;
     }
     .lead-table td {
-      padding: 0.55rem 0.75rem;
-      border-bottom: 1px solid rgba(255,255,255,0.04);
+      padding: 0.6rem 0.75rem;
+      border-bottom: 1px solid var(--border);
       color: var(--text);
-      font-size: 0.875rem;
+      font-family: var(--serif);
+      font-size: 14.5px;
       font-weight: 400;
-      letter-spacing: -0.01em;
+      letter-spacing: 0;
     }
-    .lead-table tr:hover td { background: rgba(255,255,255,0.03); }
-    .lead-table tr.selected td { background: var(--accent-light); }
-    .lead-table input[type="checkbox"] { width: 15px; height: 15px; margin: 0; cursor: pointer; accent-color: var(--accent); }
-    .lead-table th:first-child, .lead-table td:first-child { width: 36px; text-align: center; }
+    .lead-table tr:hover td { background: var(--hover-bg); }
+    .lead-table tr.selected td { background: var(--bg-2); }
+    .lead-table input[type="checkbox"] { width: 14px; height: 14px; margin: 0; cursor: pointer; accent-color: var(--accent); }
+    .lead-table th:first-child:has(input[type="checkbox"]),
+    .lead-table td:first-child:has(input[type="checkbox"]) { width: 36px; text-align: center; }
 
     .company-table {
       width: 100%;
       border-collapse: collapse;
       margin-top: 0.75rem;
-      font-size: 0.85rem;
     }
     .company-table th {
       text-align: left;
+      background: var(--bg-2);
       color: var(--text-muted);
       padding: 0.5rem 0.75rem;
       border-bottom: 1px solid var(--border);
-      font-weight: 500;
-      font-size: 0.7rem;
+      font-family: var(--mono);
+      font-weight: 400;
+      font-size: 10px;
       text-transform: uppercase;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.09em;
+      white-space: nowrap;
     }
     .company-table td {
-      padding: 0.55rem 0.75rem;
-      border-bottom: 1px solid rgba(255,255,255,0.04);
+      padding: 0.6rem 0.75rem;
+      border-bottom: 1px solid var(--border);
       vertical-align: top;
       color: var(--text);
-      font-size: 0.875rem;
+      font-family: var(--serif);
+      font-size: 14.5px;
       font-weight: 400;
-      letter-spacing: -0.01em;
+      letter-spacing: 0;
     }
-    .company-table tr:hover td { background: rgba(255,255,255,0.03); }
-    .company-table tr.co-selected td { background: var(--accent-light); }
-    .company-table input[type="checkbox"] { width: 15px; height: 15px; margin: 0; cursor: pointer; accent-color: var(--accent); }
-    .company-table th:first-child, .company-table td:first-child { width: 36px; text-align: center; }
+    .company-table td strong { font-weight: 400; }
+    .company-table tr:hover td { background: var(--hover-bg); }
+    .company-table tr.co-selected td { background: var(--bg-2); }
+    .company-table input[type="checkbox"] { width: 14px; height: 14px; margin: 0; cursor: pointer; accent-color: var(--accent); }
+    .company-table th:first-child:has(input[type="checkbox"]),
+    .company-table td:first-child:has(input[type="checkbox"]) { width: 36px; text-align: center; }
 
     /* ── Email preview ── */
     .email-preview {
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 1.25rem;
+      border-radius: 0;
+      padding: 1.5rem;
       margin-bottom: 1rem;
-      backdrop-filter: blur(12px);
     }
-    .email-preview .ep-header { color: var(--text-dim); font-size: 0.8rem; margin-bottom: 0.5rem; }
-    .email-preview .ep-subject { font-weight: 600; margin-bottom: 0.75rem; font-size: 0.95rem; color: var(--text); }
-    .email-preview .ep-body { color: var(--text); white-space: pre-wrap; line-height: 1.7; font-size: 0.88rem; }
-    .email-preview .ep-notes { color: var(--text-dim); font-size: 0.78rem; margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid var(--border); }
-    .email-preview .ep-actions { display: flex; gap: 0.5rem; margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid var(--border); }
+    .email-preview .ep-header {
+      font-family: var(--mono);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+    }
+    .email-preview .ep-subject {
+      font-family: var(--serif);
+      font-weight: 400;
+      margin-bottom: 0.75rem;
+      font-size: 18px;
+      letter-spacing: -0.015em;
+      color: var(--text);
+    }
+    .email-preview .ep-body {
+      font-family: var(--serif);
+      color: var(--text);
+      white-space: pre-wrap;
+      line-height: 1.7;
+      font-size: 14.5px;
+    }
+    .email-preview .ep-notes {
+      font-family: var(--serif);
+      color: var(--text-dim);
+      font-size: 13.5px;
+      margin-top: 0.75rem;
+      padding-top: 0.75rem;
+      border-top: 1px solid var(--border);
+    }
+    .email-preview .ep-notes strong {
+      font-family: var(--mono);
+      font-size: 9.5px;
+      font-weight: 400;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      color: var(--text-muted);
+      margin-right: 0.4rem;
+    }
+    .email-preview .ep-actions { display: flex; gap: 0.5rem; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border); flex-wrap: wrap; }
 
     /* ── Badges ── */
     .badge {
       display: inline-block;
-      padding: 0.15rem 0.5rem;
-      border-radius: 100px;
-      font-size: 0.72rem;
-      background: var(--accent-light);
-      color: var(--accent-2);
-      font-weight: 600;
+      padding: 3px 9px;
+      border-radius: var(--radius-full);
+      font-family: var(--mono);
+      font-size: 9.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      background: var(--bg-2);
+      color: var(--text);
+      font-weight: 400;
+      vertical-align: middle;
     }
     .badge-success { background: var(--success-light); color: var(--success); }
     .badge-warning { background: var(--warning-light); color: var(--warning); }
     .badge-error { background: var(--error-light); color: var(--error); }
 
     /* ── ICP display ── */
-    .icp-display { margin-top: 1rem; }
+    .icp-display { margin-top: 0.5rem; }
     .icp-display h4 {
-      font-size: 1rem;
-      margin-bottom: 0.75rem;
-      background: linear-gradient(135deg, #fff 30%, #A78BFA);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      font-weight: 600;
+      font-family: var(--serif);
+      font-size: 20px;
+      margin-bottom: 1.25rem;
+      color: var(--text);
+      font-weight: 400;
+      letter-spacing: -0.02em;
     }
-    .icp-section { margin-bottom: 1.25rem; }
+    .icp-section { margin-bottom: 1.5rem; }
     .icp-section .icp-label {
-      font-size: 0.72rem;
-      font-weight: 700;
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 400;
       text-transform: uppercase;
-      letter-spacing: 0.07em;
+      letter-spacing: 0.09em;
       color: var(--text-muted);
-      margin-bottom: 0.35rem;
+      margin-bottom: 0.45rem;
     }
-    .icp-section .icp-value { font-size: 0.92rem; color: var(--text); }
+    .icp-section .icp-value { font-family: var(--serif); font-size: 15px; color: var(--text); }
     .icp-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
     .icp-tag {
       display: inline-block;
-      padding: 0.2rem 0.6rem;
-      border-radius: 100px;
-      font-size: 0.78rem;
-      background: var(--accent-light);
-      color: var(--accent-2);
-      font-weight: 500;
-      border: 1px solid rgba(123,111,255,0.2);
+      padding: 3px 10px;
+      border-radius: var(--radius-full);
+      font-family: var(--mono);
+      font-size: 9.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      background: var(--bg-2);
+      color: var(--text);
+      font-weight: 400;
+      border: none;
     }
     .icp-tag.green {
       background: var(--success-light);
       color: var(--success);
-      border-color: rgba(52,211,153,0.2);
+      border-color: transparent;
     }
     .icp-tag.orange {
       background: var(--warning-light);
       color: var(--warning);
-      border-color: rgba(251,191,36,0.2);
+      border-color: transparent;
     }
-    .icp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-    @media (max-width: 600px) { .icp-grid { grid-template-columns: 1fr; } }
+    .icp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
     .icp-pain {
-      padding: 0.4rem 0;
-      font-size: 0.88rem;
+      padding: 0.5rem 0;
+      font-family: var(--serif);
+      font-size: 14.5px;
       color: var(--text-dim);
       border-bottom: 1px solid var(--border);
     }
     .icp-pain:last-child { border-bottom: none; }
     .icp-rationale {
-      font-size: 0.88rem;
+      font-family: var(--serif);
+      font-size: 14.5px;
       color: var(--text-dim);
       line-height: 1.7;
-      padding: 0.875rem;
-      background: rgba(255,255,255,0.03);
+      padding: 1rem;
+      background: var(--bg-2);
       border: 1px solid var(--border);
-      border-radius: var(--radius);
+      border-radius: 0;
     }
 
-    /* ── Source tabs (pill style) ── */
-    .source-tabs { display: flex; gap: 0.4rem; margin-bottom: 1.25rem; flex-wrap: wrap; }
+    /* ── Source tabs ── */
+    .source-tabs { display: flex; gap: 0.4rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
     .source-tab {
-      padding: 0.4rem 0.85rem;
-      border-radius: 100px;
+      padding: 7px 14px;
+      border-radius: var(--radius-full);
       border: 1px solid var(--border);
       background: transparent;
       color: var(--text-dim);
-      font-size: 0.78rem;
-      font-weight: 500;
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 400;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
       cursor: pointer;
       transition: all 0.15s;
-      font-family: inherit;
     }
     .source-tab:hover { border-color: var(--border-strong); color: var(--text); }
     .source-tab.active {
-      background: var(--accent-light);
-      color: var(--accent-2);
-      border-color: rgba(123,111,255,0.3);
+      background: #000000;
+      color: #ffffff;
+      border-color: #000000;
     }
     .source-panel { display: none; }
     .source-panel.active { display: block; }
 
     /* ── Directory cards ── */
-    .directory-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 0.75rem; margin-bottom: 1rem; }
+    .directory-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 0; margin-bottom: 1.25rem; border: 1px solid var(--border); }
     .directory-card {
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 1rem;
+      border: none;
+      border-radius: 0;
+      box-shadow: inset -1px -1px 0 0 var(--border);
+      padding: 1.25rem;
       cursor: pointer;
-      transition: all 0.15s;
-      background: rgba(255,255,255,0.02);
-      text-align: center;
+      transition: background 0.15s;
+      background: var(--surface);
+      text-align: left;
     }
     .directory-card:hover {
-      border-color: rgba(123,111,255,0.4);
-      background: var(--accent-light);
-      box-shadow: 0 0 0 1px rgba(123,111,255,0.2);
+      background: var(--bg-2);
+      box-shadow: inset -1px -1px 0 0 var(--border);
     }
-    .dir-icon { font-size: 1.75rem; margin-bottom: 0.4rem; }
-    .icon {
-      font-family: 'Material Symbols Rounded';
-      font-weight: 300;
-      font-style: normal;
-      font-size: 18px;
-      line-height: 1;
-      letter-spacing: normal;
-      text-transform: none;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      white-space: nowrap;
-      word-wrap: normal;
-      direction: ltr;
-      -webkit-font-smoothing: antialiased;
-      font-feature-settings: 'liga';
-      font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 20;
-      vertical-align: middle;
-      user-select: none;
+    .dir-name { font-family: var(--serif); font-weight: 400; font-size: 18px; letter-spacing: -0.015em; margin-bottom: 0.35rem; color: var(--text); }
+    .dir-desc { font-family: var(--serif); font-size: 13.5px; color: var(--text-dim); line-height: 1.45; margin-bottom: 0.75rem; }
+    .dir-link {
+      font-family: var(--mono);
+      font-size: 9.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-weight: 400;
     }
-    .icon-lg {
-      font-size: 22px;
-      font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
-    }
-    .icon-filled {
-      font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 20;
-    }
-    .dir-icon.icon {
-      font-size: 1.5rem;
-      margin-bottom: 0.5rem;
-      display: flex;
-      justify-content: center;
-      color: var(--accent-2);
-      font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
-    }
-    .dir-name { font-weight: 600; font-size: 0.88rem; margin-bottom: 0.25rem; color: var(--text); }
-    .dir-desc { font-size: 0.72rem; color: var(--text-dim); line-height: 1.4; margin-bottom: 0.5rem; }
-    .dir-link { font-size: 0.72rem; color: var(--accent-2); text-decoration: none; font-weight: 500; }
-    .dir-link:hover { text-decoration: underline; }
+    .dir-link:hover { color: var(--text); text-decoration: underline; text-underline-offset: 3px; }
 
     /* ── CSV drop zone ── */
     .csv-drop-zone {
-      border: 2px dashed var(--border);
-      border-radius: var(--radius);
-      padding: 2rem 1rem;
+      border: 1px dashed var(--border);
+      border-radius: 0;
+      padding: 2.5rem 1rem;
       text-align: center;
       cursor: pointer;
-      transition: all 0.15s;
-      background: rgba(255,255,255,0.02);
+      transition: background 0.15s, border-color 0.15s;
+      background: var(--bg-2);
     }
-    .csv-drop-zone:hover { border-color: rgba(123,111,255,0.5); background: var(--accent-light); }
+    .csv-drop-zone:hover { border-color: var(--border-strong); background: var(--bg-3); }
+    .csv-drop-title { font-family: var(--serif); font-size: 20px; font-weight: 400; letter-spacing: -0.02em; margin-bottom: 0.5rem; color: var(--text); }
+    .csv-drop-hint {
+      font-family: var(--mono);
+      font-size: 9.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      color: var(--text-muted);
+    }
+    .csv-help {
+      margin-top: 1rem;
+      font-family: var(--serif);
+      font-size: 13.5px;
+      line-height: 1.6;
+      color: var(--text-dim);
+    }
+    .csv-help strong {
+      font-family: var(--mono);
+      font-size: 9.5px;
+      font-weight: 400;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      color: var(--text-muted);
+      margin-right: 0.3rem;
+    }
 
     /* ── Companies meta ── */
-    .company-domain { font-family: 'SF Mono','Fira Code',monospace; font-size: 0.78rem; color: var(--accent-2); }
-    .relevance-text { font-size: 0.78rem; color: var(--text-dim); line-height: 1.5; }
-    .companies-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem; flex-wrap: wrap; gap: 0.5rem; }
-    .companies-meta { font-size: 0.78rem; color: var(--text-dim); margin-top: 0.2rem; }
+    .company-domain { color: var(--text-dim); font-family: var(--mono); font-size: 11.5px; }
+    .relevance-text { font-family: var(--serif); font-size: 13.5px; color: var(--text-dim); line-height: 1.5; min-width: 220px; }
+    .companies-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 0.75rem; flex-wrap: wrap; gap: 0.75rem; }
+    .companies-header strong { font-family: var(--serif); font-weight: 400; }
+    .companies-meta {
+      font-family: var(--mono);
+      font-size: 9.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      color: var(--text-muted);
+      margin-top: 0.35rem;
+    }
     .icp-action-bar {
-      margin-top: 1.5rem;
-      padding-top: 1rem;
+      margin-top: 2rem;
+      padding-top: 1.25rem;
       border-top: 1px solid var(--border);
       display: flex;
       align-items: center;
       justify-content: space-between;
       flex-wrap: wrap;
-      gap: 0.75rem;
+      gap: 1rem;
+    }
+    .icp-action-bar .hint {
+      font-family: var(--serif);
+      font-size: 14.5px;
+      color: var(--text-dim);
     }
     .co-selection-bar {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0.65rem 1rem;
-      background: var(--accent-light);
-      border: 1px solid rgba(123,111,255,0.2);
-      border-radius: var(--radius);
+      padding: 0.85rem 1rem;
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: 0;
       margin-top: 0.75rem;
       gap: 0.75rem;
       flex-wrap: wrap;
     }
-    .co-selection-bar .co-sel-count { font-weight: 600; color: var(--accent-2); font-size: 0.85rem; }
+    .co-selection-bar .co-sel-count {
+      font-family: var(--mono);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      font-weight: 400;
+      color: var(--text);
+    }
 
     /* ── Selection bar ── */
     .selection-bar {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0.75rem 1rem;
-      background: var(--accent-light);
-      border: 1px solid rgba(123,111,255,0.2);
-      border-radius: var(--radius);
+      padding: 0.85rem 1rem;
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: 0;
       margin-top: 1rem;
       gap: 1rem;
       flex-wrap: wrap;
     }
-    .selection-bar .sel-count { font-weight: 600; color: var(--accent-2); font-size: 0.88rem; }
+    .selection-bar .sel-count {
+      font-family: var(--mono);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      font-weight: 400;
+      color: var(--text);
+    }
 
     /* ── Outreach context box ── */
     .outreach-context {
-      margin-top: 1rem;
-      padding: 1.25rem;
-      background: rgba(255,255,255,0.03);
+      margin-top: 1.25rem;
+      padding: 1.5rem;
+      background: var(--bg-2);
       border: 1px solid var(--border);
-      border-radius: var(--radius);
+      border-radius: 0;
     }
-    .outreach-context h4 { font-size: 0.92rem; font-weight: 600; margin-bottom: 1rem; color: var(--text); }
+    .outreach-context h4 {
+      font-family: var(--serif);
+      font-size: 20px;
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      margin-bottom: 1.25rem;
+      color: var(--text);
+    }
+    .outreach-context input:not([type="checkbox"]), .outreach-context textarea, .outreach-context select { background: transparent; }
     .ctx-collapse-btn {
       background: none;
       border: none;
-      color: var(--accent-2);
+      border-radius: 0;
+      color: var(--text-muted);
       cursor: pointer;
-      font-size: 0.78rem;
+      font-family: var(--mono);
+      font-size: 9.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
       padding: 0;
       float: right;
-      font-weight: 500;
+      font-weight: 400;
     }
+    .ctx-collapse-btn:hover { color: var(--text); background: none; }
 
     /* ── Gen progress ── */
-    .gen-progress { margin-top: 1rem; }
-    .gen-progress .gp-item { display: flex; align-items: center; gap: 0.5rem; padding: 0.3rem 0; font-size: 0.83rem; color: var(--text-dim); }
+    .gen-progress { margin-top: 1.25rem; }
+    .gen-progress .gp-item { display: flex; align-items: center; gap: 0.5rem; padding: 0.35rem 0; font-family: var(--serif); font-size: 14px; color: var(--text-dim); }
     .gen-progress .gp-item.done { color: var(--success); }
     .gen-progress .gp-item.fail { color: var(--error); }
+    .gen-progress .gp-summary {
+      margin-top: 1rem;
+      padding: 0.85rem 1rem;
+      background: var(--success-light);
+      border-radius: 0;
+      font-family: var(--serif);
+      font-size: 14px;
+      color: var(--success);
+    }
+    .gen-progress .gp-summary strong { font-weight: 400; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+
+    /* ── Notices ── */
+    .notice {
+      margin-top: 1rem;
+      padding: 0.85rem 1rem;
+      background: var(--success-light);
+      border-radius: 0;
+      font-family: var(--serif);
+      font-size: 14px;
+      color: var(--success);
+    }
+    .notice strong { font-weight: 400; }
+    .notice-error {
+      background: var(--error-light);
+      color: var(--error);
+    }
+    .inline-error { font-family: var(--serif); font-size: 14.5px; color: var(--error); }
+    .inline-success { color: var(--success); }
+    .sources-line {
+      margin-top: 1rem;
+      font-family: var(--serif);
+      font-size: 13.5px;
+      color: var(--text-dim);
+    }
+    .sources-line strong {
+      font-family: var(--mono);
+      font-size: 9.5px;
+      font-weight: 400;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      color: var(--text-muted);
+      margin-right: 0.3rem;
+    }
+    .sources-line a { color: var(--text); text-decoration: none; border-bottom: 1px solid var(--border); }
+    .sources-line a:hover { border-bottom-color: var(--text); }
 
     /* ── Search links ── */
     .search-links { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.75rem; }
@@ -638,18 +822,20 @@
       display: inline-flex;
       align-items: center;
       gap: 0.4rem;
-      padding: 0.4rem 0.75rem;
-      border-radius: var(--radius);
+      padding: 7px 14px;
+      border-radius: var(--radius-full);
       border: 1px solid var(--border);
       background: var(--surface);
       color: var(--text);
-      font-size: 0.78rem;
+      font-family: var(--mono);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
       text-decoration: none;
-      font-weight: 500;
       transition: all 0.15s;
     }
-    .search-link:hover { border-color: rgba(123,111,255,0.4); background: var(--accent-light); }
-    .search-link img { width: 16px; height: 16px; }
+    .search-link:hover { border-color: var(--border-strong); background: var(--bg-2); }
+    .search-link img { width: 14px; height: 14px; }
 
     /* ── URL chips ── */
     .url-chips { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.75rem; }
@@ -657,102 +843,159 @@
       display: inline-flex;
       align-items: center;
       gap: 0.3rem;
-      padding: 0.25rem 0.6rem;
-      border-radius: 100px;
-      background: var(--accent-light);
-      color: var(--accent-2);
-      font-size: 0.78rem;
-      border: 1px solid rgba(123,111,255,0.2);
+      padding: 3px 10px;
+      border-radius: var(--radius-full);
+      background: var(--bg-2);
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.06em;
+      border: none;
     }
     .url-chip button {
       background: none;
       border: none;
-      color: var(--accent-2);
+      border-radius: 0;
+      color: var(--text-muted);
       cursor: pointer;
-      font-size: 0.9rem;
+      font-family: var(--mono);
+      font-size: 11px;
       padding: 0;
       line-height: 1;
     }
+    .url-chip button:hover { color: var(--text); background: none; }
 
     /* ── Review summary ── */
     .review-summary {
       display: flex;
-      gap: 1.5rem;
-      padding: 1rem 1.25rem;
-      background: rgba(255,255,255,0.03);
+      gap: 2.5rem;
+      padding: 1.25rem 1.5rem;
+      background: var(--bg-2);
       border: 1px solid var(--border);
-      border-radius: var(--radius);
-      margin-bottom: 1.5rem;
+      border-radius: 0;
+      margin-bottom: 1.75rem;
       flex-wrap: wrap;
     }
-    .review-stat { text-align: center; }
-    .review-stat .num { font-size: 1.5rem; font-weight: 700; color: var(--accent-2); }
-    .review-stat .label { font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
+    .review-stat { text-align: left; }
+    .review-stat .num { font-family: var(--serif); font-size: 32px; font-weight: 400; letter-spacing: -0.025em; line-height: 1.1; color: var(--text); }
+    .review-stat .label {
+      font-family: var(--mono);
+      font-size: 9.5px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      margin-top: 0.2rem;
+    }
     .review-actions {
       display: flex;
-      gap: 0.75rem;
+      gap: 0.5rem;
       justify-content: flex-end;
-      padding-top: 1rem;
+      padding-top: 1.25rem;
       border-top: 1px solid var(--border);
-      margin-top: 1rem;
+      margin-top: 1.25rem;
       flex-wrap: wrap;
+    }
+
+    /* ── Empty state ── */
+    .empty-state { text-align: center; padding: 4rem 1rem; }
+    .empty-state .empty-title { font-family: var(--serif); font-size: 20px; font-weight: 400; letter-spacing: -0.02em; color: var(--text); margin-bottom: 0.6rem; }
+    .empty-state .empty-hint {
+      font-family: var(--mono);
+      font-size: 9.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      color: var(--text-muted);
+      line-height: 1.8;
     }
 
     /* ── Send progress ── */
     .send-status { margin-top: 1rem; }
-    .send-status .status-item { display: flex; align-items: center; gap: 0.5rem; padding: 0.4rem 0; font-size: 0.85rem; color: var(--text-dim); }
+    .send-status .status-item { display: flex; align-items: center; gap: 0.5rem; padding: 0.4rem 0; font-family: var(--serif); font-size: 14px; color: var(--text-dim); }
     .send-status .status-icon { width: 18px; text-align: center; }
 
     /* ── Misc ── */
-    .actions { display: flex; gap: 0.75rem; margin-top: 1rem; }
+    .actions { display: flex; gap: 0.5rem; margin-top: 1rem; flex-wrap: wrap; }
     .hidden { display: none; }
-    hr.divider { border: none; border-top: 1px solid var(--border); margin: 1rem 0; }
+    hr.divider { border: none; border-top: 1px solid var(--border); margin: 1.25rem 0; }
     .checkbox-row { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; }
-    .checkbox-row input[type="checkbox"] { width: auto; margin: 0; }
-    .checkbox-row label { margin: 0; font-size: 0.85rem; }
+    .checkbox-row input[type="checkbox"] { width: auto; margin: 0; accent-color: var(--accent); }
+    .checkbox-row label { margin: 0; }
+    .toolbar { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    .bar { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 0.75rem; }
+    .count-line { font-family: var(--serif); font-size: 15px; font-weight: 400; color: var(--text); }
+    .count-line strong { font-weight: 400; }
+    .count-line em { font-style: italic; }
 
     /* ── Footer ── */
     footer {
-      padding: 1.25rem 2.25rem;
+      padding: 1.5rem 2rem 2rem;
       border-top: 1px solid var(--border);
-      font-size: 0.75rem;
+      font-family: var(--mono);
+      font-size: 9.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
       color: var(--text-muted);
-      position: relative;
-      z-index: 1;
+      line-height: 1.8;
     }
-    footer a { color: var(--accent-2); text-decoration: none; }
-    footer a:hover { text-decoration: underline; }
+    footer a { color: var(--text-dim); text-decoration: none; border-bottom: 1px solid var(--border); }
+    footer a:hover { color: var(--text); border-bottom-color: var(--text); }
+
+    /* ── Responsive ── */
+    @media (max-width: 900px) {
+      .topnav-meta { display: none; }
+    }
+    @media (max-width: 760px) {
+      .topnav { padding: 0 1.25rem; }
+      .sidebar-nav { padding: 0 1.25rem; gap: 1.25rem; }
+      .panel-header { padding: 2.25rem 1.25rem 1.25rem; }
+      .panel-header h1 { font-size: 32px; }
+      .panel-body { padding: 1.5rem 1.25rem 3rem; }
+      footer { padding: 1.25rem 1.25rem 1.75rem; }
+      .row, .icp-grid { grid-template-columns: 1fr; gap: 0; }
+      .icp-grid { gap: 1.25rem; }
+      .review-summary { gap: 1.75rem; padding: 1rem 1.25rem; }
+    }
+    @media (max-width: 560px) {
+      .logo-home, .logo-sep { display: none; }
+      .nav-label { display: none; }
+      .topnav { height: 60px; padding: 0 1rem; }
+      .sidebar-nav { padding: 0 1rem; gap: 1.1rem; }
+      .tab { font-size: 15px; gap: 6px; padding: 12px 0; }
+      .tab::before { font-size: 10px; }
+      .panel-header { padding: 1.75rem 1rem 1rem; }
+      .panel-header h1 { font-size: 30px; }
+      .panel-body { padding: 1.25rem 1rem 2.5rem; }
+      .card { padding: 1.25rem 1rem; }
+      .outreach-context { padding: 1.25rem 1rem; }
+      .directory-grid { grid-template-columns: 1fr; }
+      .review-actions { justify-content: flex-start; }
+      button { padding: 10px 18px; }
+      footer { padding: 1.25rem 1rem 1.5rem; }
+    }
   </style>
 </head>
 <body>
 
-  <!-- Sidebar -->
-  <aside class="sidebar">
-    <div class="sidebar-logo">
-      <div class="logo-wrap">
-        <div class="logo-icon"><span class="icon icon-filled" style="font-size:16px; color:white; font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 20;">bolt</span></div>
-        <span class="logo-name">GTM Tool</span>
-      </div>
+  <!-- Header -->
+  <header class="topnav">
+    <div class="logo">
+      <span class="logo-icon">
+        <svg viewBox="0 0 26 26" fill="none" stroke="currentColor" stroke-width="1.6" width="22" height="22" xmlns="http://www.w3.org/2000/svg"><path d="M4 22 L4 4 L22 13 Z"/><path d="M8 18.5 L8 7.5 L18.5 13 Z"/></svg>
+      </span>
+      <a class="logo-home" href="https://joyjcai.com">Joy&nbsp;Cai</a>
+      <span class="logo-sep">/</span>
+      <span class="logo-name">GTM Tool</span>
     </div>
-    <nav class="sidebar-nav">
-      <div class="nav-label">Workflow</div>
-      <button class="tab active" data-tab="icp">
-        <span class="icon">person_search</span><span>Define ICP</span><span class="tab-step">01</span>
-      </button>
-      <button class="tab" data-tab="search">
-        <span class="icon">manage_search</span><span>Source Leads</span><span class="tab-step">02</span>
-      </button>
-      <button class="tab" data-tab="outreach">
-        <span class="icon">mail</span><span>Outreach</span><span class="tab-step">03</span>
-      </button>
-      <button class="tab" data-tab="review">
-        <span class="icon">send</span><span>Review &amp; Send</span><span class="tab-step">04</span>
-      </button>
-    </nav>
-    <div class="sidebar-footer">
-      AI-powered GTM<br>Claude · Hunter.io · Tavily
-    </div>
-  </aside>
+    <div class="topnav-meta">AI-powered GTM · Claude · Hunter.io · Tavily</div>
+  </header>
+
+  <nav class="sidebar-nav" aria-label="Workflow">
+    <span class="nav-label">Workflow</span>
+    <button class="tab active" data-tab="icp" data-key="1">Define ICP</button>
+    <button class="tab" data-tab="search" data-key="2">Source Leads</button>
+    <button class="tab" data-tab="outreach" data-key="3">Outreach</button>
+    <button class="tab" data-tab="review" data-key="4">Review &amp; Send</button>
+  </nav>
 
   <!-- Main content -->
   <main class="main">
@@ -766,7 +1009,7 @@
       <div class="panel-body">
         <div class="card">
           <h3>Generate ICP with AI</h3>
-          <p style="color:var(--text-dim); margin-bottom:1rem; font-size:0.88rem;">Describe your product or service and Claude will generate an Ideal Customer Profile.</p>
+          <p class="card-desc">Describe your product or service and Claude will generate an Ideal Customer Profile.</p>
           <label>Product / Service Description</label>
           <textarea id="icp-description" rows="5" placeholder="e.g., DevPulse is a developer productivity platform that integrates with GitHub and Jira to provide real-time engineering metrics and AI-powered code review suggestions..."></textarea>
           <button class="btn-primary" id="icp-generate-btn" onclick="generateICP()">Generate ICP</button>
@@ -786,25 +1029,25 @@
         <!-- Target Companies Section (populated from ICP) -->
         <div class="card hidden" id="companies-section">
           <h3>Target Companies</h3>
-          <p style="color:var(--text-dim); font-size:0.88rem; margin-bottom:1rem;">These organizations were identified as strong prospects based on your ICP rationale. Click <strong>Use These Domains</strong> to auto-fill Hunter.io and start sourcing contacts.</p>
+          <p class="card-desc">These organizations were identified as strong prospects based on your ICP rationale. Click <strong>Use These Domains</strong> to auto-fill Hunter.io and start sourcing contacts.</p>
           <div id="companies-content"><!-- populated by JS --></div>
         </div>
 
         <div class="card">
           <h3>Source Leads</h3>
           <div class="source-tabs">
-            <button class="source-tab active" onclick="switchSource('hunter')"><span class="icon" style="font-size:14px;">radar</span> Hunter.io</button>
-            <button class="source-tab" onclick="switchSource('perplexity')"><span class="icon" style="font-size:14px;">travel_explore</span> Tavily</button>
-            <button class="source-tab" onclick="switchSource('apollo')"><span class="icon" style="font-size:14px;">rocket_launch</span> Apollo.io</button>
-            <button class="source-tab" onclick="switchSource('csv')"><span class="icon" style="font-size:14px;">upload_file</span> CSV Upload</button>
-            <button class="source-tab" onclick="switchSource('directories')"><span class="icon" style="font-size:14px;">folder_open</span> Directories</button>
-            <button class="source-tab" onclick="switchSource('web')"><span class="icon" style="font-size:14px;">psychology</span> AI Search</button>
-            <button class="source-tab" onclick="switchSource('url')"><span class="icon" style="font-size:14px;">link</span> URL Import</button>
+            <button class="source-tab active" onclick="switchSource('hunter')">Hunter.io</button>
+            <button class="source-tab" onclick="switchSource('perplexity')">Tavily</button>
+            <button class="source-tab" onclick="switchSource('apollo')">Apollo.io</button>
+            <button class="source-tab" onclick="switchSource('csv')">CSV Upload</button>
+            <button class="source-tab" onclick="switchSource('directories')">Directories</button>
+            <button class="source-tab" onclick="switchSource('web')">AI Search</button>
+            <button class="source-tab" onclick="switchSource('url')">URL Import</button>
           </div>
 
           <!-- Hunter.io Source -->
           <div class="source-panel active" id="source-hunter">
-            <p style="color:var(--text-dim); margin-bottom:1rem; font-size:0.88rem;">Find verified work emails by company domain. Best for targeted outreach once you know which companies to pursue.</p>
+            <p class="card-desc">Find verified work emails by company domain. Best for targeted outreach once you know which companies to pursue.</p>
             <label>Company Domains (one per line or comma-separated)</label>
             <textarea id="search-domains" rows="4" placeholder="stripe.com&#10;datadog.com&#10;vercel.com"></textarea>
             <div class="row">
@@ -843,7 +1086,7 @@
 
           <!-- Tavily Source -->
           <div class="source-panel" id="source-perplexity">
-            <p style="color:var(--text-dim); margin-bottom:1rem; font-size:0.88rem;">Search the <strong>live web</strong> with Tavily AI Search to find real, up-to-date leads. Returns verified results from current web sources. Free tier: 1,000 searches/month.</p>
+            <p class="card-desc">Search the <strong>live web</strong> with Tavily AI Search to find real, up-to-date leads. Returns verified results from current web sources. Free tier: 1,000 searches/month.</p>
             <label>Search Query</label>
             <textarea id="perp-query" rows="3" placeholder="e.g., Medical directors and VP of Operations at regional health systems in the southeastern US"></textarea>
             <div class="row">
@@ -858,7 +1101,7 @@
 
           <!-- Apollo.io Source -->
           <div class="source-panel" id="source-apollo">
-            <p style="color:var(--text-dim); margin-bottom:1rem; font-size:0.88rem;">Search Apollo.io's database of 275M+ contacts by title, location, and company size. Free tier: 50 exports/month. Requires <code>APOLLO_API_KEY</code>.</p>
+            <p class="card-desc">Search Apollo.io's database of 275M+ contacts by title, location, and company size. Free tier: 50 exports/month. Requires <code>APOLLO_API_KEY</code>.</p>
             <label>Job Titles (comma-separated)</label>
             <input id="apollo-titles" placeholder="VP of Engineering, CTO, Director of Engineering, Head of Product">
             <div class="row">
@@ -893,65 +1136,58 @@
 
           <!-- CSV Upload Source -->
           <div class="source-panel" id="source-csv">
-            <p style="color:var(--text-dim); margin-bottom:1rem; font-size:0.88rem;">Import leads from any CSV file. Automatically detects LinkedIn Connections exports, Apollo exports, and any CSV with name/email/company columns. <strong>No API key needed.</strong></p>
+            <p class="card-desc">Import leads from any CSV file. Automatically detects LinkedIn Connections exports, Apollo exports, and any CSV with name/email/company columns. <strong>No API key needed.</strong></p>
             <div class="csv-drop-zone" id="csv-drop-zone" onclick="document.getElementById('csv-file-input').click()">
-              <span class="icon" style="font-size:2.25rem; margin-bottom:0.5rem; display:block; color:var(--accent-2);">upload_file</span>
-              <div style="font-weight:600; margin-bottom:0.3rem; color:var(--text);">Click to upload a CSV file</div>
-              <div style="font-size:0.78rem; color:var(--text-dim);">LinkedIn Connections · Apollo Export · Any CSV with names &amp; emails</div>
+              <div class="csv-drop-title">Click to upload a CSV file</div>
+              <div class="csv-drop-hint">LinkedIn Connections · Apollo Export · Any CSV with names &amp; emails</div>
               <input type="file" id="csv-file-input" accept=".csv,.tsv" style="display:none" onchange="handleCSVUpload(event)">
             </div>
-            <div style="margin-top:0.75rem; font-size:0.78rem; color:var(--text-dim);">
-              <strong style="color:var(--text-dim);">How to export from LinkedIn:</strong> LinkedIn.com → Me → Settings &amp; Privacy → Data Privacy → Get a copy of your data → Connections<br>
-              <strong style="color:var(--text-dim);">How to export from Apollo:</strong> Apollo.io → People → Select contacts → Export CSV
+            <div class="csv-help">
+              <strong>How to export from LinkedIn:</strong> LinkedIn.com → Me → Settings &amp; Privacy → Data Privacy → Get a copy of your data → Connections<br>
+              <strong>How to export from Apollo:</strong> Apollo.io → People → Select contacts → Export CSV
             </div>
             <div id="csv-preview" class="hidden" style="margin-top:1rem;"></div>
           </div>
 
           <!-- Directories Source -->
           <div class="source-panel" id="source-directories">
-            <p style="color:var(--text-dim); margin-bottom:1rem; font-size:0.88rem;">Search professional directories and import leads. Click a platform to open it, find relevant profiles, then paste the URL below to extract leads.</p>
+            <p class="card-desc">Search professional directories and import leads. Click a platform to open it, find relevant profiles, then paste the URL below to extract leads.</p>
             <div class="directory-grid">
               <div class="directory-card" onclick="openDirectoryImport('https://www.doximity.com/clinician_search','Paste a Doximity search results page URL below')">
-                <div class="dir-icon icon">local_hospital</div>
                 <div class="dir-name">Doximity</div>
                 <div class="dir-desc">Physicians &amp; healthcare professionals</div>
                 <a href="https://www.doximity.com/clinician_search" target="_blank" rel="noopener" class="dir-link" onclick="event.stopPropagation()">Open Doximity ↗</a>
               </div>
               <div class="directory-card" onclick="openDirectoryImport('https://www.crunchbase.com/people','Paste a Crunchbase search or profile URL below')">
-                <div class="dir-icon icon">trending_up</div>
                 <div class="dir-name">Crunchbase</div>
                 <div class="dir-desc">Startup founders &amp; C-suite at funded companies</div>
                 <a href="https://www.crunchbase.com/people" target="_blank" rel="noopener" class="dir-link" onclick="event.stopPropagation()">Open Crunchbase ↗</a>
               </div>
               <div class="directory-card" onclick="openDirectoryImport('https://www.g2.com/products','Paste a G2 product reviews page URL below')">
-                <div class="dir-icon icon">star</div>
                 <div class="dir-name">G2</div>
                 <div class="dir-desc">Software buyers who reviewed competitor tools</div>
                 <a href="https://www.g2.com/products" target="_blank" rel="noopener" class="dir-link" onclick="event.stopPropagation()">Open G2 ↗</a>
               </div>
               <div class="directory-card" onclick="openDirectoryImport('https://www.capterra.com','Paste a Capterra product page URL below')">
-                <div class="dir-icon icon">computer</div>
                 <div class="dir-name">Capterra</div>
                 <div class="dir-desc">Software buyers &amp; reviewers by category</div>
                 <a href="https://www.capterra.com" target="_blank" rel="noopener" class="dir-link" onclick="event.stopPropagation()">Open Capterra ↗</a>
               </div>
               <div class="directory-card" onclick="openDirectoryImport('https://sessionize.com/speakers','Paste a conference speakers page URL below')">
-                <div class="dir-icon icon">record_voice_over</div>
                 <div class="dir-name">Conference Speakers</div>
                 <div class="dir-desc">High-intent senior decision-makers</div>
                 <a href="https://sessionize.com/speakers" target="_blank" rel="noopener" class="dir-link" onclick="event.stopPropagation()">Browse Speakers ↗</a>
               </div>
               <div class="directory-card" onclick="openDirectoryImport('https://go.pulsepoint.com','Paste a PulsePoint page URL below')">
-                <div class="dir-icon icon">medication</div>
                 <div class="dir-name">PulsePoint HCP</div>
                 <div class="dir-desc">Healthcare professionals &amp; HCPs</div>
                 <a href="https://go.pulsepoint.com" target="_blank" rel="noopener" class="dir-link" onclick="event.stopPropagation()">Open PulsePoint ↗</a>
               </div>
             </div>
-            <div id="directory-import-box" class="hidden" style="margin-top:1.25rem; padding:1rem; background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:var(--radius);">
-              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem;">
-                <strong style="font-size:0.88rem;" id="dir-import-label">Paste URL to extract leads from</strong>
-                <button onclick="document.getElementById('directory-import-box').classList.add('hidden')" style="background:none; border:none; color:var(--text-dim); cursor:pointer; font-size:1rem; padding:0;">✕</button>
+            <div id="directory-import-box" class="hidden outreach-context">
+              <div class="bar">
+                <strong class="count-line" id="dir-import-label">Paste URL to extract leads from</strong>
+                <button class="btn-plain" onclick="document.getElementById('directory-import-box').classList.add('hidden')">✕ Close</button>
               </div>
               <label>URL</label>
               <input id="dir-url" type="url" placeholder="https://...">
@@ -963,7 +1199,7 @@
 
           <!-- AI Search Source (Claude) -->
           <div class="source-panel" id="source-web">
-            <p style="color:var(--text-dim); margin-bottom:1rem; font-size:0.88rem;">Describe who you're looking for. Claude AI will draw on its knowledge to generate a list of realistic matching leads.</p>
+            <p class="card-desc">Describe who you're looking for. Claude AI will draw on its knowledge to generate a list of realistic matching leads.</p>
             <label>Search Query</label>
             <textarea id="web-query" rows="3" placeholder="e.g., Pediatric medical directors and lab directors at children's hospitals in the US who make decisions about laboratory testing services"></textarea>
             <div class="row">
@@ -978,7 +1214,7 @@
 
           <!-- URL Import Source -->
           <div class="source-panel" id="source-url">
-            <p style="color:var(--text-dim); margin-bottom:1rem; font-size:0.88rem;">Paste any URL and Claude AI will extract lead information from the page. Works with team pages, directories, search results, and more.</p>
+            <p class="card-desc">Paste any URL and Claude AI will extract lead information from the page. Works with team pages, directories, search results, and more.</p>
             <label>URLs to scan (one per line)</label>
             <textarea id="url-input" rows="4" placeholder="https://go.pulsepoint.com/hcp-marketing-campaigns&#10;https://www.example.com/our-team&#10;https://directory.example.com/physicians"></textarea>
             <label>Context (helps Claude extract the right leads)</label>
@@ -1000,7 +1236,7 @@
       <div class="panel-body">
         <div class="card">
           <h3>Generate Personalized Emails</h3>
-          <p style="color:var(--text-dim); margin-bottom:1rem; font-size:0.88rem;">Configure your outreach context, then generate personalized emails for your sourced leads.</p>
+          <p class="card-desc">Configure your outreach context, then generate personalized emails for your sourced leads.</p>
           <div class="row">
             <div>
               <label>Lead First Name</label>
@@ -1076,11 +1312,11 @@
       <div class="panel-body">
         <div class="card">
           <h3>Review &amp; Send Emails</h3>
-          <p style="color:var(--text-dim); margin-bottom:1rem; font-size:0.88rem;">Review all generated emails before sending. You can edit, remove, or regenerate individual emails.</p>
+          <p class="card-desc">Review all generated emails before sending. You can edit, remove, or regenerate individual emails.</p>
 
-          <div id="review-empty" style="text-align:center; padding:3rem 1rem; color:var(--text-dim);">
-            <p style="font-size:1.05rem; margin-bottom:0.5rem;">No emails to review yet.</p>
-            <p style="font-size:0.83rem;">Generate emails in the Outreach tab first, then come back here to review and send.</p>
+          <div id="review-empty" class="empty-state">
+            <p class="empty-title">No emails to review yet.</p>
+            <p class="empty-hint">Generate emails in the Outreach tab first, then come back here to review and send.</p>
           </div>
 
           <div id="review-content" class="hidden">
@@ -1094,7 +1330,7 @@
           </div>
 
           <div id="send-progress" class="hidden">
-            <h3 style="margin-bottom:0.75rem;">Sending Emails...</h3>
+            <h3>Sending Emails...</h3>
             <div class="send-status" id="send-status"></div>
           </div>
         </div>
@@ -1199,9 +1435,9 @@
         document.getElementById('panel-search').classList.add('active');
         window.scrollTo({ top: 0, behavior: 'smooth' });
 
-        if (statusEl) statusEl.innerHTML = '<span style="color:var(--success);">&#10003; ' + data.companies.length + ' companies found</span>';
+        if (statusEl) statusEl.innerHTML = '<span class="inline-success">&#10003; ' + data.companies.length + ' companies found</span>';
       } catch (err) {
-        if (statusEl) statusEl.innerHTML = '<span style="color:var(--error);">Error: ' + esc(err.message) + '</span>';
+        if (statusEl) statusEl.innerHTML = '<span class="inline-error">Error: ' + esc(err.message) + '</span>';
       } finally {
         btn.disabled = false;
         btn.textContent = 'Find Target Companies →';
@@ -1221,15 +1457,15 @@
       let html = `
         <div class="companies-header">
           <div>
-            <strong>${companies.length} organizations</strong> matched your ICP
+            <span class="count-line"><strong>${companies.length} organizations</strong> matched your ICP</span>
             <div class="companies-meta">Select specific companies below, or use all domains at once</div>
           </div>
-          <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
-            <button class="btn-secondary" onclick="autofillDomainsFromCompanies('all')" style="padding:0.45rem 0.9rem; font-size:0.85rem;">Use All Domains ↓</button>
-            <button class="btn-secondary" onclick="downloadCompaniesCSV()" style="padding:0.45rem 0.75rem; font-size:0.8rem;">Download CSV</button>
+          <div class="toolbar">
+            <button class="btn-secondary" onclick="autofillDomainsFromCompanies('all')">Use All Domains ↓</button>
+            <button class="btn-secondary" onclick="downloadCompaniesCSV()">Download CSV</button>
           </div>
         </div>
-        <div style="overflow-x:auto;">
+        <div class="table-wrap">
         <table class="company-table" id="companies-table">
           <thead><tr>
             <th><input type="checkbox" id="co-select-all-cb" onchange="toggleSelectAllCompanies(this)" title="Select all"></th>
@@ -1258,9 +1494,9 @@
 
         <div class="co-selection-bar hidden" id="co-selection-bar">
           <span class="co-sel-count" id="co-sel-count">0 companies selected</span>
-          <div style="display:flex; gap:0.5rem; flex-wrap:wrap; align-items:center;">
-            <button class="btn-secondary" onclick="clearCompanySelection()" style="padding:0.35rem 0.65rem; font-size:0.8rem;">Clear</button>
-            <button class="btn-primary" onclick="autofillDomainsFromCompanies('selected')" style="padding:0.4rem 1rem; font-size:0.85rem;">Use Selected Domains ↓</button>
+          <div class="toolbar">
+            <button class="btn-secondary" onclick="clearCompanySelection()">Clear</button>
+            <button class="btn-primary" onclick="autofillDomainsFromCompanies('selected')">Use Selected Domains ↓</button>
           </div>
         </div>`;
 
@@ -1368,12 +1604,12 @@
 
         if (data.sources?.length) {
           const citDiv = document.createElement('div');
-          citDiv.style.cssText = 'margin-top:0.75rem; font-size:0.78rem; color:var(--text-dim);';
-          citDiv.innerHTML = '<strong>Sources:</strong> ' + data.sources.slice(0, 5).map(c => { try { return `<a href="${esc(c)}" target="_blank" rel="noopener" style="color:var(--accent-2);">${esc(new URL(c).hostname)}</a>`; } catch { return ''; } }).filter(Boolean).join(', ');
+          citDiv.className = 'sources-line';
+          citDiv.innerHTML = '<strong>Sources:</strong> ' + data.sources.slice(0, 5).map(c => { try { return `<a href="${esc(c)}" target="_blank" rel="noopener">${esc(new URL(c).hostname)}</a>`; } catch { return ''; } }).filter(Boolean).join(', ');
           resultDiv.appendChild(citDiv);
         }
       } catch (err) {
-        resultDiv.innerHTML = '<p style="color:var(--error);">Error: ' + esc(err.message) + '</p>';
+        resultDiv.innerHTML = '<p class="inline-error">Error: ' + esc(err.message) + '</p>';
         resultDiv.className = 'card';
       } finally {
         btn.disabled = false;
@@ -1415,7 +1651,7 @@
         for (const l of data.leads) l.source = 'Apollo.io';
         renderLeadsTable(data.leads, data.totalResults ?? data.leads.length, resultDiv);
       } catch (err) {
-        resultDiv.innerHTML = '<p style="color:var(--error);">Error: ' + esc(err.message) + '</p>';
+        resultDiv.innerHTML = '<p class="inline-error">Error: ' + esc(err.message) + '</p>';
         resultDiv.className = 'card';
       } finally {
         btn.disabled = false;
@@ -1522,14 +1758,14 @@
       const preview = document.getElementById('csv-preview');
       preview.classList.remove('hidden');
       preview.innerHTML = `
-        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.75rem; flex-wrap:wrap; gap:0.5rem;">
-          <div>
+        <div class="bar">
+          <div class="count-line">
             <strong>${leads.length} leads</strong> detected in <em>${esc(filename)}</em>
-            <span class="badge" style="margin-left:0.4rem;">${esc(formatLabels[format])}</span>
+            <span class="badge">${esc(formatLabels[format])}</span>
           </div>
-          <button class="btn-primary" onclick="importCSVLeads()" style="padding:0.4rem 0.9rem; font-size:0.85rem;">Import ${leads.length} Leads</button>
+          <button class="btn-primary" onclick="importCSVLeads()">Import ${leads.length} Leads</button>
         </div>
-        <div style="overflow-x:auto; max-height:220px; border:1px solid var(--border); border-radius:var(--radius);">
+        <div class="table-wrap" style="max-height:220px; border:1px solid var(--border);">
           <table class="lead-table" style="margin-top:0;">
             <thead><tr><th>Name</th><th>Title</th><th>Company</th><th>Email</th></tr></thead>
             <tbody>
@@ -1539,7 +1775,7 @@
                 <td>${esc(l.company || '—')}</td>
                 <td>${esc(l.email || '—')}</td>
               </tr>`).join('')}
-              ${leads.length > 5 ? `<tr><td colspan="4" style="text-align:center; color:var(--text-dim); font-size:0.8rem;">... and ${leads.length - 5} more</td></tr>` : ''}
+              ${leads.length > 5 ? `<tr><td colspan="4" style="text-align:center; color:var(--text-muted);">... and ${leads.length - 5} more</td></tr>` : ''}
             </tbody>
           </table>
         </div>`;
@@ -1592,7 +1828,7 @@
         lastLeadsResult = data.leads;
         renderLeadsTable(data.leads, data.leads.length, resultDiv);
       } catch (err) {
-        resultDiv.innerHTML = '<p style="color:var(--error);">Error: ' + esc(err.message) + '</p>';
+        resultDiv.innerHTML = '<p class="inline-error">Error: ' + esc(err.message) + '</p>';
         resultDiv.className = 'card';
       } finally {
         btn.disabled = false;
@@ -1618,7 +1854,7 @@
       const limit = parseInt(document.getElementById('search-limit').value) || 25;
 
       if (!domains.length) {
-        resultDiv.innerHTML = '<p style="color:var(--error);">Please enter at least one company domain.</p>';
+        resultDiv.innerHTML = '<p class="inline-error">Please enter at least one company domain.</p>';
         resultDiv.className = 'card';
         btn.disabled = false;
         btn.textContent = 'Search Leads';
@@ -1639,7 +1875,7 @@
         for (const l of data.leads) l.source = 'Hunter.io';
         renderLeadsTable(data.leads, total, resultDiv);
       } catch (err) {
-        resultDiv.innerHTML = '<p style="color:var(--error);">Error: ' + esc(err.message) + '</p>';
+        resultDiv.innerHTML = '<p class="inline-error">Error: ' + esc(err.message) + '</p>';
         resultDiv.className = 'card';
       } finally {
         btn.disabled = false;
@@ -1693,7 +1929,7 @@
         lastLeadsResult = data.leads;
         renderLeadsTable(data.leads, data.leads.length, resultDiv);
       } catch (err) {
-        resultDiv.innerHTML = '<p style="color:var(--error);">Error: ' + esc(err.message) + '</p>';
+        resultDiv.innerHTML = '<p class="inline-error">Error: ' + esc(err.message) + '</p>';
         resultDiv.className = 'card';
       } finally {
         btn.disabled = false;
@@ -1730,7 +1966,7 @@
         lastLeadsResult = data.leads;
         renderLeadsTable(data.leads, data.leads.length, resultDiv);
       } catch (err) {
-        resultDiv.innerHTML = '<p style="color:var(--error);">Error: ' + esc(err.message) + '</p>';
+        resultDiv.innerHTML = '<p class="inline-error">Error: ' + esc(err.message) + '</p>';
         resultDiv.className = 'card';
       } finally {
         btn.disabled = false;
@@ -1739,13 +1975,13 @@
     }
 
     function renderLeadsTable(leads, total, resultDiv) {
-      let html = `<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;flex-wrap:wrap;gap:0.5rem;">
-        <span><strong>${leads.length}</strong> leads found <span class="badge">${total.toLocaleString()} total</span></span>
-        <button class="btn-secondary" onclick="downloadCSV()" style="padding:0.4rem 0.75rem;font-size:0.8rem;">Download CSV</button>
+      let html = `<div class="bar">
+        <span class="count-line"><strong>${leads.length}</strong> leads found <span class="badge">${total.toLocaleString()} total</span></span>
+        <button class="btn-secondary" onclick="downloadCSV()">Download CSV</button>
       </div>`;
 
       if (leads.length > 0) {
-        html += `<table class="lead-table" id="leads-table">
+        html += `<div class="table-wrap"><table class="lead-table" id="leads-table">
           <thead><tr>
             <th><input type="checkbox" id="select-all-cb" onchange="toggleSelectAll(this)" title="Select all"></th>
             <th>Name</th><th>Title</th><th>Company</th><th>Email</th><th>Source</th>
@@ -1760,15 +1996,15 @@
             <td>${esc(l.source || l.seniority || '—')}</td>
           </tr>`;
         });
-        html += '</tbody></table>';
+        html += '</tbody></table></div>';
 
         // Selection action bar (hidden until selection)
         html += `<div class="selection-bar hidden" id="selection-bar">
           <span class="sel-count" id="sel-count">0 leads selected</span>
-          <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
-            <button class="btn-secondary" onclick="selectAllLeads()" style="padding:0.4rem 0.75rem;font-size:0.8rem;">Select All</button>
-            <button class="btn-secondary" onclick="clearSelection()" style="padding:0.4rem 0.75rem;font-size:0.8rem;">Clear</button>
-            <button class="btn-primary" id="gen-emails-btn" onclick="showOutreachContext()" style="padding:0.4rem 0.9rem;font-size:0.85rem;">Generate Emails for Selected ▸</button>
+          <div class="toolbar">
+            <button class="btn-secondary" onclick="selectAllLeads()">Select All</button>
+            <button class="btn-secondary" onclick="clearSelection()">Clear</button>
+            <button class="btn-primary" id="gen-emails-btn" onclick="showOutreachContext()">Generate Emails for Selected ▸</button>
           </div>
         </div>`;
 
@@ -1911,7 +2147,7 @@
       for (const lead of selected) {
         const name = (lead.firstName || '') + ' ' + (lead.lastName || '');
         const itemId = 'gp-' + Math.random().toString(36).slice(2, 7);
-        progressDiv.innerHTML += `<div class="gp-item" id="${itemId}"><span class="spinner" style="width:12px;height:12px;border-width:2px;"></span> Generating for ${esc(name)} at ${esc(lead.company || '')}...</div>`;
+        progressDiv.innerHTML += `<div class="gp-item" id="${itemId}"><span class="spinner"></span> Generating for ${esc(name)} at ${esc(lead.company || '')}...</div>`;
 
         try {
           const res = await fetch('/api/generate-email', {
@@ -1937,8 +2173,8 @@
 
       btn.disabled = false;
       btn.textContent = 'Generate Emails for Selected Leads';
-      progressDiv.innerHTML += `<div style="margin-top:0.75rem;padding:0.75rem;background:var(--success-light);border-radius:var(--radius);font-size:0.85rem;color:var(--success);">
-        &#10003; ${successCount} email${successCount !== 1 ? 's' : ''} generated. <strong style="cursor:pointer;text-decoration:underline;" onclick="switchToReview()">Go to Review &amp; Send →</strong>
+      progressDiv.innerHTML += `<div class="gp-summary">
+        &#10003; ${successCount} email${successCount !== 1 ? 's' : ''} generated. <strong onclick="switchToReview()">Go to Review &amp; Send →</strong>
       </div>`;
     }
 
@@ -2007,12 +2243,12 @@
             <hr class="divider">
             <div class="ep-notes"><strong>Personalization:</strong> ${esc(data.email.personalizationNotes)}</div>
           </div>
-          <div style="margin-top:0.75rem; padding:0.75rem; background:var(--success-light); border-radius:var(--radius); font-size:0.85rem; color:var(--success);">
-            Added to review queue. Go to <strong>4. Review & Send</strong> to review and send.
+          <div class="notice">
+            Added to review queue. Go to <strong>4. Review &amp; Send</strong> to review and send.
           </div>`;
         resultDiv.className = '';
       } catch (err) {
-        resultDiv.innerHTML = '<p style="color:var(--error);">Error: ' + esc(err.message) + '</p>';
+        resultDiv.innerHTML = '<p class="inline-error">Error: ' + esc(err.message) + '</p>';
       } finally {
         btn.disabled = false;
         btn.textContent = 'Generate Email';
@@ -2047,7 +2283,7 @@
         <div class="review-stat"><div class="num" style="color:var(--warning);">${pending}</div><div class="label">Pending</div></div>
         <div class="review-stat"><div class="num" style="color:var(--success);">${approved}</div><div class="label">Approved</div></div>
         <div class="review-stat"><div class="num" style="color:var(--error);">${rejected}</div><div class="label">Rejected</div></div>
-        ${sent ? `<div class="review-stat"><div class="num" style="color:var(--accent-2);">${sent}</div><div class="label">Sent</div></div>` : ''}
+        ${sent ? `<div class="review-stat"><div class="num">${sent}</div><div class="label">Sent</div></div>` : ''}
         ${failed ? `<div class="review-stat"><div class="num" style="color:var(--error);">${failed}</div><div class="label">Failed</div></div>` : ''}
       `;
 
@@ -2069,7 +2305,7 @@
 
         container.innerHTML += `
           <div class="email-preview" id="card-${entry.id}" style="${entry.status === 'rejected' ? 'opacity:0.5;' : ''}">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
+            <div class="bar">
               <div class="ep-header" style="margin:0;">To: ${esc(entry.lead.firstName)} ${esc(entry.lead.lastName)} (${esc(entry.lead.title)} at ${esc(entry.lead.company)})</div>
               ${statusBadge}
             </div>
@@ -2079,9 +2315,9 @@
             <div class="ep-notes"><strong>Personalization:</strong> ${esc(entry.email.personalizationNotes)}${entry.edited ? ' <em>(edited)</em>' : ''}</div>
             ${isSendable ? `
               <div class="ep-actions">
-                <button class="btn-secondary" onclick="editEmail('${entry.id}')" style="padding:0.4rem 0.75rem; font-size:0.8rem;">Edit</button>
-                ${entry.status !== 'approved' ? `<button class="btn-success" onclick="setEmailStatus('${entry.id}','approved')" style="padding:0.4rem 0.75rem; font-size:0.8rem;">Approve</button>` : ''}
-                <button class="btn-danger" onclick="setEmailStatus('${entry.id}','rejected')" style="padding:0.4rem 0.75rem; font-size:0.8rem;">Reject</button>
+                <button class="btn-secondary" onclick="editEmail('${entry.id}')">Edit</button>
+                ${entry.status !== 'approved' ? `<button class="btn-success" onclick="setEmailStatus('${entry.id}','approved')">Approve</button>` : ''}
+                <button class="btn-danger" onclick="setEmailStatus('${entry.id}','rejected')">Reject</button>
               </div>
             ` : ''}
           </div>`;
@@ -2151,7 +2387,7 @@
 
       for (const entry of approved) {
         const leadName = entry.lead.firstName + ' ' + entry.lead.lastName;
-        statusDiv.innerHTML += `<div class="status-item" id="status-${entry.id}"><span class="status-icon"><span class="spinner" style="width:14px;height:14px;"></span></span> Sending to ${esc(leadName)}...</div>`;
+        statusDiv.innerHTML += `<div class="status-item" id="status-${entry.id}"><span class="status-icon"><span class="spinner"></span></span> Sending to ${esc(leadName)}...</div>`;
 
         try {
           const res = await fetch('/api/send-email', {
@@ -2223,10 +2459,10 @@
           <div class="icp-rationale">${esc(icp.rationale)}</div>
         </div>` : ''}
         <div class="icp-action-bar">
-          <span style="font-size:0.85rem; color:var(--text-dim);">Use this ICP to discover companies that are the best fit.</span>
-          <div style="display:flex; align-items:center; gap:0.75rem; flex-wrap:wrap;">
-            <span id="find-companies-status" style="font-size:0.85rem;"></span>
-            <button class="btn-primary" id="find-companies-btn" onclick="findTargetCompanies()" style="padding:0.5rem 1.1rem;">
+          <span class="hint">Use this ICP to discover companies that are the best fit.</span>
+          <div class="toolbar" style="align-items:center;">
+            <span id="find-companies-status" class="count-line"></span>
+            <button class="btn-primary" id="find-companies-btn" onclick="findTargetCompanies()">
               Find Target Companies →
             </button>
           </div>
