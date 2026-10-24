@@ -402,6 +402,8 @@
 
     /* ── Lead & company tables ── */
     .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    /* Custom dropdowns keep the spacing the native selects had */
+    .dd { margin-bottom: 1.25rem; }
     .lead-table {
       width: 100%;
       border-collapse: collapse;
@@ -1005,7 +1007,31 @@
       .hd-word { left: 52px; transform: none; font-size: clamp(15px, 5.2vw, 22px); top: calc(32px - 0.6em); }
       .hd-menu { padding: 8px 11px; font-size: 12px; }
     }
+    /* Phones and portrait tablets: leads and companies tables become stacked rows instead
+       of scrolling sideways */
+    @media (max-width: 860px) {
+      .table-wrap { overflow-x: visible; }
+      .lead-table, .company-table { display: block; }
+      .lead-table thead, .company-table thead, .lead-table tbody, .company-table tbody { display: block; }
+      .lead-table thead tr, .company-table thead tr { display: flex; align-items: center; }
+      .lead-table th, .company-table th { display: none; }
+      .lead-table th:first-child, .company-table th:first-child { display: flex; align-items: center; gap: 10px; width: 100%; padding: 0.6rem 0; text-align: left; background: none; }
+      .lead-table th:first-child::after, .company-table th:first-child::after { content: "Select all"; }
+      .lead-table th:first-child:has(input[type="checkbox"]), .company-table th:first-child:has(input[type="checkbox"]) { width: 100%; border-bottom: 0; }
+      .lead-table tbody tr, .company-table tbody tr { display: grid; grid-template-columns: 28px minmax(0, 1fr); column-gap: 8px; padding: 0.75rem 0; border-bottom: 1px solid var(--border); }
+      .lead-table td, .company-table td { display: block; grid-column: 2; padding: 0; border: 0; font-size: 13.5px; color: var(--text-dim); overflow-wrap: anywhere; }
+      .lead-table td:first-child, .company-table td:first-child { grid-column: 1; grid-row: 1 / span 7; width: auto; padding-top: 3px; text-align: left; }
+      .lead-table td:nth-child(2), .company-table td:nth-child(2) { font-size: 16px; color: var(--text); margin-bottom: 2px; }
+      .lead-table tr:hover td, .company-table tr:hover td { background: none; }
+      .lead-table tr.selected, .company-table tr.co-selected { background: var(--bg-2); }
+      .lead-table tr.selected td, .company-table tr.co-selected td { background: none; }
+    }
     @media (max-width: 560px) {
+      /* Four workflow steps in a 2 x 2 grid so "Review & Send" is never cut off */
+      .sidebar-nav { display: grid; grid-template-columns: 1fr 1fr; gap: 0 1rem; overflow: visible; }
+      .sidebar-nav .tab { justify-content: flex-start; white-space: nowrap; }
+      /* A box inside a box loses too much width on a phone: inner ones go flat */
+      .card .card { padding-left: 0; padding-right: 0; border-left: 0; border-right: 0; }
       .nav-label { display: none; }
       .sidebar-nav { padding: 0 1rem; gap: 1.1rem; }
       .tab { font-size: 15px; gap: 6px; padding: 12px 0; }
